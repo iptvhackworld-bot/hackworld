@@ -4,7 +4,8 @@ logs
 backups
 
 bin
-data
+
+src/data/*.json
 
 *.log
 *.pdb
