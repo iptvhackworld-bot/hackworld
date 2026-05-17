@@ -70,6 +70,186 @@ bot.action(
   '../handlers/ratingHandler'
 )
 
+const {
+
+  openAdminPanel
+
+} = require(
+  '../handlers/adminHandler'
+)
+
+/*
+|--------------------------------------------------------------------------
+| ADMIN PANEL
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'admin_panel',
+
+  openAdminPanel
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| ADD CONTENT
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'admin_add_content',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+📦 AJOUT CONTENU
+
+Envoyez maintenant
+le contenu à ajouter.
+`
+    )
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| EDIT CONTENT
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'admin_edit_content',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+📝 MODIFICATION CONTENU
+
+Système bientôt disponible.
+`
+    )
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| BROADCAST
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'admin_broadcast',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+📢 BROADCAST
+
+Envoyez le message
+à diffuser.
+`
+    )
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| STATS
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'admin_stats',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+📊 STATISTIQUES
+
+✅ Système opérationnel.
+`
+    )
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| LOGS
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'admin_logs',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+📜 LOGS
+
+Logs système disponibles.
+`
+    )
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| SECURITY
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'admin_security',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+🔒 SÉCURITÉ
+
+Protection active.
+`
+    )
+
+  }
+
+)
+
   /*
   |--------------------------------------------------------------------------
   | RULES
