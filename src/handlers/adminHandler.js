@@ -1,151 +1,124 @@
-const { Markup } = require('telegraf')
+const env = require(
+  '../config/env'
+)
 
-const openAdminPanel = async (ctx) => {
+const { Markup } =
+require('telegraf')
 
-  const userId = ctx.from.id
+/*
+|--------------------------------------------------------------------------
+| ADMIN PANEL
+|--------------------------------------------------------------------------
+*/
+
+const openAdminPanel =
+async (ctx) => {
 
   /*
   |--------------------------------------------------------------------------
-  | CHECK OWNER
+  | OWNER ONLY
   |--------------------------------------------------------------------------
   */
 
   if (
-    userId.toString() !==
-    env.ownerId
+
+    ctx.from.id.toString() !==
+    env.ownerId.toString()
+
   ) {
 
-    return ctx.reply(
-`
-❌ ACCÈS REFUSÉ
-`
+    return ctx.answerCbQuery(
+      '❌ Accès refusé',
+      {
+        show_alert: true
+      }
     )
 
   }
 
   /*
   |--------------------------------------------------------------------------
-  | ADMIN PANEL
+  | PANEL
   |--------------------------------------------------------------------------
   */
 
   await ctx.reply(
 `
-╔══════════════════╗
-      ADMIN PANEL
-╚══════════════════╝
+👑 ADMIN PANEL
 
-⚙️ Gestion avancée
 ━━━━━━━━━━━━━━━━━━
 
-👑 Owner détecté
-🛡 Accès autorisé
-🚀 Système sécurisé
+⚙️ Gestion complète du bot
+📊 Statistiques système
+🛡 Contrôle administrateur
+
+━━━━━━━━━━━━━━━━━━
 `,
+
     Markup.inlineKeyboard([
 
       [
+
         Markup.button.callback(
-          '➕ Ajouter contenu',
-          'add_content'
+          '📦 Ajouter contenu',
+          'admin_add_content'
         )
+
       ],
 
       [
+
         Markup.button.callback(
           '📝 Modifier contenu',
-          'edit_content'
+          'admin_edit_content'
         )
+
       ],
 
       [
-        Markup.button.callback(
-          '🔎 Recherche contenu',
-          'search_content'
-        )
-      ],
 
-      [
-        Markup.button.callback(
-          '📂 Catégories',
-          'view_categories'
-        )
-      ],
-
-      [
-        Markup.button.callback(
-          '👥 Gérer utilisateurs',
-          'manage_users'
-        )
-      ],
-
-      [
         Markup.button.callback(
           '📢 Broadcast',
-          'broadcast'
+          'admin_broadcast'
         )
+
       ],
 
       [
-        Markup.button.callback(
-          '⚙️ Paramètres',
-          'settings'
-        )
-      ],
 
-      [
         Markup.button.callback(
-          '👑 Staff & Top',
-          'cat_staff'
-        )
-      ],
-	  [
-	    Markup.button.callback(
-          '📊 Dashboard',
+          '📊 Stats',
           'admin_stats'
         )
+
       ],
-	  [
-        Markup.button.callback(
-           '👑 Staff Manager',
-           'staff_manager'
-		)
-	  ],
-	  [
-        Markup.button.callback(
-            '🎫 Support',
-            'support_panel'
-	    )
-	  ],
-	  [
-        Markup.button.callback(
-             '📦 Export Data',
-             'export_data'
-        )
-	  ],
-	  [
-        Markup.button.callback(
-             '♻️ Restore Backup',
-             'restore_backup'
-        )
-	  ],
-	  [
-        Markup.button.callback(
-              '📡 Monitoring',
-              'analytics_panel'
-        )
-	  ],
+
       [
+
         Markup.button.callback(
-          '🔙 Retour',
-          'back_menu'
+          '📜 Logs',
+          'admin_logs'
         )
+
+      ],
+
+      [
+
+        Markup.button.callback(
+          '🔒 Sécurité',
+          'admin_security'
+        )
+
       ]
 
     ])
+
   )
+
 }
 
 module.exports = {
+
   openAdminPanel
+
 }
