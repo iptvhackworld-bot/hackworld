@@ -1,5 +1,26 @@
 module.exports = (bot) => {
+	
+bot.action(
 
+  'rate_1',
+
+  (ctx) => rateBot(
+    ctx,
+    1
+  )
+
+)
+
+bot.action(
+
+  'rate_5',
+
+  (ctx) => rateBot(
+    ctx,
+    5
+  )
+
+)
   /*
   |--------------------------------------------------------------------------
   | IMPORTS
@@ -40,6 +61,14 @@ module.exports = (bot) => {
   } = require(
     '../handlers/staffHandler'
   )
+  
+  const {
+
+  rateBot
+
+} = require(
+  '../handlers/ratingHandler'
+)
 
   /*
   |--------------------------------------------------------------------------

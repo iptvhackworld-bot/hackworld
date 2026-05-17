@@ -7,6 +7,20 @@ require('fs')
 const path =
 require('path')
 
+const {
+
+  getTotalUsers,
+
+  getTotalUses,
+
+  getAverageRating,
+
+  incrementUses
+
+} = require(
+  '../services/statsService'
+)
+
 /*
 |--------------------------------------------------------------------------
 | MAIN MENU
@@ -16,6 +30,27 @@ require('path')
 const showMainMenu =
 async (ctx) => {
 
+  /*
+  |--------------------------------------------------------------------------
+  | STATS
+  |--------------------------------------------------------------------------
+  */
+
+  const totalUsers =
+    getTotalUsers()
+
+  const totalUses =
+    getTotalUses()
+
+  const averageRating =
+    getAverageRating()
+
+  /*
+  |--------------------------------------------------------------------------
+  | IMAGE
+  |--------------------------------------------------------------------------
+  */
+
   const imagePath =
     path.join(
 
@@ -24,6 +59,12 @@ async (ctx) => {
       '../assets/banner.jpg'
 
     )
+
+  /*
+  |--------------------------------------------------------------------------
+  | SEND
+  |--------------------------------------------------------------------------
+  */
 
   await ctx.replyWithPhoto(
 
@@ -47,7 +88,12 @@ async (ctx) => {
 ⚡ INTERFACE PRINCIPALE
 ━━━━━━━━━━━━━━━━━━
 
-👤 Utilisateur connecté
+👥 Utilisateurs : ${totalUsers}
+
+📊 Utilisations : ${totalUses}
+
+⭐ Note du bot : ${averageRating}/5
+
 🛡 Accès sécurisé activé
 🚀 Système opérationnel
 
@@ -148,6 +194,18 @@ async (ctx) => {
 
         [
           Markup.button.callback(
+            '⭐ Noter 1',
+            'rate_1'
+          ),
+
+          Markup.button.callback(
+            '⭐ Noter 5',
+            'rate_5'
+          )
+        ],
+
+        [
+          Markup.button.callback(
             '⚙️ Admin',
             'admin_panel'
           )
@@ -170,6 +228,20 @@ async (ctx) => {
 const startHandler =
 async (ctx) => {
 
+  /*
+  |--------------------------------------------------------------------------
+  | INCREMENT USES
+  |--------------------------------------------------------------------------
+  */
+
+  incrementUses()
+
+  /*
+  |--------------------------------------------------------------------------
+  | IMAGE
+  |--------------------------------------------------------------------------
+  */
+
   const imagePath =
     path.join(
 
@@ -178,6 +250,12 @@ async (ctx) => {
       '../assets/banner.jpg'
 
     )
+
+  /*
+  |--------------------------------------------------------------------------
+  | SEND
+  |--------------------------------------------------------------------------
+  */
 
   await ctx.replyWithPhoto(
 
