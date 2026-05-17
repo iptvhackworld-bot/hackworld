@@ -66,26 +66,76 @@ module.exports = (bot) => {
   } = require(
     '../handlers/adminContentHandler'
   )
-  
+
   const {
 
-  showContentList
+    showContentList
 
-} = require(
-  '../handlers/adminEditHandler'
-)
+  } = require(
+    '../handlers/adminEditHandler'
+  )
 
-const {
+  const {
 
-  startBroadcast,
+    startBroadcast,
 
-  handleBroadcastText,
+    handleBroadcastText,
 
-  handleBroadcastMedia
+    handleBroadcastMedia
 
-} = require(
-  '../handlers/broadcastHandler'
-)
+  } = require(
+    '../handlers/broadcastHandler'
+  )
+
+  const analyticsHandler =
+  require(
+    '../handlers/analyticsHandler'
+  )
+
+  const backupHandler =
+  require(
+    '../handlers/backupHandler'
+  )
+
+  const logHandler =
+  require(
+    '../handlers/logHandler'
+  )
+
+  const securityHandler =
+  require(
+    '../handlers/securityHandler'
+  )
+
+  const statsHandler =
+  require(
+    '../handlers/statsHandler'
+  )
+
+  const systemHandler =
+  require(
+    '../handlers/systemHandler'
+  )
+
+  const manageUsersHandler =
+  require(
+    '../handlers/manageUsersHandler'
+  )
+
+  const permissionHandler =
+  require(
+    '../handlers/permissionHandler'
+  )
+
+  const categoryManagerHandler =
+  require(
+    '../handlers/categoryManagerHandler'
+  )
+
+  const staffManagerHandler =
+  require(
+    '../handlers/staffManagerHandler'
+  )
 
   /*
   |--------------------------------------------------------------------------
@@ -131,7 +181,7 @@ const {
 
   /*
   |--------------------------------------------------------------------------
-  | ADD CONTENT
+  | ADMIN ADD CONTENT
   |--------------------------------------------------------------------------
   */
 
@@ -140,6 +190,174 @@ const {
     'admin_add_content',
 
     openAddContent
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | ADMIN EDIT CONTENT
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_edit_content',
+
+    showContentList
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | ADMIN BROADCAST
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_broadcast',
+
+    startBroadcast
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | ADMIN STATS
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_stats',
+
+    statsHandler.showStats
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | ADMIN LOGS
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_logs',
+
+    logHandler.showLogs
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | ADMIN SECURITY
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_security',
+
+    securityHandler.openSecurityPanel
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | ADMIN ANALYTICS
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_analytics',
+
+    analyticsHandler.showAnalytics
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | ADMIN BACKUP
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_backup',
+
+    backupHandler.createBackup
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | ADMIN USERS
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_users',
+
+    manageUsersHandler.openUsersPanel
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | ADMIN PERMISSIONS
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_permissions',
+
+    permissionHandler.openPermissions
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | ADMIN SYSTEM
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_system',
+
+    systemHandler.openSystemPanel
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | ADMIN CATEGORY MANAGER
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_categories',
+
+    categoryManagerHandler.openCategoryManager
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | ADMIN STAFF MANAGER
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_staff_manager',
+
+    staffManagerHandler.openStaffManager
 
   )
 
@@ -157,133 +375,33 @@ const {
 
   )
 
-  /*
-  |--------------------------------------------------------------------------
-  | EDIT CONTENT
-  |--------------------------------------------------------------------------
-  */
+  bot.on(
 
-bot.action(
+    'text',
 
-  'admin_edit_content',
-
-  showContentList
-
-)
-
-  /*
-  |--------------------------------------------------------------------------
-  | BROADCAST
-  |--------------------------------------------------------------------------
-  */
-
-bot.action(
-
-  'admin_broadcast',
-
-  startBroadcast
-
-)
-
-bot.on(
-
-  'text',
-
-  handleBroadcastText
-
-)
-
-bot.on(
-
-  'photo',
-
-  handleBroadcastMedia
-
-)
-
-bot.on(
-
-  'video',
-
-  handleBroadcastMedia
-
-)
-
-  /*
-  |--------------------------------------------------------------------------
-  | STATS
-  |--------------------------------------------------------------------------
-  */
-
-  bot.action(
-
-    'admin_stats',
-
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await ctx.reply(
-`
-📊 STATISTIQUES
-
-✅ Système opérationnel.
-`
-      )
-
-    }
+    handleBroadcastText
 
   )
 
   /*
   |--------------------------------------------------------------------------
-  | LOGS
+  | HANDLE MEDIA
   |--------------------------------------------------------------------------
   */
 
-  bot.action(
+  bot.on(
 
-    'admin_logs',
+    'photo',
 
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await ctx.reply(
-`
-📜 LOGS
-
-Logs système disponibles.
-`
-      )
-
-    }
+    handleBroadcastMedia
 
   )
 
-  /*
-  |--------------------------------------------------------------------------
-  | SECURITY
-  |--------------------------------------------------------------------------
-  */
+  bot.on(
 
-  bot.action(
+    'video',
 
-    'admin_security',
-
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await ctx.reply(
-`
-🔒 SÉCURITÉ
-
-Protection active.
-`
-      )
-
-    }
+    handleBroadcastMedia
 
   )
 
