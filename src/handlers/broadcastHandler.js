@@ -1,8 +1,14 @@
 const {
 
-  userService
+  loadUsers
 
-} = require('../data/userData')
+} = require(
+  '../data/userData'
+)
+
+const env = require(
+  '../config/env'
+)
 
 /*
 |--------------------------------------------------------------------------
@@ -76,7 +82,7 @@ async (ctx) => {
     'broadcast_waiting'
   ) return
 
-  const users = userService()
+  const users = loadUsers()
 
   const message =
     ctx.message.text
@@ -159,7 +165,7 @@ async (ctx) => {
     'broadcast_waiting'
   ) return
 
-  const users = userService()
+  const users = loadUsers()
 
   const caption =
     ctx.message.caption || ''

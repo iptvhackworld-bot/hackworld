@@ -1,26 +1,5 @@
 module.exports = (bot) => {
-	
-bot.action(
 
-  'rate_1',
-
-  (ctx) => rateBot(
-    ctx,
-    1
-  )
-
-)
-
-bot.action(
-
-  'rate_5',
-
-  (ctx) => rateBot(
-    ctx,
-    5
-  )
-
-)
   /*
   |--------------------------------------------------------------------------
   | IMPORTS
@@ -61,194 +40,252 @@ bot.action(
   } = require(
     '../handlers/staffHandler'
   )
+
+  const {
+
+    rateBot
+
+  } = require(
+    '../handlers/ratingHandler'
+  )
+
+  const {
+
+    openAdminPanel
+
+  } = require(
+    '../handlers/adminHandler'
+  )
+
+  const {
+
+    openAddContent,
+
+    handleAddContent
+
+  } = require(
+    '../handlers/adminContentHandler'
+  )
   
   const {
 
-  rateBot
+  showContentList
 
 } = require(
-  '../handlers/ratingHandler'
+  '../handlers/adminEditHandler'
 )
 
 const {
 
-  openAdminPanel
+  startBroadcast,
+
+  handleBroadcastText,
+
+  handleBroadcastMedia
 
 } = require(
-  '../handlers/adminHandler'
+  '../handlers/broadcastHandler'
 )
 
-/*
-|--------------------------------------------------------------------------
-| ADMIN PANEL
-|--------------------------------------------------------------------------
-*/
+  /*
+  |--------------------------------------------------------------------------
+  | RATING
+  |--------------------------------------------------------------------------
+  */
 
-bot.action(
+  bot.action(
 
-  'admin_panel',
+    'rate_1',
 
-  openAdminPanel
-
-)
-
-/*
-|--------------------------------------------------------------------------
-| ADD CONTENT
-|--------------------------------------------------------------------------
-*/
-
-bot.action(
-
-  'admin_add_content',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await ctx.reply(
-`
-📦 AJOUT CONTENU
-
-Envoyez maintenant
-le contenu à ajouter.
-`
+    (ctx) => rateBot(
+      ctx,
+      1
     )
 
-  }
+  )
 
-)
+  bot.action(
 
-/*
-|--------------------------------------------------------------------------
-| EDIT CONTENT
-|--------------------------------------------------------------------------
-*/
+    'rate_5',
+
+    (ctx) => rateBot(
+      ctx,
+      5
+    )
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | ADMIN PANEL
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_panel',
+
+    openAdminPanel
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | ADD CONTENT
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_add_content',
+
+    openAddContent
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | HANDLE TEXT
+  |--------------------------------------------------------------------------
+  */
+
+  bot.on(
+
+    'text',
+
+    handleAddContent
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | EDIT CONTENT
+  |--------------------------------------------------------------------------
+  */
 
 bot.action(
 
   'admin_edit_content',
 
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await ctx.reply(
-`
-📝 MODIFICATION CONTENU
-
-Système bientôt disponible.
-`
-    )
-
-  }
+  showContentList
 
 )
 
-/*
-|--------------------------------------------------------------------------
-| BROADCAST
-|--------------------------------------------------------------------------
-*/
+  /*
+  |--------------------------------------------------------------------------
+  | BROADCAST
+  |--------------------------------------------------------------------------
+  */
 
 bot.action(
 
   'admin_broadcast',
 
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await ctx.reply(
-`
-📢 BROADCAST
-
-Envoyez le message
-à diffuser.
-`
-    )
-
-  }
+  startBroadcast
 
 )
 
-/*
-|--------------------------------------------------------------------------
-| STATS
-|--------------------------------------------------------------------------
-*/
+bot.on(
 
-bot.action(
+  'text',
 
-  'admin_stats',
+  handleBroadcastText
 
-  async (ctx) => {
+)
 
-    await ctx.answerCbQuery()
+bot.on(
 
-    await ctx.reply(
+  'photo',
+
+  handleBroadcastMedia
+
+)
+
+bot.on(
+
+  'video',
+
+  handleBroadcastMedia
+
+)
+
+  /*
+  |--------------------------------------------------------------------------
+  | STATS
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_stats',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await ctx.reply(
 `
 📊 STATISTIQUES
 
 ✅ Système opérationnel.
 `
-    )
+      )
 
-  }
+    }
 
-)
+  )
 
-/*
-|--------------------------------------------------------------------------
-| LOGS
-|--------------------------------------------------------------------------
-*/
+  /*
+  |--------------------------------------------------------------------------
+  | LOGS
+  |--------------------------------------------------------------------------
+  */
 
-bot.action(
+  bot.action(
 
-  'admin_logs',
+    'admin_logs',
 
-  async (ctx) => {
+    async (ctx) => {
 
-    await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-    await ctx.reply(
+      await ctx.reply(
 `
 📜 LOGS
 
 Logs système disponibles.
 `
-    )
+      )
 
-  }
+    }
 
-)
+  )
 
-/*
-|--------------------------------------------------------------------------
-| SECURITY
-|--------------------------------------------------------------------------
-*/
+  /*
+  |--------------------------------------------------------------------------
+  | SECURITY
+  |--------------------------------------------------------------------------
+  */
 
-bot.action(
+  bot.action(
 
-  'admin_security',
+    'admin_security',
 
-  async (ctx) => {
+    async (ctx) => {
 
-    await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-    await ctx.reply(
+      await ctx.reply(
 `
 🔒 SÉCURITÉ
 
 Protection active.
 `
-    )
+      )
 
-  }
+    }
 
-)
+  )
 
   /*
   |--------------------------------------------------------------------------
@@ -257,7 +294,9 @@ Protection active.
   */
 
   bot.action(
+
     'accept_rules',
+
     async (ctx) => {
 
       await ctx.deleteMessage()
@@ -265,10 +304,13 @@ Protection active.
       await showMainMenu(ctx)
 
     }
+
   )
 
   bot.action(
+
     'decline_rules',
+
     async (ctx) => {
 
       await ctx.reply(
@@ -276,6 +318,7 @@ Protection active.
       )
 
     }
+
   )
 
   /*
@@ -285,23 +328,35 @@ Protection active.
   */
 
   bot.action(
+
     'cat_staff',
+
     openStaffMenu
+
   )
 
   bot.action(
+
     'show_admins',
+
     showAdmins
+
   )
 
   bot.action(
+
     'show_mods',
+
     showModerators
+
   )
 
   bot.action(
+
     'show_top_users',
+
     showTopUsers
+
   )
 
   /*
@@ -311,8 +366,11 @@ Protection active.
   */
 
   bot.action(
+
     /cat_(.+)/,
+
     categoryHandler
+
   )
 
   /*
@@ -322,7 +380,9 @@ Protection active.
   */
 
   bot.action(
+
     /next_(.+)_(\d+)/,
+
     async (ctx) => {
 
       await navigationHandler(
@@ -331,10 +391,13 @@ Protection active.
       )
 
     }
+
   )
 
   bot.action(
+
     /prev_(.+)_(\d+)/,
+
     async (ctx) => {
 
       await navigationHandler(
@@ -343,6 +406,7 @@ Protection active.
       )
 
     }
+
   )
 
   /*
@@ -352,8 +416,11 @@ Protection active.
   */
 
   bot.action(
+
     'back_menu',
+
     showMainMenu
+
   )
 
 }
