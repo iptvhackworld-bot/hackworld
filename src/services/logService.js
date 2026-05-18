@@ -1,39 +1,55 @@
-const {
-
-  addLog
-
-} = require(
-  '../handlers/logHandler'
+const Log =
+require(
+  '../models/Log'
 )
+
+/*
+|--------------------------------------------------------------------------
+| CREATE LOG
+|--------------------------------------------------------------------------
+*/
 
 const createLog =
 async (
 
-  telegram,
+  type,
 
-  username,
-
-  action,
-
-  details
+  message
 
 ) => {
 
-  await addLog(
+  return await Log.create({
 
-    telegram,
+    type,
 
-    username,
+    message
 
-    action,
+  })
 
-    details
+}
 
-  )
+/*
+|--------------------------------------------------------------------------
+| GET LOGS
+|--------------------------------------------------------------------------
+*/
+
+const getLogs =
+async () => {
+
+  return await Log.find()
+  .sort({
+
+    createdAt: -1
+
+  })
+
 }
 
 module.exports = {
 
-  createLog
+  createLog,
+
+  getLogs
 
 }

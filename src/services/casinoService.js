@@ -1,20 +1,20 @@
-const Economy =
+const Casino =
 require(
-  '../models/Economy'
+  '../models/Casino'
 )
 
 /*
 |--------------------------------------------------------------------------
-| GET ECONOMY
+| GET CASINO
 |--------------------------------------------------------------------------
 */
 
-const getEconomy =
+const getCasinoStats =
 async (userId) => {
 
-  let economy =
+  let stats =
 
-    await Economy.findOne({
+    await Casino.findOne({
 
       userId
 
@@ -26,10 +26,10 @@ async (userId) => {
   |--------------------------------------------------------------------------
   */
 
-  if (!economy) {
+  if (!stats) {
 
-    economy =
-      await Economy.create({
+    stats =
+      await Casino.create({
 
         userId
 
@@ -37,17 +37,17 @@ async (userId) => {
 
   }
 
-  return economy
+  return stats
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| ADD MONEY
+| ADD WIN
 |--------------------------------------------------------------------------
 */
 
-const addMoney =
+const addWin =
 async (
 
   userId,
@@ -56,27 +56,27 @@ async (
 
 ) => {
 
-  const economy =
-    await getEconomy(
+  const stats =
+    await getCasinoStats(
       userId
     )
 
-  economy.balance +=
+  stats.wins += 1
+
+  stats.totalBet +=
     amount
 
-  await economy.save()
-
-  return economy
+  await stats.save()
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| REMOVE MONEY
+| ADD LOSS
 |--------------------------------------------------------------------------
 */
 
-const removeMoney =
+const addLoss =
 async (
 
   userId,
@@ -85,40 +85,26 @@ async (
 
 ) => {
 
-  const economy =
-    await getEconomy(
+  const stats =
+    await getCasinoStats(
       userId
     )
 
-  economy.balance -=
+  stats.losses += 1
+
+  stats.totalBet +=
     amount
 
-  /*
-  |--------------------------------------------------------------------------
-  | NEGATIVE
-  |--------------------------------------------------------------------------
-  */
-
-  if (
-    economy.balance < 0
-  ) {
-
-    economy.balance = 0
-
-  }
-
-  await economy.save()
-
-  return economy
+  await stats.save()
 
 }
 
 module.exports = {
 
-  getEconomy,
+  getCasinoStats,
 
-  addMoney,
+  addWin,
 
-  removeMoney
+  addLoss
 
 }

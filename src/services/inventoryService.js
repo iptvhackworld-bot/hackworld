@@ -1,57 +1,7 @@
-const path = require('path')
-
-const {
-
-  read,
-
-  write
-
-} = require(
-  '../database/jsonDatabase'
+const Inventory =
+require(
+  '../models/Inventory'
 )
-
-/*
-|--------------------------------------------------------------------------
-| FILE PATH
-|--------------------------------------------------------------------------
-*/
-
-const filePath = path.join(
-
-  __dirname,
-
-  '../data/inventory.json'
-
-)
-
-/*
-|--------------------------------------------------------------------------
-| LOAD INVENTORY
-|--------------------------------------------------------------------------
-*/
-
-const loadInventory = () => {
-
-  return read(filePath)
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| SAVE INVENTORY
-|--------------------------------------------------------------------------
-*/
-
-const saveInventory = (
-  inventory
-) => {
-
-  write(
-    filePath,
-    inventory
-  )
-
-}
 
 /*
 |--------------------------------------------------------------------------
@@ -59,17 +9,16 @@ const saveInventory = (
 |--------------------------------------------------------------------------
 */
 
-const getInventory = (
-  userId
-) => {
+const getInventory =
+async (userId) => {
 
-  const inventory =
-    loadInventory()
+  let inventory =
 
-  let user =
-    inventory.find(
-      u => u.id === userId
-    )
+    await Inventory.findOne({
+
+      userId
+
+    })
 
   /*
   |--------------------------------------------------------------------------
@@ -77,23 +26,20 @@ const getInventory = (
   |--------------------------------------------------------------------------
   */
 
-  if (!user) {
+  if (!inventory) {
 
-    user = {
+    inventory =
+      await Inventory.create({
 
-      id: userId,
+        userId,
 
-      items: []
+        items: []
 
-    }
-
-    inventory.push(user)
-
-    saveInventory(inventory)
+      })
 
   }
 
-  return user
+  return inventory
 
 }
 
@@ -103,50 +49,64 @@ const getInventory = (
 |--------------------------------------------------------------------------
 */
 
-const addItem = (
+const addItem =
+async (
+
   userId,
-  item
+
+  itemName,
+
+  quantity = 1
+
 ) => {
 
   const inventory =
-    loadInventory()
+    await getInventory(
+      userId
+    )
 
-  let user =
-    inventory.find(
-      u => u.id === userId
+  const existing =
+    inventory.items.find(
+
+      item =>
+      item.name === itemName
+
     )
 
   /*
   |--------------------------------------------------------------------------
-  | CREATE
+  | EXISTS
   |--------------------------------------------------------------------------
   */
 
-  if (!user) {
+  if (existing) {
 
-    user = {
-
-      id: userId,
-
-      items: []
-
-    }
-
-    inventory.push(user)
+    existing.quantity +=
+      quantity
 
   }
 
   /*
   |--------------------------------------------------------------------------
-  | ADD
+  | NEW
   |--------------------------------------------------------------------------
   */
 
-  user.items.push(item)
+  else {
 
-  saveInventory(inventory)
+    inventory.items.push({
 
-  return user
+      name: itemName,
+
+      quantity
+
+    })
+
+  }
+
+  await inventory.save()
+
+  return inventory
 
 }
 
