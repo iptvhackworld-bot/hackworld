@@ -33,6 +33,9 @@ require('./core/errorHandler')
 const startScheduler =
 require('./core/scheduler')
 
+const connectDatabase =
+require('./database/connect')
+
 /*
 |--------------------------------------------------------------------------
 | BOT
@@ -80,5 +83,7 @@ startScheduler()
 registerErrors()
 
 registerShutdown(bot)
+
+connectDatabase()
 
 launchBot(bot)

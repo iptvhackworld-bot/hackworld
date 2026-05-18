@@ -8,5 +8,8 @@ module.exports = {
 
   logChannelId:
     process.env.LOG_CHANNEL_ID
+	
+  mongoUri:
+    process.env.MONGO_URI,
 
 }
