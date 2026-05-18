@@ -115,7 +115,6 @@ const {
 
   openUsersPanel,
 
-  openUserPanel,
 
   openSearchUser,
 
@@ -141,13 +140,6 @@ const {
   |--------------------------------------------------------------------------
   */
 
-  bot.action(
-
-    /user_(\d+)/,
-
-    openUserPanel
-
-  )
 
   bot.action(
 
