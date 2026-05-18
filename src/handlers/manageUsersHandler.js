@@ -1,50 +1,31 @@
-const env = require(
-  '../config/env'
+const {
+
+  getUsers,
+
+  banUser: banUserService,
+
+  unbanUser: unbanUserService,
+
+  getUser
+
+} = require(
+  '../services/userService'
 )
 
 const { Markup } =
 require('telegraf')
 
-const {
-
-  loadUsers,
-
-  saveUsers
-
-} = require(
-  '../data/userData'
-)
-
 /*
 |--------------------------------------------------------------------------
-| OPEN USERS PANEL
+| USERS PANEL
 |--------------------------------------------------------------------------
 */
 
 const openUsersPanel =
 async (ctx) => {
 
-  /*
-  |--------------------------------------------------------------------------
-  | OWNER ONLY
-  |--------------------------------------------------------------------------
-  */
-
-  if (
-
-    ctx.from.id.toString() !==
-    env.ownerId.toString()
-
-  ) {
-
-    return ctx.reply(
-      '❌ Accès refusé'
-    )
-
-  }
-
   const users =
-    loadUsers()
+    await getUsers()
 
   /*
   |--------------------------------------------------------------------------
@@ -52,7 +33,9 @@ async (ctx) => {
   |--------------------------------------------------------------------------
   */
 
-  if (users.length === 0) {
+  if (
+    users.length === 0
+  ) {
 
     return ctx.reply(
 `
@@ -64,28 +47,38 @@ async (ctx) => {
 
   /*
   |--------------------------------------------------------------------------
-  | BUTTONS
+  | MESSAGE
   |--------------------------------------------------------------------------
   */
 
-  const buttons = []
+  let message =
+`
+👥 UTILISATEURS
 
-  users.slice(0, 20).forEach(
+━━━━━━━━━━━━━━━━━━
+
+`
+
+  users
+  .slice(0, 20)
+  .forEach(
 
     (user) => {
 
-      buttons.push([
+      message +=
+`
+🆔 ${user.id}
 
-        Markup.button.callback(
+👤 ${user.username}
 
-          `👤 @${user.username || user.id}`,
+🚫 ${
+  user.banned
+  ? 'Banni'
+  : 'Actif'
+}
 
-          `user_${user.id}`
-
-        )
-
-      ])
-
+━━━━━━━━━━━━━━━━━━
+`
     }
 
   )
@@ -97,16 +90,7 @@ async (ctx) => {
   */
 
   await ctx.reply(
-`
-👥 GESTION UTILISATEURS
-
-━━━━━━━━━━━━━━━━━━
-
-📋 Liste utilisateurs
-`,
-    Markup.inlineKeyboard(
-      buttons
-    )
+    message
   )
 
 }
@@ -121,17 +105,13 @@ const openUserPanel =
 async (ctx) => {
 
   const userId =
-    parseInt(ctx.match[1])
-
-  const users =
-    loadUsers()
+    Number(
+      ctx.match[1]
+    )
 
   const user =
-    users.find(
-
-      (u) =>
-        u.id === userId
-
+    await getUser(
+      userId
     )
 
   /*
@@ -152,33 +132,7 @@ async (ctx) => {
 
   /*
   |--------------------------------------------------------------------------
-  | SESSION
-  |--------------------------------------------------------------------------
-  */
-
-  if (!ctx.session) {
-
-    ctx.session = {}
-
-  }
-
-  ctx.session.targetUser =
-    user.id
-
-  /*
-  |--------------------------------------------------------------------------
-  | STATUS
-  |--------------------------------------------------------------------------
-  */
-
-  const status =
-    user.banned
-      ? '🚫 BANNI'
-      : '✅ ACTIF'
-
-  /*
-  |--------------------------------------------------------------------------
-  | SEND
+  | PANEL
   |--------------------------------------------------------------------------
   */
 
@@ -188,32 +142,37 @@ async (ctx) => {
 
 ━━━━━━━━━━━━━━━━━━
 
-👤 @${user.username || 'Unknown'}
-
 🆔 ${user.id}
 
-🏅 ${user.rank || 'MEMBER'}
-
-⭐ XP :
-${user.xp || 0}
+👤 ${user.username}
 
 💰 Money :
-${user.money || 0}$
+${user.money}
 
-📌 Status :
-${status}
+⭐ XP :
+${user.xp}
+
+🚫 Status :
+${
+  user.banned
+  ? 'Banni'
+  : 'Actif'
+}
+
+━━━━━━━━━━━━━━━━━━
 `,
+
     Markup.inlineKeyboard([
 
       [
 
         Markup.button.callback(
-          '🚫 Bannir',
+          '🚫 Ban',
           'ban_user'
         ),
 
         Markup.button.callback(
-          '🔓 Débannir',
+          '✅ Unban',
           'unban_user'
         )
 
@@ -224,11 +183,7 @@ ${status}
         Markup.button.callback(
           '💰 Reset Money',
           'reset_money'
-        )
-
-      ],
-
-      [
+        ),
 
         Markup.button.callback(
           '⭐ Reset XP',
@@ -252,24 +207,14 @@ ${status}
 const banUser =
 async (ctx) => {
 
-  const users =
-    loadUsers()
-
-  const user =
-    users.find(
-
-      (u) =>
-
-        u.id ===
-        ctx.session.targetUser
-
+  const userId =
+    Number(
+      ctx.match[1]
     )
 
-  if (!user) return
-
-  user.banned = true
-
-  saveUsers(users)
+  await banUserService(
+    userId
+  )
 
   await ctx.reply(
 `
@@ -288,28 +233,18 @@ async (ctx) => {
 const unbanUser =
 async (ctx) => {
 
-  const users =
-    loadUsers()
-
-  const user =
-    users.find(
-
-      (u) =>
-
-        u.id ===
-        ctx.session.targetUser
-
+  const userId =
+    Number(
+      ctx.match[1]
     )
 
-  if (!user) return
-
-  user.banned = false
-
-  saveUsers(users)
+  await unbanUserService(
+    userId
+  )
 
   await ctx.reply(
 `
-🔓 Utilisateur débanni.
+✅ Utilisateur débanni.
 `
   )
 
@@ -324,28 +259,9 @@ async (ctx) => {
 const resetMoney =
 async (ctx) => {
 
-  const users =
-    loadUsers()
-
-  const user =
-    users.find(
-
-      (u) =>
-
-        u.id ===
-        ctx.session.targetUser
-
-    )
-
-  if (!user) return
-
-  user.money = 0
-
-  saveUsers(users)
-
   await ctx.reply(
 `
-💰 Argent réinitialisé.
+💰 Reset money bientôt disponible.
 `
   )
 
@@ -360,32 +276,9 @@ async (ctx) => {
 const resetXP =
 async (ctx) => {
 
-  const users =
-    loadUsers()
-
-  const user =
-    users.find(
-
-      (u) =>
-
-        u.id ===
-        ctx.session.targetUser
-
-    )
-
-  if (!user) return
-
-  user.xp = 0
-
-  user.level = 1
-
-  user.rank = '👤 MEMBER'
-
-  saveUsers(users)
-
   await ctx.reply(
 `
-⭐ XP réinitialisé.
+⭐ Reset XP bientôt disponible.
 `
   )
 
