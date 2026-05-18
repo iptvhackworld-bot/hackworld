@@ -8,7 +8,7 @@ module.exports = (bot) => {
 
   const {
 
-    showInventory
+    openInventory
 
   } = require(
     '../handlers/inventoryHandler'
@@ -16,9 +16,7 @@ module.exports = (bot) => {
 
   const {
 
-    openLootbox,
-
-    playRoulette
+    openCasino
 
   } = require(
     '../handlers/casinoHandler'
@@ -34,35 +32,21 @@ module.exports = (bot) => {
 
     'inventory',
 
-    showInventory
+    openInventory
 
   )
 
   /*
   |--------------------------------------------------------------------------
-  | LOOTBOX
+  | CASINO
   |--------------------------------------------------------------------------
   */
 
   bot.action(
 
-    'lootbox',
+    'casino_menu',
 
-    openLootbox
-
-  )
-
-  /*
-  |--------------------------------------------------------------------------
-  | ROULETTE
-  |--------------------------------------------------------------------------
-  */
-
-  bot.action(
-
-    'roulette',
-
-    playRoulette
+    openCasino
 
   )
 
