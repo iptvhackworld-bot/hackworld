@@ -1,189 +1,62 @@
-const {
-
-  loadStats,
-
-  saveStats
-
-} = require(
-  '../data/statsData'
-)
-
-const {
-
-  loadUsers
-
-} = require(
-  '../data/userData'
+const User =
+require(
+  '../models/User'
 )
 
 /*
 |--------------------------------------------------------------------------
-| GET TOTAL USERS
+| TOTAL USERS
 |--------------------------------------------------------------------------
 */
 
 const getTotalUsers =
-() => {
+async () => {
 
-  const users =
-    loadUsers()
-
-  return users.length
+  return await User.countDocuments()
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| GET TOTAL USES
+| TOTAL USES
 |--------------------------------------------------------------------------
 */
 
-const getTotalUses =
-() => {
-
-  const stats =
-    loadStats()
-
-  /*
-  |--------------------------------------------------------------------------
-  | FIX EMPTY
-  |--------------------------------------------------------------------------
-  */
-
-  if (
-    typeof stats.uses !==
-    'number'
-  ) {
-
-    stats.uses = 0
-
-    saveStats(stats)
-
-  }
-
-  return stats.uses
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| INCREMENT USES
-|--------------------------------------------------------------------------
-*/
+let totalUses = 0
 
 const incrementUses =
 () => {
 
-  const stats =
-    loadStats()
+  totalUses++
 
-  /*
-  |--------------------------------------------------------------------------
-  | FIX EMPTY
-  |--------------------------------------------------------------------------
-  */
+}
 
-  if (
-    typeof stats.uses !==
-    'number'
-  ) {
+const getTotalUses =
+() => {
 
-    stats.uses = 0
-
-  }
-
-  stats.uses += 1
-
-  saveStats(stats)
+  return totalUses
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| ADD RATING
-|--------------------------------------------------------------------------
-*/
-
-const addRating = (
-  rating
-) => {
-
-  const stats =
-    loadStats()
-
-  /*
-  |--------------------------------------------------------------------------
-  | FIX EMPTY
-  |--------------------------------------------------------------------------
-  */
-
-  if (
-
-    !stats.ratings ||
-
-    !Array.isArray(
-      stats.ratings
-    )
-
-  ) {
-
-    stats.ratings = []
-
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | PUSH
-  |--------------------------------------------------------------------------
-  */
-
-  stats.ratings.push(
-    rating
-  )
-
-  /*
-  |--------------------------------------------------------------------------
-  | SAVE
-  |--------------------------------------------------------------------------
-  */
-
-  saveStats(stats)
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| GET AVERAGE RATING
+| AVERAGE RATING
 |--------------------------------------------------------------------------
 */
 
 const getAverageRating =
-() => {
+async () => {
 
-  const stats =
-    loadStats()
+  const users =
+    await User.find({
 
-  /*
-  |--------------------------------------------------------------------------
-  | FIX EMPTY
-  |--------------------------------------------------------------------------
-  */
+      rating: {
 
-  if (
+        $gt: 0
 
-    !stats.ratings ||
+      }
 
-    !Array.isArray(
-      stats.ratings
-    )
-
-  ) {
-
-    stats.ratings = []
-
-    saveStats(stats)
-
-  }
+    })
 
   /*
   |--------------------------------------------------------------------------
@@ -192,33 +65,43 @@ const getAverageRating =
   */
 
   if (
-    stats.ratings.length === 0
+    users.length === 0
   ) {
 
-    return '0.0'
+    return 0
 
   }
 
   /*
   |--------------------------------------------------------------------------
-  | CALCULATE
+  | TOTAL
   |--------------------------------------------------------------------------
   */
 
   const total =
-    stats.ratings.reduce(
+    users.reduce(
 
-      (sum, rating) =>
+      (
+        sum,
+        user
+      ) =>
 
-        sum + rating,
+        sum +
+        user.rating,
 
       0
 
     )
 
+  /*
+  |--------------------------------------------------------------------------
+  | AVERAGE
+  |--------------------------------------------------------------------------
+  */
+
   return (
     total /
-    stats.ratings.length
+    users.length
   ).toFixed(1)
 
 }
@@ -227,11 +110,9 @@ module.exports = {
 
   getTotalUsers,
 
-  getTotalUses,
-
   incrementUses,
 
-  addRating,
+  getTotalUses,
 
   getAverageRating
 

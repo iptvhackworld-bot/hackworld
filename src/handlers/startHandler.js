@@ -1,25 +1,26 @@
 const { Markup } =
 require('telegraf')
 
-const fs =
-require('fs')
-
-const path =
-require('path')
-
 const {
 
   getTotalUsers,
 
   getTotalUses,
 
-  getAverageRating,
-
-  incrementUses
+  getAverageRating
 
 } = require(
   '../services/statsService'
 )
+
+/*
+|--------------------------------------------------------------------------
+| IMAGE
+|--------------------------------------------------------------------------
+*/
+
+const MAIN_IMAGE =
+'https://picsum.photos/800/400'
 
 /*
 |--------------------------------------------------------------------------
@@ -37,45 +38,23 @@ async (ctx) => {
   */
 
   const totalUsers =
-    getTotalUsers()
+    await getTotalUsers()
 
   const totalUses =
     getTotalUses()
 
   const averageRating =
-    getAverageRating()
+    await getAverageRating()
 
   /*
   |--------------------------------------------------------------------------
-  | IMAGE
-  |--------------------------------------------------------------------------
-  */
-
-  const imagePath =
-    path.join(
-
-      __dirname,
-
-      '../assets/banner.jpg'
-
-    )
-
-  /*
-  |--------------------------------------------------------------------------
-  | SEND
+  | MENU
   |--------------------------------------------------------------------------
   */
 
   await ctx.replyWithPhoto(
 
-    {
-
-      source:
-        fs.createReadStream(
-          imagePath
-        )
-
-    },
+    MAIN_IMAGE,
 
     {
 
@@ -88,12 +67,18 @@ async (ctx) => {
 ⚡ INTERFACE PRINCIPALE
 ━━━━━━━━━━━━━━━━━━
 
-👥 Utilisateurs : ${totalUsers}
+👥 Utilisateurs :
+${totalUsers}
 
-📊 Utilisations : ${totalUses}
+🚀 Utilisations :
+${totalUses}
 
-⭐ Note du bot : ${averageRating}/5
+⭐ Note moyenne :
+${averageRating}/5
 
+━━━━━━━━━━━━━━━━━━
+
+👤 Utilisateur connecté
 🛡 Accès sécurisé activé
 🚀 Système opérationnel
 
@@ -103,6 +88,7 @@ async (ctx) => {
       ...Markup.inlineKeyboard([
 
         [
+
           Markup.button.callback(
             '🛠 Tool',
             'cat_tool'
@@ -112,9 +98,11 @@ async (ctx) => {
             '📤 Partage',
             'cat_partage'
           )
+
         ],
 
         [
+
           Markup.button.callback(
             '🎓 Formation',
             'cat_formation'
@@ -124,9 +112,11 @@ async (ctx) => {
             '🎁 Gratuit',
             'cat_gratuit'
           )
+
         ],
 
         [
+
           Markup.button.callback(
             '🤝 Partenaire',
             'cat_partenaire'
@@ -136,44 +126,56 @@ async (ctx) => {
             '📢 Pub',
             'cat_pub'
           )
+
         ],
 
         [
+
           Markup.button.callback(
             '👥 Nos Groupes',
             'cat_nosgroupes'
           )
+
         ],
 
         [
+
           Markup.button.callback(
             '👑 Staff',
             'cat_staff'
           )
+
         ],
 
         [
+
           Markup.button.callback(
             '🎫 Support',
-            'support'
+            'support_panel'
           )
+
         ],
 
         [
+
           Markup.button.callback(
             '🎒 Inventaire',
             'inventory'
           )
+
         ],
 
         [
+
           Markup.button.callback(
             '👤 Profil',
             'profile_menu'
           )
+
         ],
 
         [
+
           Markup.button.callback(
             '🎰 Casino',
             'casino_menu'
@@ -183,32 +185,25 @@ async (ctx) => {
             '🎁 Lootbox',
             'lootbox'
           )
+
         ],
 
         [
+
           Markup.button.callback(
             '🛒 Shop',
             'shop_menu'
           )
+
         ],
 
         [
-          Markup.button.callback(
-            '⭐ Noter 1',
-            'rate_1'
-          ),
 
-          Markup.button.callback(
-            '⭐ Noter 5',
-            'rate_5'
-          )
-        ],
-
-        [
           Markup.button.callback(
             '⚙️ Admin',
             'admin_panel'
           )
+
         ]
 
       ])
@@ -228,45 +223,9 @@ async (ctx) => {
 const startHandler =
 async (ctx) => {
 
-  /*
-  |--------------------------------------------------------------------------
-  | INCREMENT USES
-  |--------------------------------------------------------------------------
-  */
-
-  incrementUses()
-
-  /*
-  |--------------------------------------------------------------------------
-  | IMAGE
-  |--------------------------------------------------------------------------
-  */
-
-  const imagePath =
-    path.join(
-
-      __dirname,
-
-      '../assets/banner.jpg'
-
-    )
-
-  /*
-  |--------------------------------------------------------------------------
-  | SEND
-  |--------------------------------------------------------------------------
-  */
-
   await ctx.replyWithPhoto(
 
-    {
-
-      source:
-        fs.createReadStream(
-          imagePath
-        )
-
-    },
+    MAIN_IMAGE,
 
     {
 
@@ -298,17 +257,21 @@ vous acceptez le règlement.
       ...Markup.inlineKeyboard([
 
         [
+
           Markup.button.callback(
             '✅ ACCEPTER',
             'accept_rules'
           )
+
         ],
 
         [
+
           Markup.button.callback(
             '❌ REFUSER',
             'decline_rules'
           )
+
         ]
 
       ])
