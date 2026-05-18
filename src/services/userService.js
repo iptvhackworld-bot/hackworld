@@ -5,16 +5,30 @@ require(
 
 /*
 |--------------------------------------------------------------------------
-| GET USER
+| CREATE USER
 |--------------------------------------------------------------------------
 */
 
-const getUser =
-async (id) => {
+const createUser =
+async (data) => {
 
-  return await User.findOne({
+  return await User.create({
 
-    id
+    id: data.id,
+
+    username:
+
+      data.username ||
+
+      data.first_name ||
+
+      'Unknown',
+
+    money: 0,
+
+    xp: 0,
+
+    banned: false
 
   })
 
@@ -22,34 +36,16 @@ async (id) => {
 
 /*
 |--------------------------------------------------------------------------
-| CREATE USER
+| GET USER
 |--------------------------------------------------------------------------
 */
 
-const createUser =
-async (ctx) => {
+const getUser =
+async (userId) => {
 
-  const exists =
-    await getUser(
-      ctx.from.id
-    )
+  return await User.findOne({
 
-  if (exists) {
-
-    return exists
-
-  }
-
-  return await User.create({
-
-    id:
-      ctx.from.id,
-
-    username:
-      ctx.from.username || '',
-
-    firstName:
-      ctx.from.first_name || ''
+    id: userId
 
   })
 
@@ -65,6 +61,11 @@ const getUsers =
 async () => {
 
   return await User.find()
+  .sort({
+
+    createdAt: -1
+
+  })
 
 }
 
@@ -75,11 +76,15 @@ async () => {
 */
 
 const banUser =
-async (id) => {
+async (userId) => {
 
-  return await User.updateOne(
+  return await User.findOneAndUpdate(
 
-    { id },
+    {
+
+      id: userId
+
+    },
 
     {
 
@@ -98,11 +103,15 @@ async (id) => {
 */
 
 const unbanUser =
-async (id) => {
+async (userId) => {
 
-  return await User.updateOne(
+  return await User.findOneAndUpdate(
 
-    { id },
+    {
+
+      id: userId
+
+    },
 
     {
 
@@ -114,16 +123,115 @@ async (id) => {
 
 }
 
+/*
+|--------------------------------------------------------------------------
+| RESET MONEY
+|--------------------------------------------------------------------------
+*/
+
+const resetMoney =
+async (userId) => {
+
+  return await User.findOneAndUpdate(
+
+    {
+
+      id: userId
+
+    },
+
+    {
+
+      money: 0
+
+    }
+
+  )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| RESET XP
+|--------------------------------------------------------------------------
+*/
+
+const resetXP =
+async (userId) => {
+
+  return await User.findOneAndUpdate(
+
+    {
+
+      id: userId
+
+    },
+
+    {
+
+      xp: 0
+
+    }
+
+  )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| SEARCH USER
+|--------------------------------------------------------------------------
+*/
+
+const searchUser =
+async (query) => {
+
+  return await User.find({
+
+    $or: [
+
+      {
+
+        username: {
+
+          $regex: query,
+
+          $options: 'i'
+
+        }
+
+      },
+
+      {
+
+        id:
+
+          Number(query) || 0
+
+      }
+
+    ]
+
+  })
+
+}
+
 module.exports = {
 
-  getUser,
-
   createUser,
+
+  getUser,
 
   getUsers,
 
   banUser,
 
-  unbanUser
+  unbanUser,
+
+  resetMoney,
+
+  resetXP,
+
+  searchUser
 
 }

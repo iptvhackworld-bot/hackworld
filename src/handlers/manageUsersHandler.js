@@ -2,14 +2,25 @@ const {
 
   getUsers,
 
-  banUser: banUserService,
+  getUser,
 
-  unbanUser: unbanUserService,
+  banUser,
 
-  getUser
+  unbanUser,
+
+  resetMoney,
+
+  resetXP,
+
+  searchUser
 
 } = require(
   '../services/userService'
+)
+
+const Inventory =
+require(
+  '../models/Inventory'
 )
 
 const { Markup } =
@@ -53,23 +64,26 @@ async (ctx) => {
 
   let message =
 `
-👥 UTILISATEURS
+👥 USERS PANEL
 
 ━━━━━━━━━━━━━━━━━━
 
 `
 
-  users
-  .slice(0, 20)
+  users.slice(0, 20)
   .forEach(
 
     (user) => {
 
       message +=
 `
+👤 ${user.username}
+
 🆔 ${user.id}
 
-👤 ${user.username}
+💰 ${user.money}
+
+⭐ ${user.xp}
 
 🚫 ${
   user.banned
@@ -85,50 +99,122 @@ async (ctx) => {
 
   /*
   |--------------------------------------------------------------------------
-  | SEND
+  | BUTTONS
   |--------------------------------------------------------------------------
   */
 
   await ctx.reply(
-    message
+
+    message,
+
+    Markup.inlineKeyboard([
+
+      [
+
+        Markup.button.callback(
+          '🔍 Rechercher',
+          'search_user'
+        )
+
+      ]
+
+    ])
+
   )
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| USER PANEL
+| SEARCH USER PANEL
 |--------------------------------------------------------------------------
 */
 
-const openUserPanel =
+const openSearchUser =
 async (ctx) => {
 
-  const userId =
-    Number(
-      ctx.match[1]
-    )
+  if (!ctx.session) {
 
-  const user =
-    await getUser(
-      userId
+    ctx.session = {}
+
+  }
+
+  ctx.session.step =
+    'search_user'
+
+  await ctx.reply(
+`
+🔍 RECHERCHE USER
+
+━━━━━━━━━━━━━━━━━━
+
+📝 Envoyez :
+
+• ID
+• Username
+`
+  )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| HANDLE SEARCH
+|--------------------------------------------------------------------------
+*/
+
+const handleSearchUser =
+async (ctx) => {
+
+  if (
+
+    ctx.session.step
+    !==
+    'search_user'
+
+  ) {
+
+    return
+
+  }
+
+  ctx.session.step =
+    null
+
+  const query =
+    ctx.message.text
+
+  const users =
+    await searchUser(
+      query
     )
 
   /*
   |--------------------------------------------------------------------------
-  | NOT FOUND
+  | EMPTY
   |--------------------------------------------------------------------------
   */
 
-  if (!user) {
+  if (
+    users.length === 0
+  ) {
 
     return ctx.reply(
 `
-❌ Utilisateur introuvable.
+❌ Aucun utilisateur trouvé.
 `
     )
 
   }
+
+  /*
+  |--------------------------------------------------------------------------
+  | USER
+  |--------------------------------------------------------------------------
+  */
+
+  const user =
+    users[0]
 
   /*
   |--------------------------------------------------------------------------
@@ -137,14 +223,17 @@ async (ctx) => {
   */
 
   await ctx.reply(
+
 `
-👤 USER PANEL
+👤 USER PROFILE
 
 ━━━━━━━━━━━━━━━━━━
 
-🆔 ${user.id}
+👤 Username :
+${user.username}
 
-👤 ${user.username}
+🆔 ID :
+${user.id}
 
 💰 Money :
 ${user.money}
@@ -168,12 +257,12 @@ ${
 
         Markup.button.callback(
           '🚫 Ban',
-          'ban_user'
+          `ban_${user.id}`
         ),
 
         Markup.button.callback(
           '✅ Unban',
-          'unban_user'
+          `unban_${user.id}`
         )
 
       ],
@@ -182,12 +271,25 @@ ${
 
         Markup.button.callback(
           '💰 Reset Money',
-          'reset_money'
-        ),
+          `resetmoney_${user.id}`
+        )
+
+      ],
+
+      [
 
         Markup.button.callback(
           '⭐ Reset XP',
-          'reset_xp'
+          `resetxp_${user.id}`
+        )
+
+      ],
+
+      [
+
+        Markup.button.callback(
+          '🎒 Reset Inventory',
+          `resetinv_${user.id}`
         )
 
       ]
@@ -200,85 +302,38 @@ ${
 
 /*
 |--------------------------------------------------------------------------
-| BAN USER
+| RESET INVENTORY
 |--------------------------------------------------------------------------
 */
 
-const banUser =
-async (ctx) => {
+const resetInventory =
+async (
 
-  const userId =
-    Number(
-      ctx.match[1]
-    )
+  ctx,
 
-  await banUserService(
-    userId
+  userId
+
+) => {
+
+  await Inventory.findOneAndUpdate(
+
+    {
+
+      userId
+
+    },
+
+    {
+
+      items: []
+
+    }
+
   )
 
   await ctx.reply(
 `
-🚫 Utilisateur banni.
-`
-  )
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| UNBAN USER
-|--------------------------------------------------------------------------
-*/
-
-const unbanUser =
-async (ctx) => {
-
-  const userId =
-    Number(
-      ctx.match[1]
-    )
-
-  await unbanUserService(
-    userId
-  )
-
-  await ctx.reply(
-`
-✅ Utilisateur débanni.
-`
-  )
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| RESET MONEY
-|--------------------------------------------------------------------------
-*/
-
-const resetMoney =
-async (ctx) => {
-
-  await ctx.reply(
-`
-💰 Reset money bientôt disponible.
-`
-  )
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| RESET XP
-|--------------------------------------------------------------------------
-*/
-
-const resetXP =
-async (ctx) => {
-
-  await ctx.reply(
-`
-⭐ Reset XP bientôt disponible.
+🎒 Inventaire reset.
 `
   )
 
@@ -288,7 +343,9 @@ module.exports = {
 
   openUsersPanel,
 
-  openUserPanel,
+  openSearchUser,
+
+  handleSearchUser,
 
   banUser,
 
@@ -296,6 +353,8 @@ module.exports = {
 
   resetMoney,
 
-  resetXP
+  resetXP,
+
+  resetInventory
 
 }

@@ -81,6 +81,14 @@ module.exports = (bot) => {
   } = require(
     '../handlers/staffManagerHandler'
   )
+  
+  const {
+
+  handleSearchUser
+
+} = require(
+  '../handlers/manageUsersHandler'
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -154,6 +162,14 @@ module.exports = (bot) => {
         ctx.session = {}
 
       }
+	  
+	  bot.on(
+
+  'text',
+
+  handleSearchUser
+
+)
 
       /*
       |--------------------------------------------------------------------------

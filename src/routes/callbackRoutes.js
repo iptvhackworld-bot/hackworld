@@ -129,6 +129,20 @@ const {
   '../handlers/securityHandler'
 )
 
+const {
+
+  openUsersPanel,
+
+  openSearchUser,
+
+  handleSearchUser,
+
+  resetInventory
+
+} = require(
+  '../handlers/manageUsersHandler'
+)
+
   /*
   |--------------------------------------------------------------------------
   | USER PANEL
@@ -174,6 +188,22 @@ const {
     resetXP
 
   )
+  
+  bot.action(
+
+  'admin_users',
+
+  openUsersPanel
+
+)
+
+bot.action(
+
+  'search_user',
+
+  openSearchUser
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -296,6 +326,121 @@ bot.action(
     openUsersPanel
 
   )
+  
+  bot.action(
+
+  /^ban_(.+)$/,
+
+  async (ctx) => {
+
+    const id =
+      Number(
+        ctx.match[1]
+      )
+
+    await banUser(id)
+
+    await ctx.reply(
+`
+🚫 User banni.
+`
+    )
+
+  }
+
+)
+
+bot.action(
+
+  /^unban_(.+)$/,
+
+  async (ctx) => {
+
+    const id =
+      Number(
+        ctx.match[1]
+      )
+
+    await unbanUser(id)
+
+    await ctx.reply(
+`
+✅ User débanni.
+`
+    )
+
+  }
+
+)
+
+bot.action(
+
+  /^resetmoney_(.+)$/,
+
+  async (ctx) => {
+
+    const id =
+      Number(
+        ctx.match[1]
+      )
+
+    await resetMoney(id)
+
+    await ctx.reply(
+`
+💰 Money reset.
+`
+    )
+
+  }
+
+)
+
+bot.action(
+
+  /^resetxp_(.+)$/,
+
+  async (ctx) => {
+
+    const id =
+      Number(
+        ctx.match[1]
+      )
+
+    await resetXP(id)
+
+    await ctx.reply(
+`
+⭐ XP reset.
+`
+    )
+
+  }
+
+)
+
+bot.action(
+
+  /^resetinv_(.+)$/,
+
+  async (ctx) => {
+
+    const id =
+      Number(
+        ctx.match[1]
+      )
+
+    await resetInventory(
+
+      ctx,
+
+      id
+
+    )
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
