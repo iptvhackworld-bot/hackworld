@@ -86,24 +86,6 @@ module.exports = (bot) => {
   } = require(
     '../handlers/broadcastHandler'
   )
-
-  const {
-
-    openUsersPanel,
-
-    openUserPanel,
-
-    banUser,
-
-    unbanUser,
-
-    resetMoney,
-
-    resetXP
-
-  } = require(
-    '../handlers/manageUsersHandler'
-  )
   
   const {
 
@@ -133,9 +115,19 @@ const {
 
   openUsersPanel,
 
+  openUserPanel,
+
   openSearchUser,
 
   handleSearchUser,
+
+  banUser,
+
+  unbanUser,
+
+  resetMoney,
+
+  resetXP,
 
   resetInventory
 
@@ -188,14 +180,6 @@ const {
     resetXP
 
   )
-  
-  bot.action(
-
-  'admin_users',
-
-  openUsersPanel
-
-)
 
 bot.action(
 
@@ -204,6 +188,8 @@ bot.action(
   openSearchUser
 
 )
+
+
 
   /*
   |--------------------------------------------------------------------------
@@ -456,13 +442,19 @@ bot.action(
 
   )
 
+  
   bot.on(
 
-    'text',
+  'text',
 
-    handleBroadcastText
+  handleSearchUser
 
   )
+  
+  bot.on(
+  'text',
+  handleBroadcastText
+)
 
   /*
   |--------------------------------------------------------------------------
