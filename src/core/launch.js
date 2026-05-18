@@ -3,11 +3,21 @@ require(
   '../utils/logger'
 )
 
-const launchBot = (
+let launched = false
+
+const launchBot = async (
   bot
 ) => {
 
-  bot.launch()
+  if (launched) {
+
+    return
+
+  }
+
+  launched = true
+
+  await bot.launch()
 
   logger(
     '🚀 Bot lancé'
@@ -16,4 +26,4 @@ const launchBot = (
 }
 
 module.exports =
-  launchBot
+launchBot
