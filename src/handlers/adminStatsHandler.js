@@ -1,12 +1,6 @@
 const {
 
-  loadUsers
-
-} = require(
-  '../data/userData'
-)
-
-const {
+  getTotalUsers,
 
   getTotalUses,
 
@@ -25,17 +19,26 @@ const {
 const showStats =
 async (ctx) => {
 
-  const users =
-    loadUsers()
+  /*
+  |--------------------------------------------------------------------------
+  | STATS
+  |--------------------------------------------------------------------------
+  */
 
   const totalUsers =
-    users.length
+    await getTotalUsers()
 
   const totalUses =
     getTotalUses()
 
-  const rating =
-    getAverageRating()
+  const averageRating =
+    await getAverageRating()
+
+  /*
+  |--------------------------------------------------------------------------
+  | MESSAGE
+  |--------------------------------------------------------------------------
+  */
 
   await ctx.reply(
 `
@@ -50,7 +53,7 @@ ${totalUsers}
 ${totalUses}
 
 ⭐ Note moyenne :
-${rating}/5
+${averageRating}/5
 
 ━━━━━━━━━━━━━━━━━━
 `
