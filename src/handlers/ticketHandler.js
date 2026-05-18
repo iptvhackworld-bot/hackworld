@@ -1,30 +1,21 @@
-const env =
-require(
-  '../config/env'
-)
-
 const {
 
-  logError
+  createTicket,
+
+  getTickets
 
 } = require(
-  '../services/loggerService'
+  '../services/ticketService'
 )
 
 /*
 |--------------------------------------------------------------------------
-| OPEN SUPPORT
+| OPEN TICKET
 |--------------------------------------------------------------------------
 */
 
-const openSupport =
+const openTicketPanel =
 async (ctx) => {
-
-  /*
-  |--------------------------------------------------------------------------
-  | SESSION
-  |--------------------------------------------------------------------------
-  */
 
   if (!ctx.session) {
 
@@ -32,24 +23,12 @@ async (ctx) => {
 
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | STEP
-  |--------------------------------------------------------------------------
-  */
-
   ctx.session.step =
-    'support_ticket'
-
-  /*
-  |--------------------------------------------------------------------------
-  | MESSAGE
-  |--------------------------------------------------------------------------
-  */
+    'ticket_waiting'
 
   await ctx.reply(
 `
-🎫 SUPPORT PANEL
+🎫 SUPPORT
 
 ━━━━━━━━━━━━━━━━━━
 
@@ -68,16 +47,11 @@ async (ctx) => {
 const handleTicket =
 async (ctx) => {
 
-  /*
-  |--------------------------------------------------------------------------
-  | CHECK STEP
-  |--------------------------------------------------------------------------
-  */
-
   if (
 
-    ctx.session.step !==
-    'support_ticket'
+    ctx.session.step
+    !==
+    'ticket_waiting'
 
   ) {
 
@@ -85,73 +59,101 @@ async (ctx) => {
 
   }
 
-  const text =
-    ctx.message.text
-
-  /*
-  |--------------------------------------------------------------------------
-  | RESET STEP
-  |--------------------------------------------------------------------------
-  */
-
   ctx.session.step =
     null
 
-  /*
-  |--------------------------------------------------------------------------
-  | SEND TO OWNER
-  |--------------------------------------------------------------------------
-  */
+  await createTicket(
 
-  try {
+    ctx.from.id,
 
-    await ctx.telegram.sendMessage(
+    ctx.message.text
 
-      env.ownerId,
-
-`
-🎫 NOUVEAU TICKET
-
-👤 @${ctx.from.username}
-
-🆔 ${ctx.from.id}
-
-📩 Message :
-
-${text}
-`
-
-    )
-
-  }
-
-  catch (error) {
-
-    logError(
-      'Erreur ticket support',
-      error
-    )
-
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | CONFIRMATION
-  |--------------------------------------------------------------------------
-  */
+  )
 
   await ctx.reply(
 `
-✅ Ticket envoyé au support.
+✅ Ticket envoyé.
 `
+  )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| ADMIN TICKETS
+|--------------------------------------------------------------------------
+*/
+
+const showTickets =
+async (ctx) => {
+
+  const tickets =
+    await getTickets()
+
+  /*
+  |--------------------------------------------------------------------------
+  | EMPTY
+  |--------------------------------------------------------------------------
+  */
+
+  if (
+    tickets.length === 0
+  ) {
+
+    return ctx.reply(
+`
+❌ Aucun ticket.
+`
+    )
+
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | MESSAGE
+  |--------------------------------------------------------------------------
+  */
+
+  let message =
+`
+🎫 TICKETS
+
+━━━━━━━━━━━━━━━━━━
+
+`
+
+  tickets.forEach(
+
+    (ticket) => {
+
+      message +=
+`
+🆔 ${ticket._id}
+
+👤 ${ticket.userId}
+
+📩 ${ticket.message}
+
+📌 ${ticket.status}
+
+━━━━━━━━━━━━━━━━━━
+`
+    }
+
+  )
+
+  await ctx.reply(
+    message
   )
 
 }
 
 module.exports = {
 
-  openSupport,
+  openTicketPanel,
 
-  handleTicket
+  handleTicket,
+
+  showTickets
 
 }

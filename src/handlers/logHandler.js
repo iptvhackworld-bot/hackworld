@@ -1,54 +1,10 @@
 const {
 
-  loadLogs,
-
-  saveLogs
+  getLogs
 
 } = require(
-  '../data/logData'
+  '../services/logService'
 )
-
-const formatDate =
-require(
-  '../utils/formatDate'
-)
-
-const errors =
-require(
-  '../messages/errors'
-)
-
-/*
-|--------------------------------------------------------------------------
-| ADD LOG
-|--------------------------------------------------------------------------
-*/
-
-const addLog = (
-  admin,
-  action,
-  details = ''
-) => {
-
-  const logs =
-    loadLogs()
-
-  logs.unshift({
-
-    admin,
-
-    action,
-
-    details,
-
-    createdAt:
-      new Date().toISOString()
-
-  })
-
-  saveLogs(logs)
-
-}
 
 /*
 |--------------------------------------------------------------------------
@@ -59,14 +15,8 @@ const addLog = (
 const showLogs =
 async (ctx) => {
 
-  /*
-  |--------------------------------------------------------------------------
-  | LOAD LOGS
-  |--------------------------------------------------------------------------
-  */
-
   const logs =
-    loadLogs()
+    await getLogs()
 
   /*
   |--------------------------------------------------------------------------
@@ -79,50 +29,43 @@ async (ctx) => {
   ) {
 
     return ctx.reply(
-      errors.noLogs
+`
+❌ Aucun log.
+`
     )
 
   }
 
   /*
   |--------------------------------------------------------------------------
-  | FORMAT
+  | MESSAGE
   |--------------------------------------------------------------------------
   */
 
   let message =
 `
-📜 ADMIN LOGS
+📜 LOGS
 
 ━━━━━━━━━━━━━━━━━━
 
 `
 
-  logs
-    .slice(0, 20)
-    .forEach((log) => {
+  logs.slice(0, 20)
+  .forEach(
+
+    (log) => {
 
       message +=
 `
-👤 ${log.admin}
+📌 ${log.type}
 
-⚡ ${log.action}
+📝 ${log.message}
 
-📌 ${log.details}
-
-🕒 ${formatDate(
-  log.createdAt
-)}
-
+━━━━━━━━━━━━━━━━━━
 `
+    }
 
-    })
-
-  /*
-  |--------------------------------------------------------------------------
-  | SEND
-  |--------------------------------------------------------------------------
-  */
+  )
 
   await ctx.reply(
     message
@@ -131,8 +74,6 @@ async (ctx) => {
 }
 
 module.exports = {
-
-  addLog,
 
   showLogs
 

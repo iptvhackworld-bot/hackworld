@@ -1,168 +1,60 @@
 const {
 
-  getUser,
+  addWin,
+
+  addLoss,
+
+  getCasinoStats
+
+} = require(
+  '../services/casinoService'
+)
+
+const {
 
   addMoney,
 
   removeMoney
 
 } = require(
-  '../services/userService'
-)
-
-const {
-
-  addItem
-
-} = require(
-  './inventoryHandler'
-)
-
-const rewards =
-require(
-  '../config/casinoRewards'
-)
-
-const economy =
-require(
-  '../config/economy'
-)
-
-const randomReward =
-require(
-  '../utils/randomReward'
-)
-
-const formatMoney =
-require(
-  '../utils/formatMoney'
+  '../services/economyService'
 )
 
 /*
 |--------------------------------------------------------------------------
-| OPEN LOOTBOX
+| CASINO PANEL
 |--------------------------------------------------------------------------
 */
 
-const openLootbox =
+const openCasino =
 async (ctx) => {
 
-  const user =
-    getUser(
+  const stats =
+    await getCasinoStats(
+
       ctx.from.id
-    )
-
-  /*
-  |--------------------------------------------------------------------------
-  | USER
-  |--------------------------------------------------------------------------
-  */
-
-  if (!user) {
-
-    return ctx.reply(
-      '❌ Utilisateur introuvable'
-    )
-
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | REMOVE MONEY
-  |--------------------------------------------------------------------------
-  */
-
-  const removed =
-    removeMoney(
-
-      ctx.from.id,
-
-      economy.LOOTBOX_PRICE
 
     )
 
-  if (!removed) {
-
-    return ctx.reply(
+  await ctx.reply(
 `
-❌ Coins insuffisants.
-
-💰 Prix :
-${economy.LOOTBOX_PRICE} coins
-`
-    )
-
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | RANDOM REWARD
-  |--------------------------------------------------------------------------
-  */
-
-  const reward =
-    randomReward(
-      rewards
-    )
-
-  /*
-  |--------------------------------------------------------------------------
-  | MONEY
-  |--------------------------------------------------------------------------
-  */
-
-  if (
-    reward.type ===
-    'money'
-  ) {
-
-    addMoney(
-
-      ctx.from.id,
-
-      reward.value
-
-    )
-
-    return ctx.reply(
-`
-🎁 LOOTBOX OUVERTE
+🎰 CASINO
 
 ━━━━━━━━━━━━━━━━━━
 
-💰 Récompense :
+🏆 Victoires :
+${stats.wins}
 
-+${formatMoney(
-  reward.value
-)} coins
-`
-    )
+💀 Défaites :
+${stats.losses}
 
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | ITEM
-  |--------------------------------------------------------------------------
-  */
-
-  addItem(
-
-    ctx.from.id,
-
-    reward.value
-
-  )
-
-  return ctx.reply(
-`
-🎁 LOOTBOX OUVERTE
+🎲 Total joué :
+${stats.totalBet}
 
 ━━━━━━━━━━━━━━━━━━
 
-💎 Objet obtenu :
-
-${reward.value}
+🎰 Commande :
+/bet montant
 `
   )
 
@@ -170,59 +62,54 @@ ${reward.value}
 
 /*
 |--------------------------------------------------------------------------
-| ROULETTE
+| BET
 |--------------------------------------------------------------------------
 */
 
-const playRoulette =
-async (ctx) => {
+const playCasino =
+async (
 
-  const user =
-    getUser(
-      ctx.from.id
-    )
+  ctx,
 
-  /*
-  |--------------------------------------------------------------------------
-  | USER
-  |--------------------------------------------------------------------------
-  */
+  amount
 
-  if (!user) {
+) => {
 
-    return ctx.reply(
-      '❌ Utilisateur introuvable'
-    )
-
-  }
+  amount =
+    Number(amount)
 
   /*
   |--------------------------------------------------------------------------
-  | REMOVE BET
+  | INVALID
   |--------------------------------------------------------------------------
   */
 
-  const removed =
-    removeMoney(
+  if (
 
-      ctx.from.id,
+    isNaN(amount)
 
-      economy.ROULETTE_BET
+    ||
 
-    )
+    amount <= 0
 
-  if (!removed) {
+  ) {
 
     return ctx.reply(
 `
-❌ Coins insuffisants.
-
-🎰 Mise :
-${economy.ROULETTE_BET} coins
+❌ Montant invalide.
 `
     )
 
   }
+
+  /*
+  |--------------------------------------------------------------------------
+  | RANDOM
+  |--------------------------------------------------------------------------
+  */
+
+  const win =
+    Math.random() > 0.5
 
   /*
   |--------------------------------------------------------------------------
@@ -230,42 +117,29 @@ ${economy.ROULETTE_BET} coins
   |--------------------------------------------------------------------------
   */
 
-  const win =
-    Math.random() < 0.45
-
-  /*
-  |--------------------------------------------------------------------------
-  | WIN MONEY
-  |--------------------------------------------------------------------------
-  */
-
   if (win) {
 
-    const reward =
-      Math.floor(
-        Math.random() *
-        1500
-      ) + 500
-
-    addMoney(
+    await addMoney(
 
       ctx.from.id,
 
-      reward
+      amount
+
+    )
+
+    await addWin(
+
+      ctx.from.id,
+
+      amount
 
     )
 
     return ctx.reply(
 `
-🎰 ROULETTE
+🎉 GAGNÉ
 
-━━━━━━━━━━━━━━━━━━
-
-✅ GAGNÉ
-
-💰 +${formatMoney(
-  reward
-)} coins
+💰 +${amount}
 `
     )
 
@@ -273,19 +147,31 @@ ${economy.ROULETTE_BET} coins
 
   /*
   |--------------------------------------------------------------------------
-  | LOSE
+  | LOSS
   |--------------------------------------------------------------------------
   */
 
+  await removeMoney(
+
+    ctx.from.id,
+
+    amount
+
+  )
+
+  await addLoss(
+
+    ctx.from.id,
+
+    amount
+
+  )
+
   return ctx.reply(
 `
-🎰 ROULETTE
+💀 PERDU
 
-━━━━━━━━━━━━━━━━━━
-
-❌ PERDU
-
-💸 -${economy.ROULETTE_BET} coins
+💸 -${amount}
 `
   )
 
@@ -293,8 +179,8 @@ ${economy.ROULETTE_BET} coins
 
 module.exports = {
 
-  openLootbox,
+  openCasino,
 
-  playRoulette
+  playCasino
 
 }

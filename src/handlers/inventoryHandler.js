@@ -1,30 +1,32 @@
 const {
 
-  getInventory,
-
-  addItem
+  getInventory
 
 } = require(
   '../services/inventoryService'
 )
 
-const ui =
-require(
-  '../messages/ui'
-)
-
 /*
 |--------------------------------------------------------------------------
-| SHOW INVENTORY
+| OPEN INVENTORY
 |--------------------------------------------------------------------------
 */
 
-const showInventory =
+const openInventory =
 async (ctx) => {
 
-  const user =
-    getInventory(
-      ctx.from.id
+  const userId =
+    ctx.from.id
+
+  /*
+  |--------------------------------------------------------------------------
+  | GET
+  |--------------------------------------------------------------------------
+  */
+
+  const inventory =
+    await getInventory(
+      userId
     )
 
   /*
@@ -34,12 +36,16 @@ async (ctx) => {
   */
 
   if (
-    user.items.length === 0
+    inventory.items.length === 0
   ) {
 
     return ctx.reply(
 `
-🎒 INVENTAIRE VIDE
+🎒 INVENTAIRE
+
+━━━━━━━━━━━━━━━━━━
+
+❌ Inventaire vide.
 `
     )
 
@@ -47,38 +53,43 @@ async (ctx) => {
 
   /*
   |--------------------------------------------------------------------------
-  | FORMAT
+  | MESSAGE
   |--------------------------------------------------------------------------
   */
 
-  let items = ''
+  let message =
+`
+🎒 INVENTAIRE
 
-  user.items.forEach((item) => {
+━━━━━━━━━━━━━━━━━━
 
-    items += `• ${item}\n`
+`
 
-  })
+  inventory.items.forEach(
 
-  /*
-  |--------------------------------------------------------------------------
-  | SEND
-  |--------------------------------------------------------------------------
-  */
+    (item) => {
+
+      message +=
+`
+📦 ${item.name}
+
+🔢 Quantité :
+${item.quantity}
+
+━━━━━━━━━━━━━━━━━━
+`
+    }
+
+  )
 
   await ctx.reply(
-`
-${ui.inventoryTitle}
-
-${items}
-`
+    message
   )
 
 }
 
 module.exports = {
 
-  addItem,
-
-  showInventory
+  openInventory
 
 }
