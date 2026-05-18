@@ -1,24 +1,7 @@
-const {
-
-  loadContent,
-
-  saveContent
-
-} = require(
-  '../data/contentData'
+const Content =
+require(
+  '../models/Content'
 )
-
-/*
-|--------------------------------------------------------------------------
-| GET CONTENT
-|--------------------------------------------------------------------------
-*/
-
-const getContent = () => {
-
-  return loadContent()
-
-}
 
 /*
 |--------------------------------------------------------------------------
@@ -26,18 +9,30 @@ const getContent = () => {
 |--------------------------------------------------------------------------
 */
 
-const addContent = (
-  content
-) => {
+const addContent =
+async (data) => {
 
-  const contents =
-    loadContent()
+  return await Content.create(
+    data
+  )
 
-  contents.unshift(content)
+}
 
-  saveContent(contents)
+/*
+|--------------------------------------------------------------------------
+| GET CONTENT
+|--------------------------------------------------------------------------
+*/
 
-  return content
+const getContent =
+async () => {
+
+  return await Content.find()
+  .sort({
+
+    createdAt: -1
+
+  })
 
 }
 
@@ -47,41 +42,20 @@ const addContent = (
 |--------------------------------------------------------------------------
 */
 
-const deleteContent = (
-  index
-) => {
+const deleteContent =
+async (id) => {
 
-  const contents =
-    loadContent()
-
-  if (
-
-    index < 0 ||
-
-    index >= contents.length
-
-  ) {
-
-    return false
-
-  }
-
-  contents.splice(
-    index,
-    1
+  return await Content.findByIdAndDelete(
+    id
   )
-
-  saveContent(contents)
-
-  return true
 
 }
 
 module.exports = {
 
-  getContent,
-
   addContent,
+
+  getContent,
 
   deleteContent
 
