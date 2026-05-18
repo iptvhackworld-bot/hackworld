@@ -6,10 +6,7 @@ module.exports = {
   ownerId:
     process.env.OWNER_ID,
 
-  logChannelId:
-    process.env.LOG_CHANNEL_ID
-	
   mongoUri:
-    process.env.MONGO_URI,
+    process.env.MONGO_URI
 
 }
