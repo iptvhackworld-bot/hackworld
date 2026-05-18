@@ -1,11 +1,6 @@
-const {
-
-  loadUsers,
-
-  saveUsers
-
-} = require(
-  '../data/userData'
+const User =
+require(
+  '../models/User'
 )
 
 /*
@@ -14,16 +9,14 @@ const {
 |--------------------------------------------------------------------------
 */
 
-const getUser = (
-  userId
-) => {
+const getUser =
+async (id) => {
 
-  const users =
-    loadUsers()
+  return await User.findOne({
 
-  return users.find(
-    u => u.id === userId
-  )
+    id
+
+  })
 
 }
 
@@ -33,227 +26,45 @@ const getUser = (
 |--------------------------------------------------------------------------
 */
 
-const createUser = (
-  telegramUser
-) => {
+const createUser =
+async (ctx) => {
 
-  const users =
-    loadUsers()
-
-  let user =
-    users.find(
-      u => u.id === telegramUser.id
+  const exists =
+    await getUser(
+      ctx.from.id
     )
 
-  /*
-  |--------------------------------------------------------------------------
-  | EXISTS
-  |--------------------------------------------------------------------------
-  */
+  if (exists) {
 
-  if (user) {
-
-    return user
+    return exists
 
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | CREATE
-  |--------------------------------------------------------------------------
-  */
+  return await User.create({
 
-  user = {
-
-    id: telegramUser.id,
+    id:
+      ctx.from.id,
 
     username:
-      telegramUser.username || '',
+      ctx.from.username || '',
 
     firstName:
-      telegramUser.first_name || '',
+      ctx.from.first_name || ''
 
-    money: 0,
-
-    xp: 0,
-
-    level: 1,
-
-    banned: false,
-
-    createdAt:
-      new Date().toISOString()
-
-  }
-
-  users.push(user)
-
-  saveUsers(users)
-
-  return user
+  })
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| UPDATE USER
+| GET USERS
 |--------------------------------------------------------------------------
 */
 
-const updateUser = (
-  userId,
-  updates
-) => {
+const getUsers =
+async () => {
 
-  const users =
-    loadUsers()
-
-  const user =
-    users.find(
-      u => u.id === userId
-    )
-
-  if (!user) {
-
-    return false
-
-  }
-
-  Object.assign(
-    user,
-    updates
-  )
-
-  saveUsers(users)
-
-  return user
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| ADD MONEY
-|--------------------------------------------------------------------------
-*/
-
-const addMoney = (
-  userId,
-  amount
-) => {
-
-  const user =
-    getUser(userId)
-
-  if (!user) {
-
-    return false
-
-  }
-
-  return updateUser(
-
-    userId,
-
-    {
-      money:
-        user.money + amount
-    }
-
-  )
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| REMOVE MONEY
-|--------------------------------------------------------------------------
-*/
-
-const removeMoney = (
-  userId,
-  amount
-) => {
-
-  const user =
-    getUser(userId)
-
-  if (!user) {
-
-    return false
-
-  }
-
-  if (
-    user.money < amount
-  ) {
-
-    return false
-
-  }
-
-  return updateUser(
-
-    userId,
-
-    {
-      money:
-        user.money - amount
-    }
-
-  )
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| ADD XP
-|--------------------------------------------------------------------------
-*/
-
-const addXP = (
-  userId,
-  amount
-) => {
-
-  const user =
-    getUser(userId)
-
-  if (!user) {
-
-    return false
-
-  }
-
-  let xp =
-    user.xp + amount
-
-  let level =
-    user.level
-
-  /*
-  |--------------------------------------------------------------------------
-  | LEVEL UP
-  |--------------------------------------------------------------------------
-  */
-
-  if (
-    xp >= level * 100
-  ) {
-
-    level += 1
-
-  }
-
-  return updateUser(
-
-    userId,
-
-    {
-      xp,
-      level
-    }
-
-  )
+  return await User.find()
 
 }
 
@@ -263,16 +74,17 @@ const addXP = (
 |--------------------------------------------------------------------------
 */
 
-const banUser = (
-  userId
-) => {
+const banUser =
+async (id) => {
 
-  return updateUser(
+  return await User.updateOne(
 
-    userId,
+    { id },
 
     {
+
       banned: true
+
     }
 
   )
@@ -285,16 +97,17 @@ const banUser = (
 |--------------------------------------------------------------------------
 */
 
-const unbanUser = (
-  userId
-) => {
+const unbanUser =
+async (id) => {
 
-  return updateUser(
+  return await User.updateOne(
 
-    userId,
+    { id },
 
     {
+
       banned: false
+
     }
 
   )
@@ -307,13 +120,7 @@ module.exports = {
 
   createUser,
 
-  updateUser,
-
-  addMoney,
-
-  removeMoney,
-
-  addXP,
+  getUsers,
 
   banUser,
 
