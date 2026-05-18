@@ -1,4 +1,5 @@
-const env = require(
+const env =
+require(
   '../config/env'
 )
 
@@ -22,16 +23,24 @@ async (ctx) => {
 
   if (
 
-    ctx.from.id.toString() !==
+    ctx.from.id.toString()
+
+    !==
+
     env.ownerId.toString()
 
   ) {
 
     return ctx.answerCbQuery(
+
       '❌ Accès refusé',
+
       {
+
         show_alert: true
+
       }
+
     )
 
   }
@@ -43,14 +52,17 @@ async (ctx) => {
   */
 
   await ctx.reply(
+
 `
-👑 ADMIN PANEL
+👑 HACKWORLD ADMIN
 
 ━━━━━━━━━━━━━━━━━━
 
-⚙️ Gestion complète du bot
-📊 Statistiques système
-🛡 Contrôle administrateur
+⚡ Administration avancée
+
+🛡 Contrôle système
+
+📊 Monitoring temps réel
 
 ━━━━━━━━━━━━━━━━━━
 `,
@@ -60,8 +72,13 @@ async (ctx) => {
       [
 
         Markup.button.callback(
-          '📦 Ajouter contenu',
-          'admin_add_content'
+          '📦 Content',
+          'admin_content'
+        ),
+
+        Markup.button.callback(
+          '👥 Users',
+          'admin_users'
         )
 
       ],
@@ -69,8 +86,69 @@ async (ctx) => {
       [
 
         Markup.button.callback(
-          '📝 Modifier contenu',
-          'admin_edit_content'
+          '🎫 Tickets',
+          'admin_tickets'
+        ),
+
+        Markup.button.callback(
+          '💰 Economy',
+          'admin_economy'
+        )
+
+      ],
+
+      [
+
+        Markup.button.callback(
+          '🛒 Shop',
+          'admin_shop'
+        ),
+
+        Markup.button.callback(
+          '🎰 Casino',
+          'admin_casino'
+        )
+
+      ],
+
+      [
+
+        Markup.button.callback(
+          '🎁 Lootbox',
+          'admin_lootbox'
+        ),
+
+        Markup.button.callback(
+          '👮 Staff',
+          'admin_staff'
+        )
+
+      ],
+
+      [
+
+        Markup.button.callback(
+          '📊 Dashboard',
+          'admin_dashboard'
+        ),
+
+        Markup.button.callback(
+          '📜 Logs',
+          'admin_logs'
+        )
+
+      ],
+
+      [
+
+        Markup.button.callback(
+          '🔒 Security',
+          'admin_security'
+        ),
+
+        Markup.button.callback(
+          '⚙️ Settings',
+          'admin_settings'
         )
 
       ],
@@ -80,40 +158,6 @@ async (ctx) => {
         Markup.button.callback(
           '📢 Broadcast',
           'admin_broadcast'
-        )
-
-      ],
-
-      [
-
-        Markup.button.callback(
-          '📊 Stats',
-          'admin_stats'
-        )
-
-      ],
-
-      [
-
-        Markup.button.callback(
-          '📜 Logs',
-          'admin_logs'
-        )
-
-      ],
-	  
-	  [
-        Markup.button.callback(
-          '👥 Utilisateurs',
-          'admin_users'
-        )
-      ],
-
-      [
-
-        Markup.button.callback(
-          '🔒 Sécurité',
-          'admin_security'
         )
 
       ]

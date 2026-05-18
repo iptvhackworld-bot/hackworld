@@ -59,9 +59,7 @@ module.exports = (bot) => {
 
   const {
 
-    openAddContent,
-
-    handleAddContent
+    openAddContent
 
   } = require(
     '../handlers/adminContentHandler'
@@ -77,139 +75,93 @@ module.exports = (bot) => {
 
   const {
 
-    startBroadcast,
-
-    handleBroadcastText,
-
-    handleBroadcastMedia
+    startBroadcast
 
   } = require(
     '../handlers/broadcastHandler'
   )
-  
+
   const {
 
-  showStats
+    showStats
 
-} = require(
-  '../handlers/adminStatsHandler'
-)
-
-const {
-
-  showLogs
-
-} = require(
-  '../handlers/adminLogsHandler'
-)
-
-const {
-
-  openSecurityPanel
-
-} = require(
-  '../handlers/securityHandler'
-)
-
-const {
-
-  openUsersPanel,
-
-
-  openSearchUser,
-
-  handleSearchUser,
-
-  banUser,
-
-  unbanUser,
-
-  resetMoney,
-
-  resetXP,
-
-  resetInventory
-
-} = require(
-  '../handlers/manageUsersHandler'
-)
-
-  /*
-  |--------------------------------------------------------------------------
-  | USER PANEL
-  |--------------------------------------------------------------------------
-  */
-
-
-  bot.action(
-
-    'ban_user',
-
-    banUser
-
+  } = require(
+    '../handlers/adminStatsHandler'
   )
 
-  bot.action(
+  const {
 
-    'unban_user',
+    showLogs
 
-    unbanUser
-
+  } = require(
+    '../handlers/adminLogsHandler'
   )
 
-  bot.action(
+  const {
 
-    'reset_money',
+    openSecurityPanel
 
-    resetMoney
-
+  } = require(
+    '../handlers/securityHandler'
   )
 
-  bot.action(
+  const {
 
-    'reset_xp',
+    openUsersPanel,
+
+    openUserProfile,
+
+    openSearchUser,
+
+    handleSearchUser,
+
+    resetInventory
+
+  } = require(
+    '../handlers/manageUsersHandler'
+  )
+
+  const {
+
+    banUser,
+
+    unbanUser,
+
+    resetMoney,
 
     resetXP
 
+  } = require(
+    '../services/userService'
   )
 
-bot.action(
+  const {
 
-  'search_user',
+    openContentMenu
 
-  openSearchUser
+  } = require(
+    '../handlers/adminContentMenuHandler'
+  )
 
+  const {
+
+    openDashboard
+
+  } = require(
+    '../handlers/dashboardHandler'
+  )
+  
+  const {
+
+  showTopUsersAnalytics,
+
+  showRichestUsers,
+
+  showTopGamblers
+
+} = require(
+  '../handlers/userAnalyticsHandler'
 )
-
-
-
-  /*
-  |--------------------------------------------------------------------------
-  | RATING
-  |--------------------------------------------------------------------------
-  */
-
-  bot.action(
-
-    'rate_1',
-
-    (ctx) => rateBot(
-      ctx,
-      1
-    )
-
-  )
-
-  bot.action(
-
-    'rate_5',
-
-    (ctx) => rateBot(
-      ctx,
-      5
-    )
-
-  )
 
   /*
   |--------------------------------------------------------------------------
@@ -221,79 +173,87 @@ bot.action(
 
     'admin_panel',
 
-    openAdminPanel
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openAdminPanel(ctx)
+
+    }
 
   )
 
   /*
   |--------------------------------------------------------------------------
-  | ADMIN ADD CONTENT
+  | CONTENT PANEL
   |--------------------------------------------------------------------------
   */
+
+  bot.action(
+
+    'admin_content',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openContentMenu(ctx)
+
+    }
+
+  )
 
   bot.action(
 
     'admin_add_content',
 
-    openAddContent
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openAddContent(ctx)
+
+    }
 
   )
-
-  /*
-  |--------------------------------------------------------------------------
-  | ADMIN EDIT CONTENT
-  |--------------------------------------------------------------------------
-  */
 
   bot.action(
 
     'admin_edit_content',
 
-    showContentList
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await showContentList(ctx)
+
+    }
 
   )
-  
-  bot.action(
-
-  'admin_stats',
-
-  showStats
-
-)
-
-bot.action(
-
-  'admin_logs',
-
-  showLogs
-
-)
-
-bot.action(
-
-  'admin_security',
-
-  openSecurityPanel
-
-)
 
   /*
   |--------------------------------------------------------------------------
-  | ADMIN BROADCAST
+  | DASHBOARD
   |--------------------------------------------------------------------------
   */
 
   bot.action(
 
-    'admin_broadcast',
+    'admin_dashboard',
 
-    startBroadcast
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openDashboard(ctx)
+
+    }
 
   )
 
   /*
   |--------------------------------------------------------------------------
-  | ADMIN USERS
+  | USERS PANEL
   |--------------------------------------------------------------------------
   */
 
@@ -301,26 +261,196 @@ bot.action(
 
     'admin_users',
 
-    openUsersPanel
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openUsersPanel(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    /^user_(.+)$/,
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openUserProfile(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'search_user',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openSearchUser(ctx)
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | USER ACTIONS
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    /^ban_(.+)$/,
+
+    async (ctx) => {
+
+      const id =
+        Number(
+          ctx.match[1]
+        )
+
+      await banUser(id)
+
+      await ctx.answerCbQuery(
+        '🚫 User banni'
+      )
+
+      await ctx.reply(
+`
+🚫 Utilisateur banni.
+`
+      )
+
+    }
+
+  )
+
+  bot.action(
+
+    /^unban_(.+)$/,
+
+    async (ctx) => {
+
+      const id =
+        Number(
+          ctx.match[1]
+        )
+
+      await unbanUser(id)
+
+      await ctx.answerCbQuery(
+        '✅ User débanni'
+      )
+
+      await ctx.reply(
+`
+✅ Utilisateur débanni.
+`
+      )
+
+    }
+
+  )
+
+  bot.action(
+
+    /^resetmoney_(.+)$/,
+
+    async (ctx) => {
+
+      const id =
+        Number(
+          ctx.match[1]
+        )
+
+      await resetMoney(id)
+
+      await ctx.answerCbQuery(
+        '💰 Money reset'
+      )
+
+      await ctx.reply(
+`
+💰 Argent reset.
+`
+      )
+
+    }
+
+  )
+
+  bot.action(
+
+    /^resetxp_(.+)$/,
+
+    async (ctx) => {
+
+      const id =
+        Number(
+          ctx.match[1]
+        )
+
+      await resetXP(id)
+
+      await ctx.answerCbQuery(
+        '⭐ XP reset'
+      )
+
+      await ctx.reply(
+`
+⭐ XP reset.
+`
+      )
+
+    }
+
+  )
+
+  bot.action(
+
+    /^resetinv_(.+)$/,
+
+    async (ctx) => {
+
+      const id =
+        Number(
+          ctx.match[1]
+        )
+
+      await resetInventory(
+
+        ctx,
+
+        id
+
+      )
+
+      await ctx.answerCbQuery(
+        '🎒 Inventory reset'
+      )
+
+    }
 
   )
   
   bot.action(
 
-  /^ban_(.+)$/,
+  'admin_analytics',
 
   async (ctx) => {
 
-    const id =
-      Number(
-        ctx.match[1]
-      )
-
-    await banUser(id)
-
     await ctx.reply(
 `
-🚫 User banni.
+📊 ANALYTICS PANEL
+
+━━━━━━━━━━━━━━━━━━
 `
     )
 
@@ -330,143 +460,263 @@ bot.action(
 
 bot.action(
 
-  /^unban_(.+)$/,
+  'top_users',
 
-  async (ctx) => {
-
-    const id =
-      Number(
-        ctx.match[1]
-      )
-
-    await unbanUser(id)
-
-    await ctx.reply(
-`
-✅ User débanni.
-`
-    )
-
-  }
+  showTopUsersAnalytics
 
 )
 
 bot.action(
 
-  /^resetmoney_(.+)$/,
+  'rich_users',
 
-  async (ctx) => {
-
-    const id =
-      Number(
-        ctx.match[1]
-      )
-
-    await resetMoney(id)
-
-    await ctx.reply(
-`
-💰 Money reset.
-`
-    )
-
-  }
+  showRichestUsers
 
 )
 
 bot.action(
 
-  /^resetxp_(.+)$/,
+  'top_gamblers',
 
-  async (ctx) => {
-
-    const id =
-      Number(
-        ctx.match[1]
-      )
-
-    await resetXP(id)
-
-    await ctx.reply(
-`
-⭐ XP reset.
-`
-    )
-
-  }
-
-)
-
-bot.action(
-
-  /^resetinv_(.+)$/,
-
-  async (ctx) => {
-
-    const id =
-      Number(
-        ctx.match[1]
-      )
-
-    await resetInventory(
-
-      ctx,
-
-      id
-
-    )
-
-  }
+  showTopGamblers
 
 )
 
   /*
   |--------------------------------------------------------------------------
-  | HANDLE TEXT
+  | STATS
   |--------------------------------------------------------------------------
   */
 
-  bot.on(
+  bot.action(
 
-    'text',
+    'admin_stats',
 
-    handleAddContent
+    async (ctx) => {
 
-  )
+      await ctx.answerCbQuery()
 
-  
-  bot.on(
+      await showStats(ctx)
 
-  'text',
-
-  handleSearchUser
+    }
 
   )
-  
-  bot.on(
-  'text',
-  handleBroadcastText
-)
 
   /*
   |--------------------------------------------------------------------------
-  | HANDLE MEDIA
+  | LOGS
   |--------------------------------------------------------------------------
   */
 
-  bot.on(
+  bot.action(
 
-    'photo',
+    'admin_logs',
 
-    handleBroadcastMedia
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await showLogs(ctx)
+
+    }
 
   )
 
-  bot.on(
+  /*
+  |--------------------------------------------------------------------------
+  | SECURITY
+  |--------------------------------------------------------------------------
+  */
 
-    'video',
+  bot.action(
 
-    handleBroadcastMedia
+    'admin_security',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openSecurityPanel(ctx)
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | BROADCAST
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_broadcast',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await startBroadcast(ctx)
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | PLACEHOLDERS
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_shop',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await ctx.reply(
+        '🛒 Shop panel bientôt disponible.'
+      )
+
+    }
+
+  )
+
+  bot.action(
+
+    'admin_casino',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await ctx.reply(
+        '🎰 Casino panel bientôt disponible.'
+      )
+
+    }
+
+  )
+
+  bot.action(
+
+    'admin_lootbox',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await ctx.reply(
+        '🎁 Lootbox panel bientôt disponible.'
+      )
+
+    }
+
+  )
+
+  bot.action(
+
+    'admin_staff',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await ctx.reply(
+        '👮 Staff panel bientôt disponible.'
+      )
+
+    }
+
+  )
+
+  bot.action(
+
+    'admin_settings',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await ctx.reply(
+        '⚙️ Settings bientôt disponible.'
+      )
+
+    }
+
+  )
+
+  bot.action(
+
+    'admin_economy',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await ctx.reply(
+        '💰 Economy panel bientôt disponible.'
+      )
+
+    }
+
+  )
+
+  bot.action(
+
+    'admin_tickets',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await ctx.reply(
+        '🎫 Tickets panel bientôt disponible.'
+      )
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | RATING
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'rate_1',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await rateBot(
+        ctx,
+        1
+      )
+
+    }
+
+  )
+
+  bot.action(
+
+    'rate_5',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await rateBot(
+        ctx,
+        5
+      )
+
+    }
 
   )
 
@@ -482,6 +732,8 @@ bot.action(
 
     async (ctx) => {
 
+      await ctx.answerCbQuery()
+
       await ctx.deleteMessage()
 
       await showMainMenu(ctx)
@@ -495,6 +747,8 @@ bot.action(
     'decline_rules',
 
     async (ctx) => {
+
+      await ctx.answerCbQuery()
 
       await ctx.reply(
         '❌ Vous devez accepter le règlement.'
@@ -514,7 +768,13 @@ bot.action(
 
     'cat_staff',
 
-    openStaffMenu
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openStaffMenu(ctx)
+
+    }
 
   )
 
@@ -522,7 +782,13 @@ bot.action(
 
     'show_admins',
 
-    showAdmins
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await showAdmins(ctx)
+
+    }
 
   )
 
@@ -530,7 +796,13 @@ bot.action(
 
     'show_mods',
 
-    showModerators
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await showModerators(ctx)
+
+    }
 
   )
 
@@ -538,7 +810,13 @@ bot.action(
 
     'show_top_users',
 
-    showTopUsers
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await showTopUsers(ctx)
+
+    }
 
   )
 
@@ -552,7 +830,13 @@ bot.action(
 
     /cat_(.+)/,
 
-    categoryHandler
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await categoryHandler(ctx)
+
+    }
 
   )
 
@@ -568,6 +852,8 @@ bot.action(
 
     async (ctx) => {
 
+      await ctx.answerCbQuery()
+
       await navigationHandler(
         ctx,
         'next'
@@ -582,6 +868,8 @@ bot.action(
     /prev_(.+)_(\d+)/,
 
     async (ctx) => {
+
+      await ctx.answerCbQuery()
 
       await navigationHandler(
         ctx,
@@ -602,7 +890,13 @@ bot.action(
 
     'back_menu',
 
-    showMainMenu
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await showMainMenu(ctx)
+
+    }
 
   )
 

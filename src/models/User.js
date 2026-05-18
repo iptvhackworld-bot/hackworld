@@ -1,42 +1,7 @@
 const mongoose =
-require('mongoose')
-
-/*
-|--------------------------------------------------------------------------
-| USER SCHEMA
-|--------------------------------------------------------------------------
-*/
-
-const userSchema =
-new mongoose.Schema({
-
-  id: {
-
-    type: Number,
-
-    required: true,
-
-    unique: true
-
   },
 
-  username: {
-
-    type: String,
-
-    default: ''
-
-  },
-
-  firstName: {
-
-    type: String,
-
-    default: ''
-
-  },
-
-  xp: {
+  messages: {
 
     type: Number,
 
@@ -44,11 +9,41 @@ new mongoose.Schema({
 
   },
 
-  money: {
+  casinoPlayed: {
 
     type: Number,
 
     default: 0
+
+  },
+
+  casinoWon: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  purchases: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  badges: [
+
+    String
+
+  ],
+
+  role: {
+
+    type: String,
+
+    default: 'user'
 
   },
 
@@ -60,11 +55,11 @@ new mongoose.Schema({
 
   },
 
-  rating: {
+  lastActivity: {
 
-    type: Number,
+    type: Date,
 
-    default: 0
+    default: Date.now
 
   },
 
@@ -80,6 +75,8 @@ new mongoose.Schema({
 
 module.exports =
 mongoose.model(
+
   'User',
+
   userSchema
 )
