@@ -1,13 +1,39 @@
+# Dependencies
 node_modules
+
+# Environment
 .env
+.env.local
+.env.production
+
+# Logs
 logs
+*.log
+
+# Backups
 backups
 
-bin
+# Database
+data
+*.json
 
-src/data/*.json
-
-*.log
-*.pdb
+# Mongo / Binary
 *.wt
 *.ns
+*.pdb
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+
+# Render
+.render
+
+# Temporary
+temp
+tmp
+cache

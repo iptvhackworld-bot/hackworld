@@ -104,6 +104,30 @@ module.exports = (bot) => {
   } = require(
     '../handlers/manageUsersHandler'
   )
+  
+  const {
+
+  showStats
+
+} = require(
+  '../handlers/adminStatsHandler'
+)
+
+const {
+
+  showLogs
+
+} = require(
+  '../handlers/adminLogsHandler'
+)
+
+const {
+
+  openSecurityPanel
+
+} = require(
+  '../handlers/securityHandler'
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -220,6 +244,30 @@ module.exports = (bot) => {
     showContentList
 
   )
+  
+  bot.action(
+
+  'admin_stats',
+
+  showStats
+
+)
+
+bot.action(
+
+  'admin_logs',
+
+  showLogs
+
+)
+
+bot.action(
+
+  'admin_security',
+
+  openSecurityPanel
+
+)
 
   /*
   |--------------------------------------------------------------------------
