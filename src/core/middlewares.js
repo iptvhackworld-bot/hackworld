@@ -4,14 +4,14 @@ const {
 
 } = require('telegraf')
 
-const checkBan =
-require(
-  '../middlewares/checkBan'
-)
+const {
 
-const antiSpam =
-require(
-  '../middlewares/antiSpam'
+  checkBan,
+
+  antiSpam
+
+} = require(
+  '../middlewares/checkBan'
 )
 
 const {
@@ -21,6 +21,12 @@ const {
 } = require(
   '../handlers/userHandler'
 )
+
+/*
+|--------------------------------------------------------------------------
+| REGISTER MIDDLEWARES
+|--------------------------------------------------------------------------
+*/
 
 const registerMiddlewares =
 (bot) => {
@@ -56,6 +62,7 @@ const registerMiddlewares =
   */
 
   bot.use(
+
     async (
       ctx,
       next
@@ -63,13 +70,16 @@ const registerMiddlewares =
 
       if (ctx.from) {
 
-        await registerUser(ctx)
+        await registerUser(
+          ctx
+        )
 
       }
 
       return next()
 
     }
+
   )
 
 }
