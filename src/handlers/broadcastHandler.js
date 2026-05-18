@@ -1,13 +1,14 @@
-const {
-
-  loadUsers
-
-} = require(
-  '../data/userData'
+const env =
+require(
+  '../config/env'
 )
 
-const env = require(
-  '../config/env'
+const {
+
+  getUsers
+
+} = require(
+  '../services/userService'
 )
 
 /*
@@ -16,11 +17,23 @@ const env = require(
 |--------------------------------------------------------------------------
 */
 
-const startBroadcast = async (ctx) => {
+const startBroadcast =
+async (ctx) => {
+
+  /*
+  |--------------------------------------------------------------------------
+  | OWNER ONLY
+  |--------------------------------------------------------------------------
+  */
 
   if (
-    ctx.from.id.toString() !==
-    env.ownerId
+
+    ctx.from.id.toString()
+
+    !==
+
+    env.ownerId.toString()
+
   ) {
 
     return ctx.reply(
@@ -46,7 +59,7 @@ const startBroadcast = async (ctx) => {
 
   /*
   |--------------------------------------------------------------------------
-  | ASK CONTENT
+  | ASK
   |--------------------------------------------------------------------------
   */
 
@@ -62,15 +75,16 @@ const startBroadcast = async (ctx) => {
 • Photo
 • Vidéo
 
-Le bot diffusera à tous
-les utilisateurs.
+Le bot diffusera
+à tous les utilisateurs.
 `
   )
+
 }
 
 /*
 |--------------------------------------------------------------------------
-| HANDLE TEXT BROADCAST
+| TEXT BROADCAST
 |--------------------------------------------------------------------------
 */
 
@@ -78,11 +92,33 @@ const handleBroadcastText =
 async (ctx) => {
 
   if (
-    ctx.session.step !==
-    'broadcast_waiting'
-  ) return
 
-  const users = loadUsers()
+    ctx.session.step
+
+    !==
+
+    'broadcast_waiting'
+
+  ) {
+
+    return
+
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | USERS
+  |--------------------------------------------------------------------------
+  */
+
+  const users =
+    await getUsers()
+
+  /*
+  |--------------------------------------------------------------------------
+  | MESSAGE
+  |--------------------------------------------------------------------------
+  */
 
   const message =
     ctx.message.text
@@ -102,7 +138,9 @@ async (ctx) => {
     try {
 
       await ctx.telegram.sendMessage(
+
         user.id,
+
 `
 📢 HACKWORLD NEWS
 
@@ -110,6 +148,7 @@ async (ctx) => {
 
 ${message}
 `
+
       )
 
       success++
@@ -130,7 +169,8 @@ ${message}
   |--------------------------------------------------------------------------
   */
 
-  ctx.session.step = null
+  ctx.session.step =
+    null
 
   /*
   |--------------------------------------------------------------------------
@@ -144,16 +184,19 @@ ${message}
 
 ━━━━━━━━━━━━━━━━━━
 
-📨 Envoyés : ${success}
+📨 Envoyés :
+${success}
 
-❌ Échecs : ${failed}
+❌ Échecs :
+${failed}
 `
   )
+
 }
 
 /*
 |--------------------------------------------------------------------------
-| HANDLE MEDIA BROADCAST
+| MEDIA BROADCAST
 |--------------------------------------------------------------------------
 */
 
@@ -161,11 +204,27 @@ const handleBroadcastMedia =
 async (ctx) => {
 
   if (
-    ctx.session.step !==
-    'broadcast_waiting'
-  ) return
 
-  const users = loadUsers()
+    ctx.session.step
+
+    !==
+
+    'broadcast_waiting'
+
+  ) {
+
+    return
+
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | USERS
+  |--------------------------------------------------------------------------
+  */
+
+  const users =
+    await getUsers()
 
   const caption =
     ctx.message.caption || ''
@@ -183,6 +242,7 @@ async (ctx) => {
   if (ctx.message.photo) {
 
     const photo =
+
       ctx.message.photo[
         ctx.message.photo.length - 1
       ].file_id
@@ -192,9 +252,13 @@ async (ctx) => {
       try {
 
         await ctx.telegram.sendPhoto(
+
           user.id,
+
           photo,
+
           {
+
             caption:
 `
 📢 HACKWORLD NEWS
@@ -203,7 +267,9 @@ async (ctx) => {
 
 ${caption}
 `
+
           }
+
         )
 
         success++
@@ -236,9 +302,13 @@ ${caption}
       try {
 
         await ctx.telegram.sendVideo(
+
           user.id,
+
           video,
+
           {
+
             caption:
 `
 📢 HACKWORLD NEWS
@@ -247,7 +317,9 @@ ${caption}
 
 ${caption}
 `
+
           }
+
         )
 
         success++
@@ -270,7 +342,8 @@ ${caption}
   |--------------------------------------------------------------------------
   */
 
-  ctx.session.step = null
+  ctx.session.step =
+    null
 
   /*
   |--------------------------------------------------------------------------
@@ -284,11 +357,14 @@ ${caption}
 
 ━━━━━━━━━━━━━━━━━━
 
-📨 Envoyés : ${success}
+📨 Envoyés :
+${success}
 
-❌ Échecs : ${failed}
+❌ Échecs :
+${failed}
 `
   )
+
 }
 
 module.exports = {
