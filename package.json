@@ -3,37 +3,22 @@
   "version": "1.0.0",
   "description": "Hackworld Telegram Bot",
   "main": "src/index.js",
-
   "scripts": {
-
     "start": "node src/index.js",
-
     "dev": "node src/index.js"
-
   },
-
   "keywords": [
-
     "telegram",
     "bot",
     "telegraf"
-
   ],
-
   "author": "Hackworld",
-
   "license": "ISC",
-
   "type": "commonjs",
-
   "dependencies": {
-
     "dotenv": "^17.4.2",
-
+    "express": "^5.2.1",
     "mongoose": "^9.6.2",
-
     "telegraf": "^4.16.3"
-
   }
-
 }
