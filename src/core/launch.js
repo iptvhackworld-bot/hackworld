@@ -3,25 +3,49 @@ require(
   '../utils/logger'
 )
 
-let launched = false
+const launchBot =
+async (bot) => {
 
-const launchBot = async (
-  bot
-) => {
+  try {
 
-  if (launched) {
+    /*
+    |--------------------------------------------------------------------------
+    | STOP OLD POLLING
+    |--------------------------------------------------------------------------
+    */
 
-    return
+    await bot.telegram
+    .deleteWebhook({
+
+      drop_pending_updates:
+      true
+
+    })
+
+    /*
+    |--------------------------------------------------------------------------
+    | LAUNCH
+    |--------------------------------------------------------------------------
+    */
+
+    await bot.launch({
+
+      dropPendingUpdates:
+      true
+
+    })
+
+    logger(
+      '🚀 Bot lancé'
+    )
 
   }
 
-  launched = true
+  catch (error) {
 
-  await bot.launch()
+    console.log(error)
 
-  logger(
-    '🚀 Bot lancé'
-  )
+  }
 
 }
 
