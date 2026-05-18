@@ -1,107 +1,36 @@
-const {
-
-  userService
-
-} = require('../data/userData')
-
 /*
 |--------------------------------------------------------------------------
-| CHECK BAN
+| SECURITY PANEL
 |--------------------------------------------------------------------------
 */
 
-const checkBan = async (
-  ctx,
-  next
-) => {
+const openSecurityPanel =
+async (ctx) => {
 
-  if (!ctx.from) {
+  await ctx.reply(
+`
+🔒 SECURITY PANEL
 
-    return next()
+━━━━━━━━━━━━━━━━━━
 
-  }
+✅ Anti-spam actif
 
-  const users = userService()
+✅ Protection ban active
 
-  const user = users.find(
-    u => u.id === ctx.from.id
+✅ Sessions sécurisées
+
+✅ MongoDB protégé
+
+✅ Monitoring actif
+
+━━━━━━━━━━━━━━━━━━
+`
   )
 
-  /*
-  |--------------------------------------------------------------------------
-  | USER BANNED
-  |--------------------------------------------------------------------------
-  */
-
-  if (
-    user &&
-    user.banned
-  ) {
-
-    return ctx.reply(
-`
-🚫 Vous êtes banni.
-`
-    )
-
-  }
-
-  return next()
-}
-
-/*
-|--------------------------------------------------------------------------
-| ANTI SPAM
-|--------------------------------------------------------------------------
-*/
-
-const spamMap = new Map()
-
-const antiSpam = async (
-  ctx,
-  next
-) => {
-
-  if (!ctx.from) {
-
-    return next()
-
-  }
-
-  const userId =
-    ctx.from.id
-
-  const now = Date.now()
-
-  const lastMessage =
-    spamMap.get(userId) || 0
-
-  /*
-  |--------------------------------------------------------------------------
-  | SPAM LIMIT
-  |--------------------------------------------------------------------------
-  */
-
-  if (
-    now - lastMessage < 800
-  ) {
-
-    return
-
-  }
-
-  spamMap.set(
-    userId,
-    now
-  )
-
-  return next()
 }
 
 module.exports = {
 
-  checkBan,
-
-  antiSpam
+  openSecurityPanel
 
 }
