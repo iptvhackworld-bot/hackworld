@@ -8,7 +8,7 @@ module.exports = (bot) => {
 
   const {
 
-    openSupport
+    openTicketPanel
 
   } = require(
     '../handlers/ticketHandler'
@@ -22,9 +22,9 @@ module.exports = (bot) => {
 
   bot.action(
 
-    'support',
+    'support_panel',
 
-    openSupport
+    openTicketPanel
 
   )
 
