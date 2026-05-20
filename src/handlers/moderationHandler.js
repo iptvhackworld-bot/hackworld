@@ -27,7 +27,7 @@ Gestion de la modération
       [
 
         Markup.button.callback(
-          '⚠️ Warn User',
+          '⚠️ Avertir',
           'warn_user'
         ),
 

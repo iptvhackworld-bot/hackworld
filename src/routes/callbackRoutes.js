@@ -407,19 +407,19 @@ bot.action(
 
   )
 
-  bot.action(
+bot.action(
 
-    /^user_(.+)$/,
+  /^user_(\d+)$/,
 
-    async (ctx) => {
+  async (ctx) => {
 
-      await ctx.answerCbQuery()
+    await ctx.answerCbQuery()
 
-      await openUserProfile(ctx)
+    await openUserProfile(ctx)
 
-    }
+  }
 
-  )
+)
 
   bot.action(
 
