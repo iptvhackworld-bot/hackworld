@@ -166,6 +166,9 @@ ${user.role || 'user'}
 🚫 Banni :
 ${user.banned ? 'Oui' : 'Non'}
 
+📛 Warns :
+${user.warns || 0}
+
 📅 Arrivé :
 ${new Date(user.createdAt).toLocaleDateString()}
 

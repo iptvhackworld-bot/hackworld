@@ -1,6 +1,23 @@
 const { Markup } =
 require('telegraf')
 
+const User =
+require(
+  '../models/User'
+)
+
+/*
+|--------------------------------------------------------------------------
+| ADMIN SESSIONS
+|--------------------------------------------------------------------------
+*/
+
+if (!global.adminSessions) {
+
+  global.adminSessions = {}
+
+}
+
 /*
 |--------------------------------------------------------------------------
 | MODERATION PANEL
@@ -13,11 +30,11 @@ async (ctx) => {
   await ctx.reply(
 
 `
-🛡 MODERATION PANEL
+🛡 PANEL MODÉRATION
 
 ━━━━━━━━━━━━━━━━━━
 
-Gestion de la modération
+Gestion modération utilisateurs
 
 ━━━━━━━━━━━━━━━━━━
 `,
@@ -32,49 +49,8 @@ Gestion de la modération
         ),
 
         Markup.button.callback(
-          '✅ Remove Warn',
+          '✅ Retirer Warn',
           'removewarn_user'
-        )
-
-      ],
-
-      [
-
-        Markup.button.callback(
-          '🔇 Mute User',
-          'mute_user'
-        ),
-
-        Markup.button.callback(
-          '🔊 Unmute User',
-          'unmute_user'
-        )
-
-      ],
-
-      [
-
-        Markup.button.callback(
-          '⛔ Blacklist',
-          'blacklist_user'
-        )
-
-      ],
-
-      [
-
-        Markup.button.callback(
-          '📜 User Logs',
-          'user_logs'
-        )
-
-      ],
-
-      [
-
-        Markup.button.callback(
-          '🛡 AntiSpam',
-          'antispam_panel'
         )
 
       ],
@@ -94,8 +70,207 @@ Gestion de la modération
 
 }
 
+/*
+|--------------------------------------------------------------------------
+| WARN PANEL
+|--------------------------------------------------------------------------
+*/
+
+const warnUserPanel =
+async (ctx) => {
+
+  global.adminSessions[
+    ctx.from.id
+  ] = {
+
+    action:
+    'warn_user'
+
+  }
+
+  await ctx.reply(
+
+`
+⚠️ Envoyez l'ID utilisateur à avertir.
+`
+  )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| REMOVE WARN PANEL
+|--------------------------------------------------------------------------
+*/
+
+const removeWarnPanel =
+async (ctx) => {
+
+  global.adminSessions[
+    ctx.from.id
+  ] = {
+
+    action:
+    'remove_warn'
+
+  }
+
+  await ctx.reply(
+
+`
+✅ Envoyez l'ID utilisateur.
+`
+  )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| HANDLE MODERATION INPUT
+|--------------------------------------------------------------------------
+*/
+
+const handleModerationInput =
+async (ctx) => {
+
+  const session =
+
+    global.adminSessions[
+      ctx.from.id
+    ]
+
+  if (!session) {
+
+    return false
+
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | WARN USER
+  |--------------------------------------------------------------------------
+  */
+
+  if (
+
+    session.action ===
+    'warn_user'
+
+  ) {
+
+    const userId =
+      Number(
+        ctx.message.text
+      )
+
+    const user =
+      await User.findOne({
+
+        id: userId
+
+      })
+
+    if (!user) {
+
+      return ctx.reply(
+`
+❌ Utilisateur introuvable.
+`
+      )
+
+    }
+
+    user.warns += 1
+
+    await user.save()
+
+    delete global.adminSessions[
+      ctx.from.id
+    ]
+
+    return ctx.reply(
+`
+⚠️ Warn ajouté.
+
+👤 ${user.username}
+📛 Total warns :
+${user.warns}
+`
+    )
+
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | REMOVE WARN
+  |--------------------------------------------------------------------------
+  */
+
+  if (
+
+    session.action ===
+    'remove_warn'
+
+  ) {
+
+    const userId =
+      Number(
+        ctx.message.text
+      )
+
+    const user =
+      await User.findOne({
+
+        id: userId
+
+      })
+
+    if (!user) {
+
+      return ctx.reply(
+`
+❌ Utilisateur introuvable.
+`
+      )
+
+    }
+
+    if (user.warns > 0) {
+
+      user.warns -= 1
+
+    }
+
+    await user.save()
+
+    delete global.adminSessions[
+      ctx.from.id
+    ]
+
+    return ctx.reply(
+`
+✅ Warn retiré.
+
+👤 ${user.username}
+📛 Total warns :
+${user.warns}
+`
+    )
+
+  }
+
+  return false
+
+}
+
 module.exports = {
 
-  openModerationPanel
+  openModerationPanel,
+
+  warnUserPanel,
+
+  removeWarnPanel,
+
+  handleModerationInput
 
 }

@@ -142,3 +142,11 @@ mongoose.model(
   userSchema
 
 )
+
+warns: {
+
+  type: Number,
+
+  default: 0
+
+},

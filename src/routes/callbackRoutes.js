@@ -203,6 +203,18 @@ module.exports = (bot) => {
   '../handlers/moderationHandler'
 )
 
+const {
+
+  warnUserPanel,
+
+  removeWarnPanel,
+
+  handleModerationInput
+
+} = require(
+  '../handlers/moderationHandler'
+)
+
   /*
   |--------------------------------------------------------------------------
   | ACCEPT RULES
@@ -801,11 +813,7 @@ bot.action(
 
     await ctx.answerCbQuery()
 
-    await ctx.reply(
-`
-⚠️ Système d'avertissement bientôt disponible.
-`
-    )
+    await warnUserPanel(ctx)
 
   }
 
@@ -819,11 +827,7 @@ bot.action(
 
     await ctx.answerCbQuery()
 
-    await ctx.reply(
-`
-✅ Retrait des warns bientôt disponible.
-`
-    )
+    await removeWarnPanel(ctx)
 
   }
 
@@ -1140,6 +1144,8 @@ bot.action(
     'text',
 
     async (ctx) => {
+		
+	  await handleModerationInput(ctx)
 
       await handleAdminInput(ctx)
 
