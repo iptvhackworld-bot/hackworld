@@ -194,6 +194,14 @@ module.exports = (bot) => {
   } = require(
     '../handlers/shopHandler'
   )
+  
+  const {
+
+  openModerationPanel
+
+} = require(
+  '../handlers/moderationHandler'
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -222,7 +230,27 @@ module.exports = (bot) => {
     }
 
   )
+  
+  
+/*
+|--------------------------------------------------------------------------
+| MODERATION PANEL
+|--------------------------------------------------------------------------
+*/
 
+bot.action(
+
+  'admin_moderation',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openModerationPanel(ctx)
+
+  }
+
+)
   /*
   |--------------------------------------------------------------------------
   | ADMIN PANEL

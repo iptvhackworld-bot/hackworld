@@ -82,7 +82,14 @@ async (ctx) => {
         )
 
       ],
-
+	  
+	  [
+        Markup.button.callback(
+           '🛡 Modération',
+           'admin_moderation'
+        )
+      ],
+	  
       [
 
         Markup.button.callback(
