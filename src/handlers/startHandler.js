@@ -16,31 +16,6 @@ const {
 const fs =
 require('fs')
 
-
-
-/*
-|--------------------------------------------------------------------------
-| IMAGE
-|--------------------------------------------------------------------------
-*/
-
-await ctx.replyWithPhoto(
-
-  {
-
-    source:
-    fs.createReadStream(
-
-      'src/assets/hackworld.jpg'
-
-    )
-
-  },
-
-  {
-
-    caption:
-
 /*
 |--------------------------------------------------------------------------
 | MAIN MENU
@@ -71,22 +46,22 @@ async (ctx) => {
   |--------------------------------------------------------------------------
   */
 
-await ctx.replyWithPhoto(
+  await ctx.replyWithPhoto(
 
-  {
+    {
 
-    source:
-    fs.createReadStream(
+      source:
+      fs.createReadStream(
 
-      'src/assets/hackworld.jpg'
+        'src/assets/hackworld.jpg'
 
-    )
+      )
 
-  },
+    },
 
-  {
+    {
 
-    caption:
+      caption:
 `
 ╔══════════════════╗
       HACKWORLD
@@ -253,7 +228,16 @@ async (ctx) => {
 
   await ctx.replyWithPhoto(
 
-    MAIN_IMAGE,
+    {
+
+      source:
+      fs.createReadStream(
+
+        'src/assets/hackworld.jpg'
+
+      )
+
+    },
 
     {
 
