@@ -64,10 +64,18 @@ async (ctx) => {
       caption:
 `
 ╔══════════════════╗
-      HACKWORLD
+      HACKWORLD 
 ╚══════════════════╝
 
 ⚡ INTERFACE PRINCIPALE
+
+🛡 Bienvenue sur notre bot 
+
+🔒 SÉCURITÉ & RAPPEL 🔒
+
+Pour votre sécurité :
+
+✅ Nous ne vous contacterons jamais en message privé
 ━━━━━━━━━━━━━━━━━━
 
 👥 Utilisateurs :
@@ -244,21 +252,71 @@ async (ctx) => {
       caption:
 `
 ╔══════════════════╗
-        HACKWORLD
+     HACKWORLD
 ╚══════════════════╝
 
-📜 RÈGLEMENT PRINCIPAL
+  Bienvenue a tous les nouveau membres 
+
+
+📜 RÈGLEMENT OFFICIEL — HACKWORLD 📜
+
+❤️ Bienvenue à tous les nouveaux membres ❤️
+
+Le groupe a été créé dans un esprit de partage, d’entraide et de respect mutuel.
+Merci de lire attentivement le règlement ci-dessous afin d’éviter toute sanction.
+
+━━━━━━━━━━━━━━━━━━
+⛔ INTERDICTIONS ⛔
 ━━━━━━━━━━━━━━━━━━
 
-1️⃣ Respect obligatoire.
+Il est STRICTEMENT INTERDIT de :
 
-2️⃣ Aucun spam/flood.
+1. Faire de la publicité sauvage 🚫
+2. Publier ou parler de drogues 🚫
+3. Publier ou vendre des armes 🚫
+4. Partager du contenu pornographique 🚫
+5. Tenir des propos racistes ou discriminatoires 🚫
+6. Parler de religion ou créer des débats religieux 🚫
+7. Insulter ou manquer de respect aux membres 🚫
+8. Tenter une arnaque ou une usurpation d’identité 🚫
+9. Contacter les membres en privé au nom du staff 🚫
 
-3️⃣ Aucun contenu illégal.
+━━━━━━━━━━━━━━━━━━
+⚠️ SANCTIONS ⚠️
+━━━━━━━━━━━━━━━━━━
 
-4️⃣ Respect du staff.
+Toute personne ne respectant pas le règlement sera sanctionnée :
 
-5️⃣ Toute violation = bannissement.
+• BAN IMMÉDIAT ET DÉFINITIF ⛔
+• Aucun avertissement pour les cas graves 📛
+• Les décisions des administrateurs sont finales ✅
+
+━━━━━━━━━━━━━━━━━━
+🔒 SÉCURITÉ & RAPPEL 🔒
+━━━━━━━━━━━━━━━━━━
+
+Pour votre sécurité :
+
+✅ Nous ne vous contacterons jamais en message privé
+✅ Aucun paiement sans système d’escrow
+✅ Vérifiez toujours les @ officiels avant tout échange
+✅ Toute annonce doit obligatoirement passer par l’escrow du groupe
+
+Toute annonce postée sans respect des règles pourra entraîner un bannissement immédiat.
+
+━━━━━━━━━━━━━━━━━━
+📌 INFORMATIONS IMPORTANTES 📌
+━━━━━━━━━━━━━━━━━━
+
+• Restez polis et courtois avec tous les membres
+• En cas de problème, contactez un administrateur
+• Le staff se réserve le droit de modifier le règlement à tout moment
+
+En restant dans le groupe, vous acceptez automatiquement ce règlement.
+
+Merci à tous pour votre compréhension 🙏
+— L’Équipe HackWorld
+
 
 ━━━━━━━━━━━━━━━━━━
 
