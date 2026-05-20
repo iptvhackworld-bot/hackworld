@@ -24,8 +24,22 @@ require('fs')
 |--------------------------------------------------------------------------
 */
 
-const MAIN_IMAGE =
-'https://picsum.photos/800/400'
+await ctx.replyWithPhoto(
+
+  {
+
+    source:
+    fs.createReadStream(
+
+      'src/assets/hackworld.jpg'
+
+    )
+
+  },
+
+  {
+
+    caption:
 
 /*
 |--------------------------------------------------------------------------
