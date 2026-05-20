@@ -18,9 +18,17 @@ new mongoose.Schema({
 
   },
 
-  username: String,
+  username: {
 
-  firstName: String,
+    type: String
+
+  },
+
+  firstName: {
+
+    type: String
+
+  },
 
   /*
   |--------------------------------------------------------------------------
@@ -88,7 +96,13 @@ new mongoose.Schema({
 
   },
 
+  warns: {
 
+    type: Number,
+
+    default: 0
+
+  },
 
   /*
   |--------------------------------------------------------------------------
@@ -111,14 +125,7 @@ new mongoose.Schema({
     default: 0
 
   },
-  
-  warns: {
 
-    type: Number,
-
-    default: 0
-
-  },
   /*
   |--------------------------------------------------------------------------
   | DATES
@@ -143,11 +150,3 @@ mongoose.model(
   userSchema
 
 )
-
-warns: {
-
-  type: Number,
-
-  default: 0
-
-},
