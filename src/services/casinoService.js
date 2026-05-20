@@ -1,110 +1,162 @@
-const Casino =
+const User =
 require(
-  '../models/Casino'
+  '../models/User'
+)
+
+const CasinoHistory =
+require(
+  '../models/CasinoHistory'
 )
 
 /*
 |--------------------------------------------------------------------------
-| GET CASINO
+| PLAY ROULETTE
 |--------------------------------------------------------------------------
 */
 
-const getCasinoStats =
-async (userId) => {
+const playRoulette =
+async (
 
-  let stats =
+  userId,
 
-    await Casino.findOne({
+  amount
 
-      userId
+) => {
+
+  const user =
+    await User.findOne({
+
+      id: userId
 
     })
 
   /*
   |--------------------------------------------------------------------------
-  | CREATE
+  | USER
   |--------------------------------------------------------------------------
   */
 
-  if (!stats) {
+  if (!user) {
 
-    stats =
-      await Casino.create({
+    return {
 
-        userId
+      error:
+      'Utilisateur introuvable'
 
-      })
+    }
 
   }
 
-  return stats
+  /*
+  |--------------------------------------------------------------------------
+  | MONEY
+  |--------------------------------------------------------------------------
+  */
 
-}
+  if (
+    user.money < amount
+  ) {
 
-/*
-|--------------------------------------------------------------------------
-| ADD WIN
-|--------------------------------------------------------------------------
-*/
+    return {
 
-const addWin =
-async (
+      error:
+      'Argent insuffisant'
 
-  userId,
+    }
 
-  amount
+  }
 
-) => {
+  /*
+  |--------------------------------------------------------------------------
+  | GAME
+  |--------------------------------------------------------------------------
+  */
 
-  const stats =
-    await getCasinoStats(
-      userId
-    )
+  const win =
+    Math.random() < 0.5
 
-  stats.wins += 1
+  let profit = 0
 
-  stats.totalBet +=
-    amount
+  if (win) {
 
-  await stats.save()
+    profit = amount
 
-}
+    user.money += amount
 
-/*
-|--------------------------------------------------------------------------
-| ADD LOSS
-|--------------------------------------------------------------------------
-*/
+    user.casinoWon += amount
 
-const addLoss =
-async (
+  }
 
-  userId,
+  else {
 
-  amount
+    profit = -amount
 
-) => {
+    user.money -= amount
 
-  const stats =
-    await getCasinoStats(
-      userId
-    )
+  }
 
-  stats.losses += 1
+  /*
+  |--------------------------------------------------------------------------
+  | STATS
+  |--------------------------------------------------------------------------
+  */
 
-  stats.totalBet +=
-    amount
+  user.casinoPlayed += 1
 
-  await stats.save()
+  /*
+  |--------------------------------------------------------------------------
+  | SAVE USER
+  |--------------------------------------------------------------------------
+  */
+
+  await user.save()
+
+  /*
+  |--------------------------------------------------------------------------
+  | HISTORY
+  |--------------------------------------------------------------------------
+  */
+
+  await CasinoHistory.create({
+
+    userId,
+
+    game: 'roulette',
+
+    amount,
+
+    result:
+      win
+      ?
+      'win'
+      :
+      'lose',
+
+    profit
+
+  })
+
+  /*
+  |--------------------------------------------------------------------------
+  | RETURN
+  |--------------------------------------------------------------------------
+  */
+
+  return {
+
+    win,
+
+    profit,
+
+    money:
+      user.money
+
+  }
 
 }
 
 module.exports = {
 
-  getCasinoStats,
-
-  addWin,
-
-  addLoss
+  playRoulette
 
 }
