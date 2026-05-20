@@ -1,182 +1,122 @@
 const {
 
-  getUser,
+  getShopItems,
 
-  removeMoney
-
-} = require(
-  '../services/userService'
-)
-
-const {
-
-  addItem
+  buyItem
 
 } = require(
-  '../services/inventoryService'
+  '../services/shopService'
 )
 
-const {
-
-  shopItems
-
-} = require(
-  '../config'
-)
-
-const formatMoney =
-require(
-  '../utils/formatMoney'
-)
-
-const {
-
-  replyError,
-
-  replySuccess
-
-} = require(
-  '../utils/responses'
-)
+const { Markup } =
+require('telegraf')
 
 /*
 |--------------------------------------------------------------------------
-| SHOW SHOP
+| SHOP PANEL
 |--------------------------------------------------------------------------
 */
 
-const showShop =
+const openShop =
 async (ctx) => {
 
-  let message =
+  const items =
+    await getShopItems()
+
+  if (
+    items.length === 0
+  ) {
+
+    return ctx.reply(
 `
-🛒 SHOP
+❌ Aucun item shop.
+`
+    )
+
+  }
+
+  const buttons =
+    items.map((item) => {
+
+      return [
+
+        Markup.button.callback(
+
+          `${item.emoji} ${item.name} • ${item.price}$`,
+
+          `buy_${item.id}`
+
+        )
+
+      ]
+
+    })
+
+  await ctx.reply(
+
+`
+🛒 PREMIUM SHOP
 
 ━━━━━━━━━━━━━━━━━━
 
-`
+Choisissez un item
 
-  shopItems.forEach(
-    (item, index) => {
+━━━━━━━━━━━━━━━━━━
+`,
 
-      message +=
-`
-${index + 1}. ${item.name}
+    Markup.inlineKeyboard(
+      buttons
+    )
 
-💰 ${formatMoney(item.price)}
-
-📌 ${item.description}
-
-`
-    }
   )
-
-  await ctx.reply(message)
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| BUY ITEM
+| BUY
 |--------------------------------------------------------------------------
 */
 
-const buyItem =
-async (
+const buyHandler =
+async (ctx) => {
 
-  ctx,
+  const itemId =
+    ctx.match[1]
 
-  itemIndex
-
-) => {
-
-  const user =
-    getUser(
-      ctx.from.id
-    )
-
-  /*
-  |--------------------------------------------------------------------------
-  | USER
-  |--------------------------------------------------------------------------
-  */
-
-  if (!user) {
-
-    return replyError(
-      ctx,
-      'Utilisateur introuvable'
-    )
-
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | ITEM
-  |--------------------------------------------------------------------------
-  */
-
-  const item =
-    shopItems[itemIndex]
-
-  if (!item) {
-
-    return replyError(
-      ctx,
-      'Objet introuvable'
-    )
-
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | MONEY
-  |--------------------------------------------------------------------------
-  */
-
-  const removed =
-    removeMoney(
+  const result =
+    await buyItem(
 
       ctx.from.id,
 
-      item.price
+      itemId
 
     )
 
-  if (!removed) {
+  if (result.error) {
 
-    return replyError(
-      ctx,
-      'Coins insuffisants'
+    return ctx.reply(
+`
+❌ ${result.error}
+`
     )
 
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | ADD ITEM
-  |--------------------------------------------------------------------------
-  */
+  await ctx.reply(
 
-  addItem(
+`
+🛒 ACHAT EFFECTUÉ
 
-    ctx.from.id,
+━━━━━━━━━━━━━━━━━━
 
-    item.name
+${result.item.emoji} ${result.item.name}
 
-  )
+💰 Argent restant :
+${result.money}$
 
-  /*
-  |--------------------------------------------------------------------------
-  | SUCCESS
-  |--------------------------------------------------------------------------
-  */
-
-  return replySuccess(
-
-    ctx,
-
-    `${item.name} acheté avec succès`
+━━━━━━━━━━━━━━━━━━
+`
 
   )
 
@@ -184,8 +124,8 @@ async (
 
 module.exports = {
 
-  showShop,
+  openShop,
 
-  buyItem
+  buyHandler
 
 }

@@ -22,6 +22,16 @@ module.exports = (bot) => {
     '../handlers/casinoHandler'
   )
 
+  const {
+
+    openShop,
+
+    buyHandler
+
+  } = require(
+    '../handlers/shopHandler'
+  )
+
   /*
   |--------------------------------------------------------------------------
   | INVENTORY
@@ -57,6 +67,40 @@ module.exports = (bot) => {
       await ctx.answerCbQuery()
 
       await openCasinoPanel(ctx)
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | SHOP
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'shop_menu',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openShop(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    /^buy_(.+)$/,
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await buyHandler(ctx)
 
     }
 

@@ -1,32 +1,110 @@
-const sendContent = require('../utils/sendContent')
-
 const {
-  contentService
-} = require('../data/contentData')
 
-const categoryHandler = async (ctx) => {
+  getCategoryContent
 
-  const category = ctx.match[1]
+} = require(
+  '../services/contentService'
+)
 
-  const contentData = contentService()
+const { Markup } =
+require('telegraf')
 
-  const firstItem = contentData.find(
-    item => item.category === category
-  )
+/*
+|--------------------------------------------------------------------------
+| CATEGORY HANDLER
+|--------------------------------------------------------------------------
+*/
 
-  if (!firstItem) {
+const categoryHandler =
+async (ctx) => {
+
+  const category =
+    ctx.match[1]
+
+  /*
+  |--------------------------------------------------------------------------
+  | GET CONTENT
+  |--------------------------------------------------------------------------
+  */
+
+  const content =
+    await getCategoryContent(
+      category
+    )
+
+  if (
+    !content
+    ||
+    content.length === 0
+  ) {
 
     return ctx.reply(
 `
-❌ Aucun contenu trouvé.
+❌ Aucun contenu disponible.
 `
     )
 
   }
 
-  await sendContent(ctx, firstItem)
+  /*
+  |--------------------------------------------------------------------------
+  | FORMAT
+  |--------------------------------------------------------------------------
+  */
+
+  let message =
+`
+📂 ${category.toUpperCase()}
+
+━━━━━━━━━━━━━━━━━━
+
+`
+
+  content.forEach(
+
+    (item, index) => {
+
+      message +=
+`
+${index + 1}. ${item.title}
+
+🔗 ${item.link}
+
+`
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | SEND
+  |--------------------------------------------------------------------------
+  */
+
+  await ctx.reply(
+
+    message,
+
+    Markup.inlineKeyboard([
+
+      [
+
+        Markup.button.callback(
+          '⬅️ Retour',
+          'back_menu'
+        )
+
+      ]
+
+    ])
+
+  )
+
 }
 
 module.exports = {
+
   categoryHandler
+
 }

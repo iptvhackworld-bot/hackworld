@@ -4,19 +4,19 @@ require('mongoose')
 const inventorySchema =
 new mongoose.Schema({
 
-  userId: {
-
-    type: Number,
-
-    required: true
-
-  },
+  userId: Number,
 
   items: [
 
     {
 
+      itemId: String,
+
       name: String,
+
+      emoji: String,
+
+      rarity: String,
 
       quantity: {
 
