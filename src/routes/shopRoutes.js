@@ -16,7 +16,7 @@ module.exports = (bot) => {
 
   const {
 
-    openCasino
+    openCasinoPanel
 
   } = require(
     '../handlers/casinoHandler'
@@ -32,7 +32,13 @@ module.exports = (bot) => {
 
     'inventory',
 
-    openInventory
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openInventory(ctx)
+
+    }
 
   )
 
@@ -46,7 +52,13 @@ module.exports = (bot) => {
 
     'casino_menu',
 
-    openCasino
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openCasinoPanel(ctx)
+
+    }
 
   )
 
