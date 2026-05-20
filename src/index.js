@@ -3,6 +3,11 @@ require('dotenv').config()
 const { Telegraf } =
 require('telegraf')
 
+const session =
+require(
+  'telegraf/session'
+)
+
 const env =
 require('./config/env')
 
@@ -47,6 +52,17 @@ new Telegraf(
   env.botToken
 )
 
+/*
+|--------------------------------------------------------------------------
+| SESSION
+|--------------------------------------------------------------------------
+*/
+
+bot.use(
+
+  session()
+
+)
 
 /*
 |--------------------------------------------------------------------------
@@ -87,3 +103,12 @@ registerShutdown(bot)
 connectDatabase()
 
 launchBot(bot)
+
+/*
+|--------------------------------------------------------------------------
+| EXPORT
+|--------------------------------------------------------------------------
+*/
+
+module.exports =
+bot
