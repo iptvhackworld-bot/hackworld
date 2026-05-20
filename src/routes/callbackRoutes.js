@@ -113,9 +113,19 @@ module.exports = (bot) => {
 
     openSearchUser,
 
-    handleSearchUser,
+    handleAdminInput,
 
-    resetInventory
+    giveMoneyPanel,
+
+    giveXPPanel,
+
+    setAdmin,
+
+    setMod,
+
+    resetInventory,
+
+    resetUser
 
   } = require(
     '../handlers/manageUsersHandler'
@@ -195,7 +205,7 @@ module.exports = (bot) => {
 
   /*
   |--------------------------------------------------------------------------
-  | CONTENT PANEL
+  | CONTENT
   |--------------------------------------------------------------------------
   */
 
@@ -266,63 +276,6 @@ module.exports = (bot) => {
   | ANALYTICS
   |--------------------------------------------------------------------------
   */
-
-  bot.action(
-
-    'admin_analytics',
-
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await ctx.reply(
-
-`
-📊 ANALYTICS PANEL
-
-━━━━━━━━━━━━━━━━━━
-`,
-
-        require('telegraf')
-        .Markup.inlineKeyboard([
-
-          [
-
-            require('telegraf')
-            .Markup.button.callback(
-              '👥 Top Users',
-              'top_users'
-            )
-
-          ],
-
-          [
-
-            require('telegraf')
-            .Markup.button.callback(
-              '💰 Richest Users',
-              'rich_users'
-            )
-
-          ],
-
-          [
-
-            require('telegraf')
-            .Markup.button.callback(
-              '🎰 Top Gamblers',
-              'top_gamblers'
-            )
-
-          ]
-
-        ])
-
-      )
-
-    }
-
-  )
 
   bot.action(
 
@@ -416,7 +369,134 @@ module.exports = (bot) => {
 
   /*
   |--------------------------------------------------------------------------
-  | USER ACTIONS
+  | GIVE MONEY
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    /^givemoney_(.+)$/,
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await giveMoneyPanel(ctx)
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | GIVE XP
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    /^givexp_(.+)$/,
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await giveXPPanel(ctx)
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | SET ADMIN
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    /^setadmin_(.+)$/,
+
+    async (ctx) => {
+
+      const id =
+        Number(
+          ctx.match[1]
+        )
+
+      await setAdmin(
+
+        ctx,
+
+        id
+
+      )
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | SET MOD
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    /^setmod_(.+)$/,
+
+    async (ctx) => {
+
+      const id =
+        Number(
+          ctx.match[1]
+        )
+
+      await setMod(
+
+        ctx,
+
+        id
+
+      )
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | RESET USER
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    /^resetuser_(.+)$/,
+
+    async (ctx) => {
+
+      const id =
+        Number(
+          ctx.match[1]
+        )
+
+      await resetUser(
+
+        ctx,
+
+        id
+
+      )
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | BAN
   |--------------------------------------------------------------------------
   */
 
@@ -433,10 +513,6 @@ module.exports = (bot) => {
 
       await banUser(id)
 
-      await ctx.answerCbQuery(
-        '🚫 User banni'
-      )
-
       await ctx.reply(
 `
 🚫 Utilisateur banni.
@@ -446,6 +522,12 @@ module.exports = (bot) => {
     }
 
   )
+
+  /*
+  |--------------------------------------------------------------------------
+  | UNBAN
+  |--------------------------------------------------------------------------
+  */
 
   bot.action(
 
@@ -460,10 +542,6 @@ module.exports = (bot) => {
 
       await unbanUser(id)
 
-      await ctx.answerCbQuery(
-        '✅ User débanni'
-      )
-
       await ctx.reply(
 `
 ✅ Utilisateur débanni.
@@ -473,6 +551,12 @@ module.exports = (bot) => {
     }
 
   )
+
+  /*
+  |--------------------------------------------------------------------------
+  | RESET MONEY
+  |--------------------------------------------------------------------------
+  */
 
   bot.action(
 
@@ -487,10 +571,6 @@ module.exports = (bot) => {
 
       await resetMoney(id)
 
-      await ctx.answerCbQuery(
-        '💰 Money reset'
-      )
-
       await ctx.reply(
 `
 💰 Argent reset.
@@ -500,6 +580,12 @@ module.exports = (bot) => {
     }
 
   )
+
+  /*
+  |--------------------------------------------------------------------------
+  | RESET XP
+  |--------------------------------------------------------------------------
+  */
 
   bot.action(
 
@@ -514,10 +600,6 @@ module.exports = (bot) => {
 
       await resetXP(id)
 
-      await ctx.answerCbQuery(
-        '⭐ XP reset'
-      )
-
       await ctx.reply(
 `
 ⭐ XP reset.
@@ -527,6 +609,12 @@ module.exports = (bot) => {
     }
 
   )
+
+  /*
+  |--------------------------------------------------------------------------
+  | RESET INVENTORY
+  |--------------------------------------------------------------------------
+  */
 
   bot.action(
 
@@ -545,10 +633,6 @@ module.exports = (bot) => {
 
         id
 
-      )
-
-      await ctx.answerCbQuery(
-        '🎒 Inventory reset'
       )
 
     }
@@ -637,23 +721,9 @@ module.exports = (bot) => {
 
   /*
   |--------------------------------------------------------------------------
-  | CASINO PANEL
+  | CASINO
   |--------------------------------------------------------------------------
   */
-
-  bot.action(
-
-    'admin_casino',
-
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await openCasinoPanel(ctx)
-
-    }
-
-  )
 
   bot.action(
 
@@ -664,186 +734,6 @@ module.exports = (bot) => {
       await ctx.answerCbQuery()
 
       await rouletteHandler(ctx)
-
-    }
-
-  )
-
-  /*
-  |--------------------------------------------------------------------------
-  | PLACEHOLDERS
-  |--------------------------------------------------------------------------
-  */
-
-  bot.action(
-
-    'admin_shop',
-
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await ctx.reply(
-        '🛒 Shop panel bientôt disponible.'
-      )
-
-    }
-
-  )
-
-  bot.action(
-
-    'admin_lootbox',
-
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await ctx.reply(
-        '🎁 Lootbox panel bientôt disponible.'
-      )
-
-    }
-
-  )
-
-  bot.action(
-
-    'admin_staff',
-
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await ctx.reply(
-        '👮 Staff panel bientôt disponible.'
-      )
-
-    }
-
-  )
-
-  bot.action(
-
-    'admin_settings',
-
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await ctx.reply(
-        '⚙️ Settings bientôt disponible.'
-      )
-
-    }
-
-  )
-
-  bot.action(
-
-    'admin_economy',
-
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await ctx.reply(
-        '💰 Economy panel bientôt disponible.'
-      )
-
-    }
-
-  )
-
-  bot.action(
-
-    'admin_tickets',
-
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await ctx.reply(
-        '🎫 Tickets panel bientôt disponible.'
-      )
-
-    }
-
-  )
-
-  /*
-  |--------------------------------------------------------------------------
-  | RATING
-  |--------------------------------------------------------------------------
-  */
-
-  bot.action(
-
-    'rate_1',
-
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await rateBot(
-        ctx,
-        1
-      )
-
-    }
-
-  )
-
-  bot.action(
-
-    'rate_5',
-
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await rateBot(
-        ctx,
-        5
-      )
-
-    }
-
-  )
-
-  /*
-  |--------------------------------------------------------------------------
-  | RULES
-  |--------------------------------------------------------------------------
-  */
-
-  bot.action(
-
-    'accept_rules',
-
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await ctx.deleteMessage()
-
-      await showMainMenu(ctx)
-
-    }
-
-  )
-
-  bot.action(
-
-    'decline_rules',
-
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await ctx.reply(
-        '❌ Vous devez accepter le règlement.'
-      )
 
     }
 
@@ -986,6 +876,24 @@ module.exports = (bot) => {
       await ctx.answerCbQuery()
 
       await showMainMenu(ctx)
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | TEXT ADMIN INPUT
+  |--------------------------------------------------------------------------
+  */
+
+  bot.on(
+
+    'text',
+
+    async (ctx) => {
+
+      await handleAdminInput(ctx)
 
     }
 

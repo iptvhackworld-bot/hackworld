@@ -1,13 +1,6 @@
-const {
-
-  getUsers,
-
-  getUser,
-
-  searchUser
-
-} = require(
-  '../services/userService'
+const User =
+require(
+  '../models/User'
 )
 
 const Inventory =
@@ -28,19 +21,7 @@ const openUsersPanel =
 async (ctx) => {
 
   const users =
-    await getUsers()
-
-  if (
-    users.length === 0
-  ) {
-
-    return ctx.reply(
-`
-❌ Aucun utilisateur.
-`
-    )
-
-  }
+    await User.find()
 
   const buttons =
 
@@ -64,18 +45,6 @@ async (ctx) => {
 
     })
 
-  buttons.push([
-
-    Markup.button.callback(
-
-      '🔍 Rechercher',
-
-      'search_user'
-
-    )
-
-  ])
-
   await ctx.reply(
 
 `
@@ -83,14 +52,25 @@ async (ctx) => {
 
 ━━━━━━━━━━━━━━━━━━
 
-📋 Liste utilisateurs
+Gestion utilisateurs
 
 ━━━━━━━━━━━━━━━━━━
 `,
 
-    Markup.inlineKeyboard(
-      buttons
-    )
+    Markup.inlineKeyboard([
+
+      ...buttons,
+
+      [
+
+        Markup.button.callback(
+          '🔍 Rechercher',
+          'search_user'
+        )
+
+      ]
+
+    ])
 
   )
 
@@ -111,7 +91,11 @@ async (ctx) => {
     )
 
   const user =
-    await getUser(userId)
+    await User.findOne({
+
+      id: userId
+
+    })
 
   if (!user) {
 
@@ -156,30 +140,64 @@ async (ctx) => {
 ${user.id}
 
 💰 Argent :
-${user.money || 0}
+${user.money}
 
 ⭐ XP :
-${user.xp || 0}
+${user.xp}
 
 🎒 Inventory :
 ${inventoryCount} items
 
-📅 Arrivé le :
+🛡 Role :
+${user.role || 'user'}
+
+🚫 Banni :
+${user.banned ? 'Oui' : 'Non'}
+
+📅 Arrivé :
 ${new Date(user.createdAt).toLocaleDateString()}
-
-📨 Utilisations :
-${user.messages || 0}
-
-⚠️ Warns :
-${user.warns || 0}
-
-🚫 Status :
-${user.banned ? 'Banni' : 'Actif'}
 
 ━━━━━━━━━━━━━━━━━━
 `,
 
     Markup.inlineKeyboard([
+
+      [
+
+        Markup.button.callback(
+          '💰 Give Money',
+          `givemoney_${user.id}`
+        ),
+
+        Markup.button.callback(
+          '⭐ Give XP',
+          `givexp_${user.id}`
+        )
+
+      ],
+
+      [
+
+        Markup.button.callback(
+          '🎁 Give Item',
+          `giveitem_${user.id}`
+        )
+
+      ],
+
+      [
+
+        Markup.button.callback(
+          '👑 Set Admin',
+          `setadmin_${user.id}`
+        ),
+
+        Markup.button.callback(
+          '🛡 Set Mod',
+          `setmod_${user.id}`
+        )
+
+      ],
 
       [
 
@@ -198,26 +216,17 @@ ${user.banned ? 'Banni' : 'Actif'}
       [
 
         Markup.button.callback(
-          '💰 Reset Money',
-          `resetmoney_${user.id}`
-        )
-
-      ],
-
-      [
-
-        Markup.button.callback(
-          '⭐ Reset XP',
-          `resetxp_${user.id}`
-        )
-
-      ],
-
-      [
-
-        Markup.button.callback(
           '🎒 Reset Inventory',
           `resetinv_${user.id}`
+        )
+
+      ],
+
+      [
+
+        Markup.button.callback(
+          '💀 Reset User',
+          `resetuser_${user.id}`
         )
 
       ],
@@ -239,30 +248,20 @@ ${user.banned ? 'Banni' : 'Actif'}
 
 /*
 |--------------------------------------------------------------------------
-| SEARCH PANEL
+| SEARCH USER
 |--------------------------------------------------------------------------
 */
 
 const openSearchUser =
 async (ctx) => {
 
-  if (!ctx.session) {
-
-    ctx.session = {}
-
-  }
-
-  ctx.session.step =
+  ctx.session.adminAction =
     'search_user'
 
   await ctx.reply(
 
 `
-🔍 RECHERCHE USER
-
-━━━━━━━━━━━━━━━━━━
-
-Envoyez :
+🔍 Envoyez :
 
 • ID
 • Username
@@ -273,62 +272,294 @@ Envoyez :
 
 /*
 |--------------------------------------------------------------------------
-| HANDLE SEARCH
+| HANDLE ADMIN INPUT
 |--------------------------------------------------------------------------
 */
 
-const handleSearchUser =
+const handleAdminInput =
 async (ctx) => {
 
   if (
-
-    !ctx.session
-
-    ||
-
-    ctx.session.step
-    !==
-    'search_user'
-
+    !ctx.session.adminAction
   ) {
 
     return
 
   }
 
-  ctx.session.step =
-    null
-
-  const query =
-    ctx.message.text
-
-  const users =
-    await searchUser(query)
+  /*
+  |--------------------------------------------------------------------------
+  | SEARCH USER
+  |--------------------------------------------------------------------------
+  */
 
   if (
-    users.length === 0
+
+    ctx.session.adminAction ===
+    'search_user'
+
   ) {
+
+    const query =
+      ctx.message.text
+
+    const user =
+      await User.findOne({
+
+        $or: [
+
+          {
+
+            username: query
+
+          },
+
+          {
+
+            id: Number(query)
+
+          }
+
+        ]
+
+      })
+
+    if (!user) {
+
+      return ctx.reply(
+`
+❌ Introuvable.
+`
+      )
+
+    }
+
+    ctx.match = [
+
+      null,
+
+      user.id
+
+    ]
+
+    ctx.session.adminAction =
+      null
+
+    return openUserProfile(ctx)
+
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | GIVE MONEY
+  |--------------------------------------------------------------------------
+  */
+
+  if (
+
+    ctx.session.adminAction ===
+    'give_money'
+
+  ) {
+
+    const amount =
+      Number(
+        ctx.message.text
+      )
+
+    const user =
+      await User.findOne({
+
+        id:
+        ctx.session.targetUser
+
+      })
+
+    user.money += amount
+
+    await user.save()
+
+    ctx.session.adminAction =
+      null
 
     return ctx.reply(
 `
-❌ Aucun utilisateur trouvé.
+💰 ${amount}$ ajouté.
 `
     )
 
   }
 
-  const user =
-    users[0]
+  /*
+  |--------------------------------------------------------------------------
+  | GIVE XP
+  |--------------------------------------------------------------------------
+  */
 
-  ctx.match = [
+  if (
 
-    null,
+    ctx.session.adminAction ===
+    'give_xp'
 
-    user.id
+  ) {
 
-  ]
+    const amount =
+      Number(
+        ctx.message.text
+      )
 
-  await openUserProfile(ctx)
+    const user =
+      await User.findOne({
+
+        id:
+        ctx.session.targetUser
+
+      })
+
+    user.xp += amount
+
+    await user.save()
+
+    ctx.session.adminAction =
+      null
+
+    return ctx.reply(
+`
+⭐ ${amount} XP ajouté.
+`
+    )
+
+  }
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| GIVE MONEY PANEL
+|--------------------------------------------------------------------------
+*/
+
+const giveMoneyPanel =
+async (ctx) => {
+
+  ctx.session.adminAction =
+    'give_money'
+
+  ctx.session.targetUser =
+    Number(
+      ctx.match[1]
+    )
+
+  await ctx.reply(
+
+`
+💰 Envoyez le montant à ajouter.
+`
+  )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| GIVE XP PANEL
+|--------------------------------------------------------------------------
+*/
+
+const giveXPPanel =
+async (ctx) => {
+
+  ctx.session.adminAction =
+    'give_xp'
+
+  ctx.session.targetUser =
+    Number(
+      ctx.match[1]
+    )
+
+  await ctx.reply(
+
+`
+⭐ Envoyez le XP à ajouter.
+`
+  )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| SET ADMIN
+|--------------------------------------------------------------------------
+*/
+
+const setAdmin =
+async (
+
+  ctx,
+
+  userId
+
+) => {
+
+  await User.updateOne(
+
+    {
+
+      id: userId
+
+    },
+
+    {
+
+      role: 'admin'
+
+    }
+
+  )
+
+  await ctx.reply(
+`
+👑 Admin ajouté.
+`
+  )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| SET MOD
+|--------------------------------------------------------------------------
+*/
+
+const setMod =
+async (
+
+  ctx,
+
+  userId
+
+) => {
+
+  await User.updateOne(
+
+    {
+
+      id: userId
+
+    },
+
+    {
+
+      role: 'mod'
+
+    }
+
+  )
+
+  await ctx.reply(
+`
+🛡 Modérateur ajouté.
+`
+  )
 
 }
 
@@ -371,6 +602,67 @@ async (
 
 }
 
+/*
+|--------------------------------------------------------------------------
+| RESET USER
+|--------------------------------------------------------------------------
+*/
+
+const resetUser =
+async (
+
+  ctx,
+
+  userId
+
+) => {
+
+  await User.updateOne(
+
+    {
+
+      id: userId
+
+    },
+
+    {
+
+      money: 0,
+
+      xp: 0,
+
+      warns: 0,
+
+      banned: false
+
+    }
+
+  )
+
+  await Inventory.findOneAndUpdate(
+
+    {
+
+      userId
+
+    },
+
+    {
+
+      items: []
+
+    }
+
+  )
+
+  await ctx.reply(
+`
+💀 Utilisateur reset.
+`
+  )
+
+}
+
 module.exports = {
 
   openUsersPanel,
@@ -379,8 +671,18 @@ module.exports = {
 
   openSearchUser,
 
-  handleSearchUser,
+  handleAdminInput,
 
-  resetInventory
+  giveMoneyPanel,
+
+  giveXPPanel,
+
+  setAdmin,
+
+  setMod,
+
+  resetInventory,
+
+  resetUser
 
 }
