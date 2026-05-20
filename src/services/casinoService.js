@@ -49,12 +49,28 @@ async (
 
   /*
   |--------------------------------------------------------------------------
+  | ADMIN
+  |--------------------------------------------------------------------------
+  */
+
+  const isAdmin =
+
+    user.role === 'admin'
+
+  /*
+  |--------------------------------------------------------------------------
   | MONEY
   |--------------------------------------------------------------------------
   */
 
   if (
+
+    !isAdmin
+
+    &&
+
     user.money < amount
+
   ) {
 
     return {
@@ -81,9 +97,13 @@ async (
 
     profit = amount
 
-    user.money += amount
+    if (!isAdmin) {
 
-    user.casinoWon += amount
+      user.money += amount
+
+      user.casinoWon += amount
+
+    }
 
   }
 
@@ -91,7 +111,11 @@ async (
 
     profit = -amount
 
-    user.money -= amount
+    if (!isAdmin) {
+
+      user.money -= amount
+
+    }
 
   }
 
