@@ -37,7 +37,9 @@ async (ctx) => {
       message +=
 `
 #${index + 1}
+
 👤 @${user.username}
+
 📨 ${user.messages} messages
 
 `
@@ -46,13 +48,15 @@ async (ctx) => {
 
   )
 
-  await ctx.reply(message)
+  await ctx.reply(
+    message
+  )
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| RICHEST
+| RICHEST USERS
 |--------------------------------------------------------------------------
 */
 
@@ -71,5 +75,79 @@ async (ctx) => {
 `
 
   users.forEach(
+
+    (user, index) => {
+
+      message +=
+`
+#${index + 1}
+
+👤 @${user.username}
+
+💰 ${user.money}
+
+`
+
+    }
+
+  )
+
+  await ctx.reply(
+    message
+  )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| TOP GAMBLERS
+|--------------------------------------------------------------------------
+*/
+
+const showTopGamblers =
+async (ctx) => {
+
+  const users =
+    await getTopGamblers()
+
+  let message =
+`
+🎰 TOP GAMBLERS
+
+━━━━━━━━━━━━━━━━━━
+
+`
+
+  users.forEach(
+
+    (user, index) => {
+
+      message +=
+`
+#${index + 1}
+
+👤 @${user.username}
+
+🎲 ${user.casinoPlayed}
+
+`
+
+    }
+
+  )
+
+  await ctx.reply(
+    message
+  )
+
+}
+
+module.exports = {
+
+  showTopUsersAnalytics,
+
+  showRichestUsers,
+
+  showTopGamblers
 
 }
