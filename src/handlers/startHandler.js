@@ -13,6 +13,11 @@ const {
   '../services/statsService'
 )
 
+const fs =
+require('fs')
+
+
+
 /*
 |--------------------------------------------------------------------------
 | IMAGE
@@ -52,13 +57,22 @@ async (ctx) => {
   |--------------------------------------------------------------------------
   */
 
-  await ctx.replyWithPhoto(
+await ctx.replyWithPhoto(
 
-    MAIN_IMAGE,
+  {
 
-    {
+    source:
+    fs.createReadStream(
 
-      caption:
+      'src/assets/hackworld.jpg'
+
+    )
+
+  },
+
+  {
+
+    caption:
 `
 ╔══════════════════╗
       HACKWORLD
