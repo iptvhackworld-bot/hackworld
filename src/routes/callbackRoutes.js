@@ -786,6 +786,138 @@ bot.action(
     }
 
   )
+  
+  /*
+|--------------------------------------------------------------------------
+| MODERATION ACTIONS
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'warn_user',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+⚠️ Système d'avertissement bientôt disponible.
+`
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'removewarn_user',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+✅ Retrait des warns bientôt disponible.
+`
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'mute_user',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+🔇 Système mute bientôt disponible.
+`
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'unmute_user',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+🔊 Système unmute bientôt disponible.
+`
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'blacklist_user',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+⛔ Blacklist bientôt disponible.
+`
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'user_logs',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+📜 Logs utilisateur bientôt disponibles.
+`
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'antispam_panel',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+🛡 Panel Anti-Spam bientôt disponible.
+`
+    )
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
