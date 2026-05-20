@@ -32,7 +32,7 @@ module.exports = (bot) => {
 
   const {
 
-    showShop
+    openShop
 
   } = require(
     '../handlers/shopHandler'
@@ -55,8 +55,11 @@ module.exports = (bot) => {
   */
 
   bot.command(
+
     'profile',
+
     showProfile
+
   )
 
   /*
@@ -66,8 +69,11 @@ module.exports = (bot) => {
   */
 
   bot.command(
+
     'daily',
+
     dailyReward
+
   )
 
   /*
@@ -77,8 +83,11 @@ module.exports = (bot) => {
   */
 
   bot.command(
+
     'shop',
-    showShop
+
+    openShop
+
   )
 
 }
