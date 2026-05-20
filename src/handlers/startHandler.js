@@ -234,6 +234,12 @@ ${averageRating}/5
 const startHandler =
 async (ctx) => {
 
+  /*
+  |--------------------------------------------------------------------------
+  | IMAGE
+  |--------------------------------------------------------------------------
+  */
+
   await ctx.replyWithPhoto(
 
     {
@@ -245,19 +251,19 @@ async (ctx) => {
 
       )
 
-    },
+    }
 
-    {
+  )
 
-      caption:
+  /*
+  |--------------------------------------------------------------------------
+  | RULES
+  |--------------------------------------------------------------------------
+  */
+
+  await ctx.reply(
+
 `
-╔══════════════════╗
-     HACKWORLD
-╚══════════════════╝
-
-  Bienvenue a tous les nouveau membres 
-
-
 📜 RÈGLEMENT OFFICIEL — HACKWORLD 📜
 
 ❤️ Bienvenue à tous les nouveaux membres ❤️
@@ -269,84 +275,67 @@ Merci de lire attentivement le règlement ci-dessous afin d’éviter toute sanc
 ⛔ INTERDICTIONS ⛔
 ━━━━━━━━━━━━━━━━━━
 
-Il est STRICTEMENT INTERDIT de :
-
-1. Faire de la publicité sauvage 🚫
-2. Publier ou parler de drogues 🚫
-3. Publier ou vendre des armes 🚫
-4. Partager du contenu pornographique 🚫
-5. Tenir des propos racistes ou discriminatoires 🚫
-6. Parler de religion ou créer des débats religieux 🚫
-7. Insulter ou manquer de respect aux membres 🚫
-8. Tenter une arnaque ou une usurpation d’identité 🚫
-9. Contacter les membres en privé au nom du staff 🚫
+1. Publicité sauvage 🚫
+2. Drogues 🚫
+3. Armes 🚫
+4. Pornographie 🚫
+5. Racisme / discrimination 🚫
+6. Religion / débats religieux 🚫
+7. Insultes / irrespect 🚫
+8. Arnaques / usurpation 🚫
+9. Faux staff / MP frauduleux 🚫
 
 ━━━━━━━━━━━━━━━━━━
 ⚠️ SANCTIONS ⚠️
 ━━━━━━━━━━━━━━━━━━
 
-Toute personne ne respectant pas le règlement sera sanctionnée :
-
-• BAN IMMÉDIAT ET DÉFINITIF ⛔
-• Aucun avertissement pour les cas graves 📛
-• Les décisions des administrateurs sont finales ✅
+• BAN IMMÉDIAT ⛔
+• Aucun avertissement pour cas graves 📛
+• Décisions staff finales ✅
 
 ━━━━━━━━━━━━━━━━━━
-🔒 SÉCURITÉ & RAPPEL 🔒
+🔒 SÉCURITÉ 🔒
 ━━━━━━━━━━━━━━━━━━
 
-Pour votre sécurité :
-
-✅ Nous ne vous contacterons jamais en message privé
-✅ Aucun paiement sans système d’escrow
-✅ Vérifiez toujours les @ officiels avant tout échange
-✅ Toute annonce doit obligatoirement passer par l’escrow du groupe
-
-Toute annonce postée sans respect des règles pourra entraîner un bannissement immédiat.
+✅ Aucun MP du staff
+✅ Vérifiez toujours les @ officiels
+✅ Escrow obligatoire
 
 ━━━━━━━━━━━━━━━━━━
-📌 INFORMATIONS IMPORTANTES 📌
+📌 IMPORTANT 📌
 ━━━━━━━━━━━━━━━━━━
 
-• Restez polis et courtois avec tous les membres
-• En cas de problème, contactez un administrateur
-• Le staff se réserve le droit de modifier le règlement à tout moment
-
-En restant dans le groupe, vous acceptez automatiquement ce règlement.
-
-Merci à tous pour votre compréhension 🙏
-— L’Équipe HackWorld
-
-
-━━━━━━━━━━━━━━━━━━
+• Respect obligatoire
+• Contactez un admin si besoin
+• Le règlement peut être modifié
 
 ⚠️ En cliquant sur ACCEPTER,
-vous acceptez le règlement.
+vous acceptez automatiquement ce règlement.
+
+— L’Équipe HackWorld
 `,
 
-      ...Markup.inlineKeyboard([
+    Markup.inlineKeyboard([
 
-        [
+      [
 
-          Markup.button.callback(
-            '✅ ACCEPTER',
-            'accept_rules'
-          )
+        Markup.button.callback(
+          '✅ ACCEPTER',
+          'accept_rules'
+        )
 
-        ],
+      ],
 
-        [
+      [
 
-          Markup.button.callback(
-            '❌ REFUSER',
-            'decline_rules'
-          )
+        Markup.button.callback(
+          '❌ REFUSER',
+          'decline_rules'
+        )
 
-        ]
+      ]
 
-      ])
-
-    }
+    ])
 
   )
 
