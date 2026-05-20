@@ -8,6 +8,8 @@ module.exports = (bot) => {
 
   const {
 
+    startHandler,
+
     showMainMenu
 
   } = require(
@@ -181,6 +183,44 @@ module.exports = (bot) => {
 
   } = require(
     '../handlers/casinoHandler'
+  )
+
+  const {
+
+    openShop,
+
+    buyHandler
+
+  } = require(
+    '../handlers/shopHandler'
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | ACCEPT RULES
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'accept_rules',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      try {
+
+        await ctx.deleteMessage()
+
+      }
+
+      catch (error) {}
+
+      await showMainMenu(ctx)
+
+    }
+
   )
 
   /*
@@ -721,9 +761,57 @@ module.exports = (bot) => {
 
   /*
   |--------------------------------------------------------------------------
+  | SHOP
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'shop_menu',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openShop(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    /^buy_(.+)$/,
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await buyHandler(ctx)
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
   | CASINO
   |--------------------------------------------------------------------------
   */
+
+  bot.action(
+
+    'casino_menu',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openCasinoPanel(ctx)
+
+    }
+
+  )
 
   bot.action(
 
