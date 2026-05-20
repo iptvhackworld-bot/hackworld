@@ -13,6 +13,18 @@ require('telegraf')
 
 /*
 |--------------------------------------------------------------------------
+| ADMIN SESSIONS
+|--------------------------------------------------------------------------
+*/
+
+if (!global.adminSessions) {
+
+  global.adminSessions = {}
+
+}
+
+/*
+|--------------------------------------------------------------------------
 | USERS PANEL
 |--------------------------------------------------------------------------
 */
@@ -134,7 +146,7 @@ async (ctx) => {
 ━━━━━━━━━━━━━━━━━━
 
 👤 Username :
-@${user.username}
+@${user.username || 'Unknown'}
 
 🆔 ID :
 ${user.id}
@@ -255,8 +267,14 @@ ${new Date(user.createdAt).toLocaleDateString()}
 const openSearchUser =
 async (ctx) => {
 
-  ctx.session.adminAction =
+  global.adminSessions[
+    ctx.from.id
+  ] = {
+
+    action:
     'search_user'
+
+  }
 
   await ctx.reply(
 
@@ -279,9 +297,13 @@ async (ctx) => {
 const handleAdminInput =
 async (ctx) => {
 
-  if (
-    !ctx.session.adminAction
-  ) {
+  const session =
+
+    global.adminSessions[
+      ctx.from.id
+    ]
+
+  if (!session) {
 
     return
 
@@ -295,7 +317,7 @@ async (ctx) => {
 
   if (
 
-    ctx.session.adminAction ===
+    session.action ===
     'search_user'
 
   ) {
@@ -342,8 +364,9 @@ async (ctx) => {
 
     ]
 
-    ctx.session.adminAction =
-      null
+    delete global.adminSessions[
+      ctx.from.id
+    ]
 
     return openUserProfile(ctx)
 
@@ -357,7 +380,7 @@ async (ctx) => {
 
   if (
 
-    ctx.session.adminAction ===
+    session.action ===
     'give_money'
 
   ) {
@@ -371,16 +394,27 @@ async (ctx) => {
       await User.findOne({
 
         id:
-        ctx.session.targetUser
+        session.targetUser
 
       })
+
+    if (!user) {
+
+      return ctx.reply(
+`
+❌ Utilisateur introuvable.
+`
+      )
+
+    }
 
     user.money += amount
 
     await user.save()
 
-    ctx.session.adminAction =
-      null
+    delete global.adminSessions[
+      ctx.from.id
+    ]
 
     return ctx.reply(
 `
@@ -398,7 +432,7 @@ async (ctx) => {
 
   if (
 
-    ctx.session.adminAction ===
+    session.action ===
     'give_xp'
 
   ) {
@@ -412,16 +446,27 @@ async (ctx) => {
       await User.findOne({
 
         id:
-        ctx.session.targetUser
+        session.targetUser
 
       })
+
+    if (!user) {
+
+      return ctx.reply(
+`
+❌ Utilisateur introuvable.
+`
+      )
+
+    }
 
     user.xp += amount
 
     await user.save()
 
-    ctx.session.adminAction =
-      null
+    delete global.adminSessions[
+      ctx.from.id
+    ]
 
     return ctx.reply(
 `
@@ -442,13 +487,19 @@ async (ctx) => {
 const giveMoneyPanel =
 async (ctx) => {
 
-  ctx.session.adminAction =
-    'give_money'
+  global.adminSessions[
+    ctx.from.id
+  ] = {
 
-  ctx.session.targetUser =
+    action:
+    'give_money',
+
+    targetUser:
     Number(
       ctx.match[1]
     )
+
+  }
 
   await ctx.reply(
 
@@ -468,13 +519,19 @@ async (ctx) => {
 const giveXPPanel =
 async (ctx) => {
 
-  ctx.session.adminAction =
-    'give_xp'
+  global.adminSessions[
+    ctx.from.id
+  ] = {
 
-  ctx.session.targetUser =
+    action:
+    'give_xp',
+
+    targetUser:
     Number(
       ctx.match[1]
     )
+
+  }
 
   await ctx.reply(
 

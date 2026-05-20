@@ -9,10 +9,7 @@ require('dotenv').config()
 const { Telegraf } =
 require('telegraf')
 
-const LocalSession =
-require(
-  'telegraf-session-local'
-)
+
 
 /*
 |--------------------------------------------------------------------------
@@ -72,15 +69,6 @@ new Telegraf(
 |--------------------------------------------------------------------------
 */
 
-bot.use(
-
-  new LocalSession({
-
-    database: 'sessions.json'
-
-  }).middleware()
-
-)
 
 /*
 |--------------------------------------------------------------------------
