@@ -1,24 +1,13 @@
 const {
 
-  addWin,
-
-  addLoss,
-
-  getCasinoStats
+  playRoulette
 
 } = require(
   '../services/casinoService'
 )
 
-const {
-
-  addMoney,
-
-  removeMoney
-
-} = require(
-  '../services/economyService'
-)
+const { Markup } =
+require('telegraf')
 
 /*
 |--------------------------------------------------------------------------
@@ -26,152 +15,115 @@ const {
 |--------------------------------------------------------------------------
 */
 
-const openCasino =
+const openCasinoPanel =
 async (ctx) => {
 
-  const stats =
-    await getCasinoStats(
-
-      ctx.from.id
-
-    )
-
   await ctx.reply(
+
 `
-🎰 CASINO
+🎰 CASINO PANEL
 
 ━━━━━━━━━━━━━━━━━━
 
-🏆 Victoires :
-${stats.wins}
-
-💀 Défaites :
-${stats.losses}
-
-🎲 Total joué :
-${stats.totalBet}
+Choisissez un jeu
 
 ━━━━━━━━━━━━━━━━━━
+`,
 
-🎰 Commande :
-/bet montant
-`
+    Markup.inlineKeyboard([
+
+      [
+
+        Markup.button.callback(
+          '🎲 Roulette',
+          'casino_roulette'
+        )
+
+      ],
+
+      [
+
+        Markup.button.callback(
+          '🎰 Slots',
+          'casino_slots'
+        )
+
+      ],
+
+      [
+
+        Markup.button.callback(
+          '🃏 Blackjack',
+          'casino_blackjack'
+        )
+
+      ]
+
+    ])
+
   )
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| BET
+| ROULETTE
 |--------------------------------------------------------------------------
 */
 
-const playCasino =
-async (
+const rouletteHandler =
+async (ctx) => {
 
-  ctx,
+  const userId =
+    ctx.from.id
 
-  amount
+  const amount =
+    100
 
-) => {
+  const result =
+    await playRoulette(
 
-  amount =
-    Number(amount)
-
-  /*
-  |--------------------------------------------------------------------------
-  | INVALID
-  |--------------------------------------------------------------------------
-  */
-
-  if (
-
-    isNaN(amount)
-
-    ||
-
-    amount <= 0
-
-  ) {
-
-    return ctx.reply(
-`
-❌ Montant invalide.
-`
-    )
-
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | RANDOM
-  |--------------------------------------------------------------------------
-  */
-
-  const win =
-    Math.random() > 0.5
-
-  /*
-  |--------------------------------------------------------------------------
-  | WIN
-  |--------------------------------------------------------------------------
-  */
-
-  if (win) {
-
-    await addMoney(
-
-      ctx.from.id,
+      userId,
 
       amount
 
     )
 
-    await addWin(
-
-      ctx.from.id,
-
-      amount
-
-    )
+  if (result.error) {
 
     return ctx.reply(
 `
-🎉 GAGNÉ
-
-💰 +${amount}
+❌ ${result.error}
 `
     )
 
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | LOSS
-  |--------------------------------------------------------------------------
-  */
+  if (result.win) {
 
-  await removeMoney(
+    return ctx.reply(
+`
+🎉 VICTOIRE
 
-    ctx.from.id,
+💰 Gain :
++${amount}
 
-    amount
+💵 Argent :
+${result.money}
+`
+    )
 
-  )
-
-  await addLoss(
-
-    ctx.from.id,
-
-    amount
-
-  )
+  }
 
   return ctx.reply(
 `
 💀 PERDU
 
-💸 -${amount}
+💸 Perte :
+-${amount}
+
+💵 Argent :
+${result.money}
 `
   )
 
@@ -179,8 +131,8 @@ async (
 
 module.exports = {
 
-  openCasino,
+  openCasinoPanel,
 
-  playCasino
+  rouletteHandler
 
 }

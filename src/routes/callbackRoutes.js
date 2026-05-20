@@ -150,18 +150,28 @@ module.exports = (bot) => {
   } = require(
     '../handlers/dashboardHandler'
   )
-  
+
   const {
 
-  showTopUsersAnalytics,
+    showTopUsersAnalytics,
 
-  showRichestUsers,
+    showRichestUsers,
 
-  showTopGamblers
+    showTopGamblers
 
-} = require(
-  '../handlers/userAnalyticsHandler'
-)
+  } = require(
+    '../handlers/userAnalyticsHandler'
+  )
+
+  const {
+
+    openCasinoPanel,
+
+    rouletteHandler
+
+  } = require(
+    '../handlers/casinoHandler'
+  )
 
   /*
   |--------------------------------------------------------------------------
@@ -246,6 +256,111 @@ module.exports = (bot) => {
       await ctx.answerCbQuery()
 
       await openDashboard(ctx)
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | ANALYTICS
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_analytics',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await ctx.reply(
+
+`
+📊 ANALYTICS PANEL
+
+━━━━━━━━━━━━━━━━━━
+`,
+
+        require('telegraf')
+        .Markup.inlineKeyboard([
+
+          [
+
+            require('telegraf')
+            .Markup.button.callback(
+              '👥 Top Users',
+              'top_users'
+            )
+
+          ],
+
+          [
+
+            require('telegraf')
+            .Markup.button.callback(
+              '💰 Richest Users',
+              'rich_users'
+            )
+
+          ],
+
+          [
+
+            require('telegraf')
+            .Markup.button.callback(
+              '🎰 Top Gamblers',
+              'top_gamblers'
+            )
+
+          ]
+
+        ])
+
+      )
+
+    }
+
+  )
+
+  bot.action(
+
+    'top_users',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await showTopUsersAnalytics(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'rich_users',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await showRichestUsers(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'top_gamblers',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await showTopGamblers(ctx)
 
     }
 
@@ -439,48 +554,6 @@ module.exports = (bot) => {
     }
 
   )
-  
-  bot.action(
-
-  'admin_analytics',
-
-  async (ctx) => {
-
-    await ctx.reply(
-`
-📊 ANALYTICS PANEL
-
-━━━━━━━━━━━━━━━━━━
-`
-    )
-
-  }
-
-)
-
-bot.action(
-
-  'top_users',
-
-  showTopUsersAnalytics
-
-)
-
-bot.action(
-
-  'rich_users',
-
-  showRichestUsers
-
-)
-
-bot.action(
-
-  'top_gamblers',
-
-  showTopGamblers
-
-)
 
   /*
   |--------------------------------------------------------------------------
@@ -564,6 +637,40 @@ bot.action(
 
   /*
   |--------------------------------------------------------------------------
+  | CASINO PANEL
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_casino',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openCasinoPanel(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'casino_roulette',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await rouletteHandler(ctx)
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
   | PLACEHOLDERS
   |--------------------------------------------------------------------------
   */
@@ -578,22 +685,6 @@ bot.action(
 
       await ctx.reply(
         '🛒 Shop panel bientôt disponible.'
-      )
-
-    }
-
-  )
-
-  bot.action(
-
-    'admin_casino',
-
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await ctx.reply(
-        '🎰 Casino panel bientôt disponible.'
       )
 
     }
