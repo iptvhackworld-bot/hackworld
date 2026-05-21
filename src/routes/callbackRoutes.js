@@ -197,7 +197,23 @@ module.exports = (bot) => {
   
   const {
 
-  openModerationPanel
+  warnUserPanel,
+
+  removeWarnPanel,
+
+  muteUserPanel,
+
+  unmuteUserPanel,
+
+  blacklistUserPanel,
+
+  unblacklistUserPanel,
+
+  openUserLogs,
+
+  openAntiSpamPanel,
+
+  handleModerationInput
 
 } = require(
   '../handlers/moderationHandler'
@@ -841,11 +857,7 @@ bot.action(
 
     await ctx.answerCbQuery()
 
-    await ctx.reply(
-`
-🔇 Système mute bientôt disponible.
-`
-    )
+    await muteUserPanel(ctx)
 
   }
 
@@ -859,11 +871,7 @@ bot.action(
 
     await ctx.answerCbQuery()
 
-    await ctx.reply(
-`
-🔊 Système unmute bientôt disponible.
-`
-    )
+    await unmuteUserPanel(ctx)
 
   }
 
@@ -877,11 +885,21 @@ bot.action(
 
     await ctx.answerCbQuery()
 
-    await ctx.reply(
-`
-⛔ Blacklist bientôt disponible.
-`
-    )
+    await blacklistUserPanel(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  'unblacklist_user',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await unblacklistUserPanel(ctx)
 
   }
 
@@ -895,11 +913,7 @@ bot.action(
 
     await ctx.answerCbQuery()
 
-    await ctx.reply(
-`
-📜 Logs utilisateur bientôt disponibles.
-`
-    )
+    await openUserLogs(ctx)
 
   }
 
@@ -913,11 +927,7 @@ bot.action(
 
     await ctx.answerCbQuery()
 
-    await ctx.reply(
-`
-🛡 Panel Anti-Spam bientôt disponible.
-`
-    )
+    await openAntiSpamPanel(ctx)
 
   }
 
