@@ -1,4 +1,46 @@
 module.exports = (bot) => {
+	
+	bot.action(
+
+  'support_panel',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openSupportPanel(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  'admin_tickets',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openAdminTickets(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  'close_ticket',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await closeTicketPanel(ctx)
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -1173,6 +1215,7 @@ bot.action(
   )
 
 }
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -1180,44 +1223,4 @@ bot.action(
   |--------------------------------------------------------------------------
   */
   
-  bot.action(
 
-  'support_panel',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await openSupportPanel(ctx)
-
-  }
-
-)
-
-bot.action(
-
-  'admin_tickets',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await openAdminTickets(ctx)
-
-  }
-
-)
-
-bot.action(
-
-  'close_ticket',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await closeTicketPanel(ctx)
-
-  }
-
-)
