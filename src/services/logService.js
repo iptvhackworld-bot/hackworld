@@ -14,15 +14,31 @@ async (
 
   type,
 
-  message
+  admin,
+
+  target,
+
+  reason = 'Aucune raison'
 
 ) => {
 
-  return await Log.create({
+  await Log.create({
 
     type,
 
-    message
+    adminId:
+    admin.id,
+
+    adminUsername:
+    admin.username || 'Unknown',
+
+    targetId:
+    target.id,
+
+    targetUsername:
+    target.username || 'Unknown',
+
+    reason
 
   })
 
@@ -30,19 +46,26 @@ async (
 
 /*
 |--------------------------------------------------------------------------
-| GET LOGS
+| GET USER LOGS
 |--------------------------------------------------------------------------
 */
 
-const getLogs =
-async () => {
+const getUserLogs =
+async (userId) => {
 
-  return await Log.find()
+  return await Log.find({
+
+    targetId: userId
+
+  })
+
   .sort({
 
     createdAt: -1
 
   })
+
+  .limit(20)
 
 }
 
@@ -50,6 +73,6 @@ module.exports = {
 
   createLog,
 
-  getLogs
+  getUserLogs
 
 }

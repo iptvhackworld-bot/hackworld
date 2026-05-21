@@ -169,6 +169,9 @@ ${user.banned ? 'Oui' : 'Non'}
 📛 Warns :
 ${user.warns || 0}
 
+📜 Logs :
+Disponible
+
 📅 Arrivé :
 ${new Date(user.createdAt).toLocaleDateString()}
 
