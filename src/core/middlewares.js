@@ -1,11 +1,22 @@
 const {
 
+  session
+
+} = require('telegraf')
+
+const {
+
   checkBan,
 
   antiSpam
 
 } = require(
   '../middlewares/checkBan'
+)
+
+const antiSpamMiddleware =
+require(
+  '../middlewares/antiSpam'
 )
 
 const {
@@ -15,13 +26,6 @@ const {
 } = require(
   '../handlers/userHandler'
 )
-
-const antiSpamMiddleware =
-require(
-  '../middlewares/antiSpam'
-)
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +38,16 @@ const registerMiddlewares =
 
   /*
   |--------------------------------------------------------------------------
+  | SESSION
+  |--------------------------------------------------------------------------
+  */
+
+  bot.use(
+    session()
+  )
+
+  /*
+  |--------------------------------------------------------------------------
   | SECURITY
   |--------------------------------------------------------------------------
   */
@@ -41,6 +55,22 @@ const registerMiddlewares =
   bot.use(
     checkBan
   )
+
+  /*
+  |--------------------------------------------------------------------------
+  | ANTISPAM
+  |--------------------------------------------------------------------------
+  */
+
+  bot.use(
+    antiSpamMiddleware
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | LEGACY ANTISPAM
+  |--------------------------------------------------------------------------
+  */
 
   bot.use(
     antiSpam
@@ -74,22 +104,6 @@ const registerMiddlewares =
   )
 
 }
-
-  /*
-  |--------------------------------------------------------------------------
-  | ANTI SPAM
-  |--------------------------------------------------------------------------
-  */
-  
-  bot.use(
-  antiSpamMiddleware
-)
-
-bot.use(
-  checkBan
-)
-
-
 
 module.exports =
 registerMiddlewares
