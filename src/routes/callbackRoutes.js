@@ -219,17 +219,6 @@ module.exports = (bot) => {
   '../handlers/moderationHandler'
 )
 
-const {
-
-  warnUserPanel,
-
-  removeWarnPanel,
-
-  handleModerationInput
-
-} = require(
-  '../handlers/moderationHandler'
-)
 
   /*
   |--------------------------------------------------------------------------
