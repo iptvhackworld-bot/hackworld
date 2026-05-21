@@ -172,17 +172,7 @@ async (ctx) => {
 
 }
 
-await createLog(
 
-  'REMOVE_WARN',
-
-  ctx.from,
-
-  user,
-
-  'Retrait warn'
-
-)
 
 /*
 |--------------------------------------------------------------------------
@@ -210,17 +200,7 @@ async (ctx) => {
 
 }
 
-await createLog(
 
-  'MUTE',
-
-  ctx.from,
-
-  user,
-
-  'Mute administrateur'
-
-)
 
 /*
 |--------------------------------------------------------------------------
@@ -248,17 +228,7 @@ async (ctx) => {
 
 }
 
-await createLog(
 
-  'UNMUTE',
-
-  ctx.from,
-
-  user,
-
-  'Unmute administrateur'
-
-)
 
 /*
 |--------------------------------------------------------------------------
@@ -325,17 +295,7 @@ async (ctx) => {
 
 }
 
-await createLog(
 
-  'UNBLACKLIST',
-
-  ctx.from,
-
-  user,
-
-  'Retrait blacklist'
-
-)
 
 /*
 |--------------------------------------------------------------------------
@@ -396,8 +356,12 @@ async (ctx) => {
     ]
 
   if (!session) {
-	  
-	  /*
+
+  return false
+
+}
+
+/*
 |--------------------------------------------------------------------------
 | USER LOGS
 |--------------------------------------------------------------------------
@@ -511,19 +475,7 @@ ${new Date(
 	
 	await createLog(
 
-  'WARN',
-
-  ctx.from,
-
-  user,
-
-  'Warn administrateur'
-
-)
-	
-	await createLog(
-
-  'WARN',
+  'MUTE',
 
   ctx.from,
 
@@ -572,13 +524,13 @@ ${user.warns}
 	
 	await createLog(
 
-  'WARN',
+  'REMOVE_MUTE',
 
   ctx.from,
 
   user,
 
-  'Warn administrateur'
+  'Retrait warn'
 
 )
 
@@ -617,7 +569,7 @@ ${user.warns}
 	
 	await createLog(
 
-  'WARN',
+  'MUTE',
 
   ctx.from,
 
@@ -660,7 +612,7 @@ ${user.warns}
 	
 	await createLog(
 
-  'WARN',
+  'UNMUTE',
 
   ctx.from,
 
@@ -703,7 +655,7 @@ ${user.warns}
 	
 	await createLog(
 
-  'WARN',
+  'BLACLIST',
 
   ctx.from,
 
@@ -746,7 +698,7 @@ ${user.warns}
 	
 	await createLog(
 
-  'WARN',
+  'UNBLACKLIST',
 
   ctx.from,
 
