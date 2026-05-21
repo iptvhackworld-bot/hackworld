@@ -319,7 +319,18 @@ async (ctx) => {
 
   await ctx.reply(
 `
-🛡 Anti-Spam bientôt disponible.
+🛡 ANTI-SPAM
+
+✅ Activé
+
+⚠️ Auto Warn
+🔇 Auto Mute
+
+📨 Max messages :
+5
+
+⏱ Interval :
+5 secondes
 `
   )
 

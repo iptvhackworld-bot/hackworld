@@ -1,11 +1,40 @@
-const spamMap = new Map()
+const User =
+require(
+  '../models/User'
+)
 
-const antiSpam = async (
+const config =
+require(
+  '../config/antispam'
+)
+
+const usersMessages =
+{}
+
+/*
+|--------------------------------------------------------------------------
+| ANTISPAM
+|--------------------------------------------------------------------------
+*/
+
+const antiSpamMiddleware =
+async (
+
   ctx,
+
   next
+
 ) => {
 
-  if (!ctx.from) {
+  if (
+
+    !config.enabled ||
+
+    !ctx.from ||
+
+    !ctx.message
+
+  ) {
 
     return next()
 
@@ -17,23 +46,105 @@ const antiSpam = async (
   const now =
     Date.now()
 
-  const lastMessage =
-    spamMap.get(userId) || 0
-
   if (
-    now - lastMessage < 800
+
+    !usersMessages[userId]
+
   ) {
 
-    return
+    usersMessages[userId] = []
 
   }
 
-  spamMap.set(
-    userId,
-    now
-  )
+  usersMessages[userId]
+  .push(now)
+
+  usersMessages[userId] =
+
+    usersMessages[userId]
+
+    .filter(
+
+      (time) =>
+
+        now - time <
+        config.interval
+
+    )
+
+  if (
+
+    usersMessages[userId]
+    .length >
+
+    config.maxMessages
+
+  ) {
+
+    const user =
+      await User.findOne({
+
+        id: userId
+
+      })
+
+    if (!user) {
+
+      return
+
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | AUTO WARN
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+
+      config.autoWarn
+
+    ) {
+
+      user.warns += 1
+
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | AUTO MUTE
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+
+      config.autoMute
+
+    ) {
+
+      user.muted = true
+
+    }
+
+    await user.save()
+
+    return ctx.reply(
+`
+🛡 Anti-Spam déclenché.
+
+👤 ${ctx.from.first_name}
+
+⚠️ Warn ajouté
+🔇 Utilisateur mute
+`
+    )
+
+  }
 
   return next()
+
 }
 
-module.exports = antiSpam
+module.exports =
+
+antiSpamMiddleware

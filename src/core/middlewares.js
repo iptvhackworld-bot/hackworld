@@ -16,6 +16,13 @@ const {
   '../handlers/userHandler'
 )
 
+const antiSpamMiddleware =
+require(
+  '../middlewares/antiSpam'
+)
+
+
+
 /*
 |--------------------------------------------------------------------------
 | REGISTER MIDDLEWARES
@@ -67,6 +74,22 @@ const registerMiddlewares =
   )
 
 }
+
+  /*
+  |--------------------------------------------------------------------------
+  | ANTI SPAM
+  |--------------------------------------------------------------------------
+  */
+  
+  bot.use(
+  antiSpamMiddleware
+)
+
+bot.use(
+  checkBan
+)
+
+
 
 module.exports =
 registerMiddlewares
