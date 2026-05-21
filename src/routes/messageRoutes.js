@@ -90,6 +90,18 @@ module.exports = (bot) => {
   '../handlers/manageUsersHandler'
 )
 
+const {
+
+  handleTicketInput,
+
+  handleAdminTicketInput
+
+} = require(
+  '../handlers/ticketHandler'
+)
+
+
+
   /*
   |--------------------------------------------------------------------------
   | PHOTO / VIDEO
@@ -170,6 +182,18 @@ module.exports = (bot) => {
   handleSearchUser
 
 )
+
+if (
+
+  await handleTicketInput(ctx)
+
+) return
+
+if (
+
+  await handleAdminTicketInput(ctx)
+
+) return
 
       /*
       |--------------------------------------------------------------------------

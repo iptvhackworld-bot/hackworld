@@ -1,38 +1,54 @@
+const { Markup } =
+require('telegraf')
+
+const Ticket =
+require(
+  '../models/Ticket'
+)
+
 const {
 
   createTicket,
 
-  getTickets
+  getOpenTickets,
+
+  closeTicket,
+
+  replyTicket
 
 } = require(
   '../services/ticketService'
 )
 
+if (!global.ticketSessions) {
+
+  global.ticketSessions = {}
+
+}
+
 /*
 |--------------------------------------------------------------------------
-| OPEN TICKET
+| USER PANEL
 |--------------------------------------------------------------------------
 */
 
-const openTicketPanel =
+const openSupportPanel =
 async (ctx) => {
 
-  if (!ctx.session) {
+  global.ticketSessions[
+    ctx.from.id
+  ] = {
 
-    ctx.session = {}
+    action:
+    'create_ticket'
 
   }
-
-  ctx.session.step =
-    'ticket_waiting'
 
   await ctx.reply(
 `
 🎫 SUPPORT
 
-━━━━━━━━━━━━━━━━━━
-
-📝 Envoyez votre problème.
+Envoyez votre problème.
 `
   )
 
@@ -40,120 +56,210 @@ async (ctx) => {
 
 /*
 |--------------------------------------------------------------------------
-| HANDLE TICKET
+| HANDLE USER TICKET
 |--------------------------------------------------------------------------
 */
 
-const handleTicket =
+const handleTicketInput =
 async (ctx) => {
 
-  if (
+  const session =
 
-    ctx.session.step
-    !==
-    'ticket_waiting'
+    global.ticketSessions[
+      ctx.from.id
+    ]
 
-  ) {
+  if (!session) {
 
-    return
+    return false
 
   }
 
-  ctx.session.step =
-    null
-
-  await createTicket(
-
-    ctx.from.id,
-
-    ctx.message.text
-
-  )
-
-  await ctx.reply(
-`
-✅ Ticket envoyé.
-`
-  )
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| ADMIN TICKETS
-|--------------------------------------------------------------------------
-*/
-
-const showTickets =
-async (ctx) => {
-
-  const tickets =
-    await getTickets()
-
   /*
   |--------------------------------------------------------------------------
-  | EMPTY
+  | CREATE TICKET
   |--------------------------------------------------------------------------
   */
 
   if (
-    tickets.length === 0
+
+    session.action ===
+    'create_ticket'
+
   ) {
+
+    const ticket =
+      await createTicket(
+
+        ctx.from,
+
+        ctx.message.text
+
+      )
+
+    delete global.ticketSessions[
+      ctx.from.id
+    ]
 
     return ctx.reply(
 `
-❌ Aucun ticket.
+✅ Ticket créé.
+
+🎫 ID :
+${ticket._id}
+
+📨 Support bientôt répondu.
 `
     )
 
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | MESSAGE
-  |--------------------------------------------------------------------------
-  */
+  return false
 
-  let message =
+}
+
+/*
+|--------------------------------------------------------------------------
+| ADMIN PANEL
+|--------------------------------------------------------------------------
+*/
+
+const openAdminTickets =
+async (ctx) => {
+
+  const tickets =
+    await getOpenTickets()
+
+  if (!tickets.length) {
+
+    return ctx.reply(
 `
-🎫 TICKETS
+📭 Aucun ticket ouvert.
+`
+    )
+
+  }
+
+  let text =
+`
+🎫 TICKETS OUVERTS
 
 ━━━━━━━━━━━━━━━━━━
-
 `
 
-  tickets.forEach(
+  tickets.forEach((ticket) => {
 
-    (ticket) => {
-
-      message +=
+    text +=
 `
 🆔 ${ticket._id}
 
-👤 ${ticket.userId}
+👤 @${ticket.username}
 
-📩 ${ticket.message}
+📝 ${ticket.reason}
 
-📌 ${ticket.status}
+📅 ${new Date(
+  ticket.createdAt
+).toLocaleString()}
 
 ━━━━━━━━━━━━━━━━━━
 `
-    }
 
-  )
+  })
+
+  await ctx.reply(text)
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| CLOSE PANEL
+|--------------------------------------------------------------------------
+*/
+
+const closeTicketPanel =
+async (ctx) => {
+
+  global.ticketSessions[
+    ctx.from.id
+  ] = {
+
+    action:
+    'close_ticket'
+
+  }
 
   await ctx.reply(
-    message
+`
+🔒 Envoyez l'ID ticket.
+`
   )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| HANDLE CLOSE
+|--------------------------------------------------------------------------
+*/
+
+const handleAdminTicketInput =
+async (ctx) => {
+
+  const session =
+
+    global.ticketSessions[
+      ctx.from.id
+    ]
+
+  if (!session) {
+
+    return false
+
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | CLOSE
+  |--------------------------------------------------------------------------
+  */
+
+  if (
+
+    session.action ===
+    'close_ticket'
+
+  ) {
+
+    await closeTicket(
+      ctx.message.text
+    )
+
+    delete global.ticketSessions[
+      ctx.from.id
+    ]
+
+    return ctx.reply(
+`
+🔒 Ticket fermé.
+`
+    )
+
+  }
+
+  return false
 
 }
 
 module.exports = {
 
-  openTicketPanel,
+  openSupportPanel,
 
-  handleTicket,
+  handleTicketInput,
 
-  showTickets
+  openAdminTickets,
+
+  closeTicketPanel,
+
+  handleAdminTicketInput
 
 }

@@ -12,17 +12,21 @@ require(
 const createTicket =
 async (
 
-  userId,
+  user,
 
-  message
+  reason
 
 ) => {
 
   return await Ticket.create({
 
-    userId,
+    userId:
+    user.id,
 
-    message
+    username:
+    user.username || 'Unknown',
+
+    reason
 
   })
 
@@ -30,14 +34,19 @@ async (
 
 /*
 |--------------------------------------------------------------------------
-| GET TICKETS
+| GET OPEN TICKETS
 |--------------------------------------------------------------------------
 */
 
-const getTickets =
+const getOpenTickets =
 async () => {
 
-  return await Ticket.find()
+  return await Ticket.find({
+
+    status: 'open'
+
+  })
+
   .sort({
 
     createdAt: -1
@@ -53,11 +62,11 @@ async () => {
 */
 
 const closeTicket =
-async (id) => {
+async (ticketId) => {
 
   return await Ticket.findByIdAndUpdate(
 
-    id,
+    ticketId,
 
     {
 
@@ -69,12 +78,43 @@ async (id) => {
 
 }
 
+/*
+|--------------------------------------------------------------------------
+| REPLY TICKET
+|--------------------------------------------------------------------------
+*/
+
+const replyTicket =
+async (
+
+  ticketId,
+
+  message
+
+) => {
+
+  return await Ticket.findByIdAndUpdate(
+
+    ticketId,
+
+    {
+
+      adminReply: message
+
+    }
+
+  )
+
+}
+
 module.exports = {
 
   createTicket,
 
-  getTickets,
+  getOpenTickets,
 
-  closeTicket
+  closeTicket,
+
+  replyTicket
 
 }

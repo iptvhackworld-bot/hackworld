@@ -221,6 +221,24 @@ module.exports = (bot) => {
   '../handlers/moderationHandler'
 )
 
+const {
+
+  openSupportPanel,
+
+  openAdminTickets,
+
+  closeTicketPanel,
+
+  handleTicketInput,
+
+  handleAdminTicketInput
+
+} = require(
+  '../handlers/ticketHandler'
+)
+
+
+
 
   /*
   |--------------------------------------------------------------------------
@@ -1155,3 +1173,51 @@ bot.action(
   )
 
 }
+
+  /*
+  |--------------------------------------------------------------------------
+  | PANEL SUPPORT 
+  |--------------------------------------------------------------------------
+  */
+  
+  bot.action(
+
+  'support_panel',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openSupportPanel(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  'admin_tickets',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openAdminTickets(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  'close_ticket',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await closeTicketPanel(ctx)
+
+  }
+
+)

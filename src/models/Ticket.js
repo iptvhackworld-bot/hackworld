@@ -4,9 +4,41 @@ require('mongoose')
 const ticketSchema =
 new mongoose.Schema({
 
-  userId: Number,
+  /*
+  |--------------------------------------------------------------------------
+  | USER
+  |--------------------------------------------------------------------------
+  */
 
-  message: String,
+  userId: {
+
+    type: Number,
+
+    required: true
+
+  },
+
+  username: {
+
+    type: String,
+
+    default: 'Unknown'
+
+  },
+
+  /*
+  |--------------------------------------------------------------------------
+  | TICKET
+  |--------------------------------------------------------------------------
+  */
+
+  reason: {
+
+    type: String,
+
+    default: 'Aucune raison'
+
+  },
 
   status: {
 
@@ -15,6 +47,20 @@ new mongoose.Schema({
     default: 'open'
 
   },
+
+  adminReply: {
+
+    type: String,
+
+    default: null
+
+  },
+
+  /*
+  |--------------------------------------------------------------------------
+  | DATES
+  |--------------------------------------------------------------------------
+  */
 
   createdAt: {
 
