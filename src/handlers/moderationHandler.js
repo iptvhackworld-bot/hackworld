@@ -6,12 +6,6 @@ require(
   '../models/User'
 )
 
-/*
-|--------------------------------------------------------------------------
-| ADMIN SESSIONS
-|--------------------------------------------------------------------------
-*/
-
 if (!global.adminSessions) {
 
   global.adminSessions = {}
@@ -34,7 +28,7 @@ async (ctx) => {
 
 ━━━━━━━━━━━━━━━━━━
 
-Gestion modération utilisateurs
+Gestion sécurité utilisateurs
 
 ━━━━━━━━━━━━━━━━━━
 `,
@@ -51,6 +45,52 @@ Gestion modération utilisateurs
         Markup.button.callback(
           '✅ Retirer Warn',
           'removewarn_user'
+        )
+
+      ],
+
+      [
+
+        Markup.button.callback(
+          '🔇 Rendre Muet',
+          'mute_user'
+        ),
+
+        Markup.button.callback(
+          '🔊 Retirer Muet',
+          'unmute_user'
+        )
+
+      ],
+
+      [
+
+        Markup.button.callback(
+          '⛔ Liste Noire',
+          'blacklist_user'
+        ),
+
+        Markup.button.callback(
+          '✅ Retirer Blacklist',
+          'unblacklist_user'
+        )
+
+      ],
+
+      [
+
+        Markup.button.callback(
+          '📜 Logs Utilisateur',
+          'user_logs'
+        )
+
+      ],
+
+      [
+
+        Markup.button.callback(
+          '🛡 Anti-Spam',
+          'antispam_panel'
         )
 
       ],
@@ -89,9 +129,8 @@ async (ctx) => {
   }
 
   await ctx.reply(
-
 `
-⚠️ Envoyez l'ID utilisateur à avertir.
+⚠️ Envoyez l'ID utilisateur.
 `
   )
 
@@ -99,7 +138,7 @@ async (ctx) => {
 
 /*
 |--------------------------------------------------------------------------
-| REMOVE WARN PANEL
+| REMOVE WARN
 |--------------------------------------------------------------------------
 */
 
@@ -116,7 +155,6 @@ async (ctx) => {
   }
 
   await ctx.reply(
-
 `
 ✅ Envoyez l'ID utilisateur.
 `
@@ -126,7 +164,145 @@ async (ctx) => {
 
 /*
 |--------------------------------------------------------------------------
-| HANDLE MODERATION INPUT
+| MUTE PANEL
+|--------------------------------------------------------------------------
+*/
+
+const muteUserPanel =
+async (ctx) => {
+
+  global.adminSessions[
+    ctx.from.id
+  ] = {
+
+    action:
+    'mute_user'
+
+  }
+
+  await ctx.reply(
+`
+🔇 Envoyez l'ID utilisateur.
+`
+  )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| UNMUTE PANEL
+|--------------------------------------------------------------------------
+*/
+
+const unmuteUserPanel =
+async (ctx) => {
+
+  global.adminSessions[
+    ctx.from.id
+  ] = {
+
+    action:
+    'unmute_user'
+
+  }
+
+  await ctx.reply(
+`
+🔊 Envoyez l'ID utilisateur.
+`
+  )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| BLACKLIST PANEL
+|--------------------------------------------------------------------------
+*/
+
+const blacklistUserPanel =
+async (ctx) => {
+
+  global.adminSessions[
+    ctx.from.id
+  ] = {
+
+    action:
+    'blacklist_user'
+
+  }
+
+  await ctx.reply(
+`
+⛔ Envoyez l'ID utilisateur.
+`
+  )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| UNBLACKLIST PANEL
+|--------------------------------------------------------------------------
+*/
+
+const unblacklistUserPanel =
+async (ctx) => {
+
+  global.adminSessions[
+    ctx.from.id
+  ] = {
+
+    action:
+    'unblacklist_user'
+
+  }
+
+  await ctx.reply(
+`
+✅ Envoyez l'ID utilisateur.
+`
+  )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| USER LOGS
+|--------------------------------------------------------------------------
+*/
+
+const openUserLogs =
+async (ctx) => {
+
+  await ctx.reply(
+`
+📜 Logs bientôt disponibles.
+`
+  )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| ANTISPAM PANEL
+|--------------------------------------------------------------------------
+*/
+
+const openAntiSpamPanel =
+async (ctx) => {
+
+  await ctx.reply(
+`
+🛡 Anti-Spam bientôt disponible.
+`
+  )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| HANDLE INPUT
 |--------------------------------------------------------------------------
 */
 
@@ -145,9 +321,31 @@ async (ctx) => {
 
   }
 
+  const userId =
+    Number(
+      ctx.message.text
+    )
+
+  const user =
+    await User.findOne({
+
+      id: userId
+
+    })
+
+  if (!user) {
+
+    return ctx.reply(
+`
+❌ Utilisateur introuvable.
+`
+    )
+
+  }
+
   /*
   |--------------------------------------------------------------------------
-  | WARN USER
+  | WARN
   |--------------------------------------------------------------------------
   */
 
@@ -157,28 +355,6 @@ async (ctx) => {
     'warn_user'
 
   ) {
-
-    const userId =
-      Number(
-        ctx.message.text
-      )
-
-    const user =
-      await User.findOne({
-
-        id: userId
-
-      })
-
-    if (!user) {
-
-      return ctx.reply(
-`
-❌ Utilisateur introuvable.
-`
-      )
-
-    }
 
     user.warns += 1
 
@@ -193,7 +369,7 @@ async (ctx) => {
 ⚠️ Warn ajouté.
 
 👤 ${user.username}
-📛 Total warns :
+📛 Warns :
 ${user.warns}
 `
     )
@@ -213,28 +389,6 @@ ${user.warns}
 
   ) {
 
-    const userId =
-      Number(
-        ctx.message.text
-      )
-
-    const user =
-      await User.findOne({
-
-        id: userId
-
-      })
-
-    if (!user) {
-
-      return ctx.reply(
-`
-❌ Utilisateur introuvable.
-`
-      )
-
-    }
-
     if (user.warns > 0) {
 
       user.warns -= 1
@@ -252,14 +406,136 @@ ${user.warns}
 ✅ Warn retiré.
 
 👤 ${user.username}
-📛 Total warns :
+📛 Warns :
 ${user.warns}
 `
     )
 
   }
 
-  return false
+  /*
+  |--------------------------------------------------------------------------
+  | MUTE
+  |--------------------------------------------------------------------------
+  */
+
+  if (
+
+    session.action ===
+    'mute_user'
+
+  ) {
+
+    user.muted = true
+
+    await user.save()
+
+    delete global.adminSessions[
+      ctx.from.id
+    ]
+
+    return ctx.reply(
+`
+🔇 Utilisateur mute.
+
+👤 ${user.username}
+`
+    )
+
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | UNMUTE
+  |--------------------------------------------------------------------------
+  */
+
+  if (
+
+    session.action ===
+    'unmute_user'
+
+  ) {
+
+    user.muted = false
+
+    await user.save()
+
+    delete global.adminSessions[
+      ctx.from.id
+    ]
+
+    return ctx.reply(
+`
+🔊 Utilisateur unmute.
+
+👤 ${user.username}
+`
+    )
+
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | BLACKLIST
+  |--------------------------------------------------------------------------
+  */
+
+  if (
+
+    session.action ===
+    'blacklist_user'
+
+  ) {
+
+    user.blacklisted = true
+
+    await user.save()
+
+    delete global.adminSessions[
+      ctx.from.id
+    ]
+
+    return ctx.reply(
+`
+⛔ Utilisateur blacklist.
+
+👤 ${user.username}
+`
+    )
+
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | UNBLACKLIST
+  |--------------------------------------------------------------------------
+  */
+
+  if (
+
+    session.action ===
+    'unblacklist_user'
+
+  ) {
+
+    user.blacklisted = false
+
+    await user.save()
+
+    delete global.adminSessions[
+      ctx.from.id
+    ]
+
+    return ctx.reply(
+`
+✅ Blacklist retirée.
+
+👤 ${user.username}
+`
+    )
+
+  }
 
 }
 
@@ -270,6 +546,18 @@ module.exports = {
   warnUserPanel,
 
   removeWarnPanel,
+
+  muteUserPanel,
+
+  unmuteUserPanel,
+
+  blacklistUserPanel,
+
+  unblacklistUserPanel,
+
+  openUserLogs,
+
+  openAntiSpamPanel,
 
   handleModerationInput
 

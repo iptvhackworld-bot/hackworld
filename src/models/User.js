@@ -104,6 +104,22 @@ new mongoose.Schema({
 
   },
 
+  muted: {
+
+    type: Boolean,
+
+    default: false
+
+  },
+
+  blacklisted: {
+
+    type: Boolean,
+
+    default: false
+
+  },
+
   /*
   |--------------------------------------------------------------------------
   | STATS
