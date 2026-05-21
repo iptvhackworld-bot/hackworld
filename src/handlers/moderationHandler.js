@@ -6,12 +6,6 @@ require(
   '../models/User'
 )
 
-if (!global.adminSessions) {
-
-  global.adminSessions = {}
-
-}
-
 const {
 
   createLog,
@@ -21,6 +15,18 @@ const {
 } = require(
   '../services/logService'
 )
+
+/*
+|--------------------------------------------------------------------------
+| ADMIN SESSIONS
+|--------------------------------------------------------------------------
+*/
+
+if (!global.adminSessions) {
+
+  global.adminSessions = {}
+
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -148,7 +154,7 @@ async (ctx) => {
 
 /*
 |--------------------------------------------------------------------------
-| REMOVE WARN
+| REMOVE WARN PANEL
 |--------------------------------------------------------------------------
 */
 
@@ -171,8 +177,6 @@ async (ctx) => {
   )
 
 }
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -200,8 +204,6 @@ async (ctx) => {
 
 }
 
-
-
 /*
 |--------------------------------------------------------------------------
 | UNMUTE PANEL
@@ -227,8 +229,6 @@ async (ctx) => {
   )
 
 }
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -256,19 +256,6 @@ async (ctx) => {
 
 }
 
-await createLog(
-
-  'BLACKLIST',
-
-  ctx.from,
-
-  user,
-
-  'Blacklist administrateur'
-
-)
-
-
 /*
 |--------------------------------------------------------------------------
 | UNBLACKLIST PANEL
@@ -295,11 +282,9 @@ async (ctx) => {
 
 }
 
-
-
 /*
 |--------------------------------------------------------------------------
-| USER LOGS
+| USER LOGS PANEL
 |--------------------------------------------------------------------------
 */
 
@@ -342,7 +327,7 @@ async (ctx) => {
 
 /*
 |--------------------------------------------------------------------------
-| HANDLE INPUT
+| HANDLE MODERATION INPUT
 |--------------------------------------------------------------------------
 */
 
@@ -357,79 +342,6 @@ async (ctx) => {
 
   if (!session) {
 
-  return false
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| USER LOGS
-|--------------------------------------------------------------------------
-*/
-
-if (
-
-  session.action ===
-  'user_logs'
-
-) {
-
-  const logs =
-    await getUserLogs(
-      user.id
-    )
-
-  delete global.adminSessions[
-    ctx.from.id
-  ]
-
-  if (!logs.length) {
-
-    return ctx.reply(
-`
-📜 Aucun log trouvé.
-`
-    )
-
-  }
-
-  let text =
-`
-📜 LOGS UTILISATEUR
-
-👤 ${user.username}
-
-━━━━━━━━━━━━━━━━━━
-`
-
-  logs.forEach((log) => {
-
-    text +=
-
-`
-🛡 Type :
-${log.type}
-
-👮 Admin :
-@${log.adminUsername}
-
-📝 Raison :
-${log.reason}
-
-📅 Date :
-${new Date(
-  log.createdAt
-).toLocaleString()}
-
-━━━━━━━━━━━━━━━━━━
-`
-
-  })
-
-  return ctx.reply(text)
-
-}
-
     return false
 
   }
@@ -438,6 +350,16 @@ ${new Date(
     Number(
       ctx.message.text
     )
+
+  if (isNaN(userId)) {
+
+    return ctx.reply(
+`
+❌ ID invalide.
+`
+    )
+
+  }
 
   const user =
     await User.findOne({
@@ -458,7 +380,76 @@ ${new Date(
 
   /*
   |--------------------------------------------------------------------------
-  | WARN
+  | USER LOGS
+  |--------------------------------------------------------------------------
+  */
+
+  if (
+
+    session.action ===
+    'user_logs'
+
+  ) {
+
+    const logs =
+      await getUserLogs(
+        user.id
+      )
+
+    delete global.adminSessions[
+      ctx.from.id
+    ]
+
+    if (!logs.length) {
+
+      return ctx.reply(
+`
+📜 Aucun log trouvé.
+`
+      )
+
+    }
+
+    let text =
+`
+📜 LOGS UTILISATEUR
+
+👤 ${user.username}
+
+━━━━━━━━━━━━━━━━━━
+`
+
+    logs.forEach((log) => {
+
+      text +=
+
+`
+🛡 Type :
+${log.type}
+
+👮 Admin :
+@${log.adminUsername}
+
+📝 Raison :
+${log.reason}
+
+📅 Date :
+${new Date(
+  log.createdAt
+).toLocaleString()}
+
+━━━━━━━━━━━━━━━━━━
+`
+
+    })
+
+    return ctx.reply(text)
+
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | WARN USER
   |--------------------------------------------------------------------------
   */
 
@@ -472,18 +463,18 @@ ${new Date(
     user.warns += 1
 
     await user.save()
-	
-	await createLog(
 
-  'MUTE',
+    await createLog(
 
-  ctx.from,
+      'WARN',
 
-  user,
+      ctx.from,
 
-  'Warn administrateur'
+      user,
 
-)
+      'Warn administrateur'
+
+    )
 
     delete global.adminSessions[
       ctx.from.id
@@ -494,6 +485,7 @@ ${new Date(
 ⚠️ Warn ajouté.
 
 👤 ${user.username}
+
 📛 Warns :
 ${user.warns}
 `
@@ -521,18 +513,18 @@ ${user.warns}
     }
 
     await user.save()
-	
-	await createLog(
 
-  'REMOVE_MUTE',
+    await createLog(
 
-  ctx.from,
+      'REMOVE_WARN',
 
-  user,
+      ctx.from,
 
-  'Retrait warn'
+      user,
 
-)
+      'Retrait warn'
+
+    )
 
     delete global.adminSessions[
       ctx.from.id
@@ -543,6 +535,7 @@ ${user.warns}
 ✅ Warn retiré.
 
 👤 ${user.username}
+
 📛 Warns :
 ${user.warns}
 `
@@ -552,7 +545,7 @@ ${user.warns}
 
   /*
   |--------------------------------------------------------------------------
-  | MUTE
+  | MUTE USER
   |--------------------------------------------------------------------------
   */
 
@@ -566,18 +559,18 @@ ${user.warns}
     user.muted = true
 
     await user.save()
-	
-	await createLog(
 
-  'MUTE',
+    await createLog(
 
-  ctx.from,
+      'MUTE',
 
-  user,
+      ctx.from,
 
-  'Warn administrateur'
+      user,
 
-)
+      'Mute administrateur'
+
+    )
 
     delete global.adminSessions[
       ctx.from.id
@@ -595,7 +588,7 @@ ${user.warns}
 
   /*
   |--------------------------------------------------------------------------
-  | UNMUTE
+  | UNMUTE USER
   |--------------------------------------------------------------------------
   */
 
@@ -609,18 +602,18 @@ ${user.warns}
     user.muted = false
 
     await user.save()
-	
-	await createLog(
 
-  'UNMUTE',
+    await createLog(
 
-  ctx.from,
+      'UNMUTE',
 
-  user,
+      ctx.from,
 
-  'Warn administrateur'
+      user,
 
-)
+      'Unmute administrateur'
+
+    )
 
     delete global.adminSessions[
       ctx.from.id
@@ -638,7 +631,7 @@ ${user.warns}
 
   /*
   |--------------------------------------------------------------------------
-  | BLACKLIST
+  | BLACKLIST USER
   |--------------------------------------------------------------------------
   */
 
@@ -652,18 +645,18 @@ ${user.warns}
     user.blacklisted = true
 
     await user.save()
-	
-	await createLog(
 
-  'BLACLIST',
+    await createLog(
 
-  ctx.from,
+      'BLACKLIST',
 
-  user,
+      ctx.from,
 
-  'Warn administrateur'
+      user,
 
-)
+      'Blacklist administrateur'
+
+    )
 
     delete global.adminSessions[
       ctx.from.id
@@ -681,7 +674,7 @@ ${user.warns}
 
   /*
   |--------------------------------------------------------------------------
-  | UNBLACKLIST
+  | UNBLACKLIST USER
   |--------------------------------------------------------------------------
   */
 
@@ -695,18 +688,18 @@ ${user.warns}
     user.blacklisted = false
 
     await user.save()
-	
-	await createLog(
 
-  'UNBLACKLIST',
+    await createLog(
 
-  ctx.from,
+      'UNBLACKLIST',
 
-  user,
+      ctx.from,
 
-  'Warn administrateur'
+      user,
 
-)
+      'Retrait blacklist'
+
+    )
 
     delete global.adminSessions[
       ctx.from.id
@@ -721,6 +714,8 @@ ${user.warns}
     )
 
   }
+
+  return false
 
 }
 
