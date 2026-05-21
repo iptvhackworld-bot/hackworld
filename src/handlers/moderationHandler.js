@@ -321,7 +321,9 @@ async (ctx) => {
 `
 🛡 ANTI-SPAM
 
-✅ Activé
+━━━━━━━━━━━━━━━━━━
+
+✅ Système activé
 
 ⚠️ Auto Warn
 🔇 Auto Mute
@@ -331,6 +333,10 @@ async (ctx) => {
 
 ⏱ Interval :
 5 secondes
+
+━━━━━━━━━━━━━━━━━━
+
+🚀 Protection active
 `
   )
 
