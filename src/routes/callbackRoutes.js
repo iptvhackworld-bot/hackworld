@@ -197,6 +197,8 @@ module.exports = (bot) => {
   
   const {
 
+  openModerationPanel,
+
   warnUserPanel,
 
   removeWarnPanel,
