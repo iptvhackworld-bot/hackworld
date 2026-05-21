@@ -1,46 +1,4 @@
 module.exports = (bot) => {
-	
-	bot.action(
-
-  'support_panel',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await openSupportPanel(ctx)
-
-  }
-
-)
-
-bot.action(
-
-  'admin_tickets',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await openAdminTickets(ctx)
-
-  }
-
-)
-
-bot.action(
-
-  'close_ticket',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await closeTicketPanel(ctx)
-
-  }
-
-)
 
   /*
   |--------------------------------------------------------------------------
@@ -49,8 +7,6 @@ bot.action(
   */
 
   const {
-
-    startHandler,
 
     showMainMenu
 
@@ -87,18 +43,18 @@ bot.action(
 
   const {
 
-    rateBot
-
-  } = require(
-    '../handlers/ratingHandler'
-  )
-
-  const {
-
     openAdminPanel
 
   } = require(
     '../handlers/adminHandler'
+  )
+
+  const {
+
+    openContentMenu
+
+  } = require(
+    '../handlers/adminContentMenuHandler'
   )
 
   const {
@@ -191,14 +147,6 @@ bot.action(
 
   const {
 
-    openContentMenu
-
-  } = require(
-    '../handlers/adminContentMenuHandler'
-  )
-
-  const {
-
     openDashboard
 
   } = require(
@@ -236,51 +184,48 @@ bot.action(
   } = require(
     '../handlers/shopHandler'
   )
-  
+
   const {
 
-  openModerationPanel,
+    openModerationPanel,
 
-  warnUserPanel,
+    warnUserPanel,
 
-  removeWarnPanel,
+    removeWarnPanel,
 
-  muteUserPanel,
+    muteUserPanel,
 
-  unmuteUserPanel,
+    unmuteUserPanel,
 
-  blacklistUserPanel,
+    blacklistUserPanel,
 
-  unblacklistUserPanel,
+    unblacklistUserPanel,
 
-  openUserLogs,
+    openUserLogs,
 
-  openAntiSpamPanel,
+    openAntiSpamPanel,
 
-  handleModerationInput
+    handleModerationInput
 
-} = require(
-  '../handlers/moderationHandler'
-)
+  } = require(
+    '../handlers/moderationHandler'
+  )
 
-const {
+  const {
 
-  openSupportPanel,
+    openSupportPanel,
 
-  openAdminTickets,
+    openAdminTickets,
 
-  closeTicketPanel,
+    closeTicketPanel,
 
-  handleTicketInput,
+    handleTicketInput,
 
-  handleAdminTicketInput
+    handleAdminTicketInput
 
-} = require(
-  '../handlers/ticketHandler'
-)
-
-
-
+  } = require(
+    '../handlers/ticketHandler'
+  )
 
   /*
   |--------------------------------------------------------------------------
@@ -309,27 +254,7 @@ const {
     }
 
   )
-  
-  
-/*
-|--------------------------------------------------------------------------
-| MODERATION PANEL
-|--------------------------------------------------------------------------
-*/
 
-bot.action(
-
-  'admin_moderation',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await openModerationPanel(ctx)
-
-  }
-
-)
   /*
   |--------------------------------------------------------------------------
   | ADMIN PANEL
@@ -345,6 +270,192 @@ bot.action(
       await ctx.answerCbQuery()
 
       await openAdminPanel(ctx)
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | MODERATION PANEL
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_moderation',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openModerationPanel(ctx)
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | MODERATION ACTIONS
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'warn_user',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await warnUserPanel(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'removewarn_user',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await removeWarnPanel(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'mute_user',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await muteUserPanel(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'unmute_user',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await unmuteUserPanel(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'blacklist_user',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await blacklistUserPanel(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'unblacklist_user',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await unblacklistUserPanel(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'user_logs',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openUserLogs(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'antispam_panel',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openAntiSpamPanel(ctx)
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | SUPPORT PANEL
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'support_panel',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openSupportPanel(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'admin_tickets',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openAdminTickets(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'close_ticket',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await closeTicketPanel(ctx)
 
     }
 
@@ -486,19 +597,19 @@ bot.action(
 
   )
 
-bot.action(
+  bot.action(
 
-  /^user_(\d+)$/,
+    /^user_(\d+)$/,
 
-  async (ctx) => {
+    async (ctx) => {
 
-    await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-    await openUserProfile(ctx)
+      await openUserProfile(ctx)
 
-  }
+    }
 
-)
+  )
 
   bot.action(
 
@@ -516,7 +627,7 @@ bot.action(
 
   /*
   |--------------------------------------------------------------------------
-  | GIVE MONEY
+  | USER ACTIONS
   |--------------------------------------------------------------------------
   */
 
@@ -534,12 +645,6 @@ bot.action(
 
   )
 
-  /*
-  |--------------------------------------------------------------------------
-  | GIVE XP
-  |--------------------------------------------------------------------------
-  */
-
   bot.action(
 
     /^givexp_(.+)$/,
@@ -554,12 +659,6 @@ bot.action(
 
   )
 
-  /*
-  |--------------------------------------------------------------------------
-  | SET ADMIN
-  |--------------------------------------------------------------------------
-  */
-
   bot.action(
 
     /^setadmin_(.+)$/,
@@ -567,27 +666,18 @@ bot.action(
     async (ctx) => {
 
       const id =
-        Number(
-          ctx.match[1]
-        )
+      Number(
+        ctx.match[1]
+      )
 
       await setAdmin(
-
         ctx,
-
         id
-
       )
 
     }
 
   )
-
-  /*
-  |--------------------------------------------------------------------------
-  | SET MOD
-  |--------------------------------------------------------------------------
-  */
 
   bot.action(
 
@@ -596,27 +686,18 @@ bot.action(
     async (ctx) => {
 
       const id =
-        Number(
-          ctx.match[1]
-        )
+      Number(
+        ctx.match[1]
+      )
 
       await setMod(
-
         ctx,
-
         id
-
       )
 
     }
 
   )
-
-  /*
-  |--------------------------------------------------------------------------
-  | RESET USER
-  |--------------------------------------------------------------------------
-  */
 
   bot.action(
 
@@ -625,27 +706,18 @@ bot.action(
     async (ctx) => {
 
       const id =
-        Number(
-          ctx.match[1]
-        )
+      Number(
+        ctx.match[1]
+      )
 
       await resetUser(
-
         ctx,
-
         id
-
       )
 
     }
 
   )
-
-  /*
-  |--------------------------------------------------------------------------
-  | BAN
-  |--------------------------------------------------------------------------
-  */
 
   bot.action(
 
@@ -654,9 +726,9 @@ bot.action(
     async (ctx) => {
 
       const id =
-        Number(
-          ctx.match[1]
-        )
+      Number(
+        ctx.match[1]
+      )
 
       await banUser(id)
 
@@ -670,12 +742,6 @@ bot.action(
 
   )
 
-  /*
-  |--------------------------------------------------------------------------
-  | UNBAN
-  |--------------------------------------------------------------------------
-  */
-
   bot.action(
 
     /^unban_(.+)$/,
@@ -683,9 +749,9 @@ bot.action(
     async (ctx) => {
 
       const id =
-        Number(
-          ctx.match[1]
-        )
+      Number(
+        ctx.match[1]
+      )
 
       await unbanUser(id)
 
@@ -699,12 +765,6 @@ bot.action(
 
   )
 
-  /*
-  |--------------------------------------------------------------------------
-  | RESET MONEY
-  |--------------------------------------------------------------------------
-  */
-
   bot.action(
 
     /^resetmoney_(.+)$/,
@@ -712,9 +772,9 @@ bot.action(
     async (ctx) => {
 
       const id =
-        Number(
-          ctx.match[1]
-        )
+      Number(
+        ctx.match[1]
+      )
 
       await resetMoney(id)
 
@@ -728,12 +788,6 @@ bot.action(
 
   )
 
-  /*
-  |--------------------------------------------------------------------------
-  | RESET XP
-  |--------------------------------------------------------------------------
-  */
-
   bot.action(
 
     /^resetxp_(.+)$/,
@@ -741,9 +795,9 @@ bot.action(
     async (ctx) => {
 
       const id =
-        Number(
-          ctx.match[1]
-        )
+      Number(
+        ctx.match[1]
+      )
 
       await resetXP(id)
 
@@ -757,12 +811,6 @@ bot.action(
 
   )
 
-  /*
-  |--------------------------------------------------------------------------
-  | RESET INVENTORY
-  |--------------------------------------------------------------------------
-  */
-
   bot.action(
 
     /^resetinv_(.+)$/,
@@ -770,16 +818,13 @@ bot.action(
     async (ctx) => {
 
       const id =
-        Number(
-          ctx.match[1]
-        )
+      Number(
+        ctx.match[1]
+      )
 
       await resetInventory(
-
         ctx,
-
         id
-
       )
 
     }
@@ -806,12 +851,6 @@ bot.action(
 
   )
 
-  /*
-  |--------------------------------------------------------------------------
-  | LOGS
-  |--------------------------------------------------------------------------
-  */
-
   bot.action(
 
     'admin_logs',
@@ -825,12 +864,6 @@ bot.action(
     }
 
   )
-
-  /*
-  |--------------------------------------------------------------------------
-  | SECURITY
-  |--------------------------------------------------------------------------
-  */
 
   bot.action(
 
@@ -846,12 +879,6 @@ bot.action(
 
   )
 
-  /*
-  |--------------------------------------------------------------------------
-  | BROADCAST
-  |--------------------------------------------------------------------------
-  */
-
   bot.action(
 
     'admin_broadcast',
@@ -865,124 +892,6 @@ bot.action(
     }
 
   )
-  
-  /*
-|--------------------------------------------------------------------------
-| MODERATION ACTIONS
-|--------------------------------------------------------------------------
-*/
-
-bot.action(
-
-  'warn_user',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await warnUserPanel(ctx)
-
-  }
-
-)
-
-bot.action(
-
-  'removewarn_user',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await removeWarnPanel(ctx)
-
-  }
-
-)
-
-bot.action(
-
-  'mute_user',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await muteUserPanel(ctx)
-
-  }
-
-)
-
-bot.action(
-
-  'unmute_user',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await unmuteUserPanel(ctx)
-
-  }
-
-)
-
-bot.action(
-
-  'blacklist_user',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await blacklistUserPanel(ctx)
-
-  }
-
-)
-
-bot.action(
-
-  'unblacklist_user',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await unblacklistUserPanel(ctx)
-
-  }
-
-)
-
-bot.action(
-
-  'user_logs',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await openUserLogs(ctx)
-
-  }
-
-)
-
-bot.action(
-
-  'antispam_panel',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await openAntiSpamPanel(ctx)
-
-  }
-
-)
 
   /*
   |--------------------------------------------------------------------------
@@ -1196,7 +1105,7 @@ bot.action(
 
   /*
   |--------------------------------------------------------------------------
-  | TEXT ADMIN INPUT
+  | TEXT INPUTS
   |--------------------------------------------------------------------------
   */
 
@@ -1205,8 +1114,12 @@ bot.action(
     'text',
 
     async (ctx) => {
-		
-	  await handleModerationInput(ctx)
+
+      await handleModerationInput(ctx)
+
+      await handleTicketInput(ctx)
+
+      await handleAdminTicketInput(ctx)
 
       await handleAdminInput(ctx)
 
@@ -1215,12 +1128,3 @@ bot.action(
   )
 
 }
-)
-
-  /*
-  |--------------------------------------------------------------------------
-  | PANEL SUPPORT 
-  |--------------------------------------------------------------------------
-  */
-  
-
