@@ -110,7 +110,7 @@ async (ctx) => {
 		Markup.button.callback(
           '💰 Finance',
           'admin_finance'
-        )
+        ),
 		
 		Markup.button.callback(
           '🤖 Fraud Logs',
