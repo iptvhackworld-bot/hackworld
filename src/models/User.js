@@ -14,7 +14,9 @@ new mongoose.Schema({
 
     type: Number,
 
-    unique: true
+    unique: true,
+	
+    required: true
 
   },
 

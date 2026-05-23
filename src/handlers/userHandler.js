@@ -76,13 +76,42 @@ async (ctx) => {
   | CREATE
   |--------------------------------------------------------------------------
   */
+  
+  const registerUser =
+async (ctx) => {
 
-  user =
-    await createUser(
-      ctx
+  if (
+
+    !ctx.from ||
+
+    !ctx.from.id
+
+  ) {
+
+    return
+
+  }
+
+  let user =
+    await getUserById(
+      ctx.from.id
     )
 
-  return user
+  if (!user) {
+
+    await createUser({
+
+      id: ctx.from.id,
+
+      username:
+      ctx.from.username,
+
+      firstName:
+      ctx.from.first_name
+
+    })
+
+  }
 
 }
 
