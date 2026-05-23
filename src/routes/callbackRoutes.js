@@ -1634,13 +1634,13 @@ bot.action(
 
     const {
 
-      startHandler
+      showMainMenu
 
     } = require(
       '../handlers/startHandler'
     )
 
-    await startHandler(ctx)
+    await showMainMenu(ctx)
 
   }
 
