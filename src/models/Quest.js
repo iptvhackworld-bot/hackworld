@@ -72,6 +72,14 @@ new mongoose.Schema({
 
   },
 
+  claimed: {
+
+    type: Boolean,
+
+    default: false
+
+  },
+
   /*
   |--------------------------------------------------------------------------
   | DATES
@@ -87,14 +95,6 @@ new mongoose.Schema({
   }
 
 })
-
-claimed: {
-
-  type: Boolean,
-
-  default: false
-
-},
 
 module.exports =
 mongoose.model(
