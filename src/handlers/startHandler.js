@@ -204,6 +204,11 @@ ${averageRating}/5
           Markup.button.callback(
             '🛒 Shop',
             'shop_menu'
+          ),
+		  
+		  Markup.button.callback(
+            '👑 Seller',
+            'seller_dashboard'
           )
 
         ],

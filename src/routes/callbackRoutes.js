@@ -238,6 +238,15 @@ const {
   '../handlers/marketHandler'
 )
 
+const {
+
+  openSellerDashboard,
+
+  openSellerAnalytics
+
+}
+
+
   /*
   |--------------------------------------------------------------------------
   | ACCEPT RULES
@@ -977,6 +986,45 @@ bot.action(
 
 )
 
+/*
+|--------------------------------------------------------------------------
+| SELLER DASHBOARD
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'seller_dashboard',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openSellerDashboard(ctx)
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| SELLER ANALYSTICS 
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'seller_analytics',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openSellerAnalytics(ctx)
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
