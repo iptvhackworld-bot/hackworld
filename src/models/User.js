@@ -15,7 +15,7 @@ new mongoose.Schema({
     type: Number,
 
     unique: true,
-	
+
     required: true
 
   },
@@ -146,6 +146,44 @@ new mongoose.Schema({
 
   /*
   |--------------------------------------------------------------------------
+  | MARKETPLACE
+  |--------------------------------------------------------------------------
+  */
+
+  sellerRating: {
+
+    type: Number,
+
+    default: 5
+
+  },
+
+  sellerReviews: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  sellerSales: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  trustedSeller: {
+
+    type: Boolean,
+
+    default: false
+
+  },
+
+  /*
+  |--------------------------------------------------------------------------
   | DATES
   |--------------------------------------------------------------------------
   */
@@ -159,44 +197,6 @@ new mongoose.Schema({
   }
 
 })
-
-/*
-|--------------------------------------------------------------------------
-| MARKETPLACE
-|--------------------------------------------------------------------------
-*/
-
-sellerRating: {
-
-  type: Number,
-
-  default: 5
-
-},
-
-sellerReviews: {
-
-  type: Number,
-
-  default: 0
-
-},
-
-sellerSales: {
-
-  type: Number,
-
-  default: 0
-
-},
-
-trustedSeller: {
-
-  type: Boolean,
-
-  default: false
-
-},
 
 module.exports =
 mongoose.model(
