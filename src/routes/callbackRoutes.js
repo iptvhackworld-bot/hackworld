@@ -184,6 +184,16 @@ module.exports = (bot) => {
   '../handlers/escrowHandler'
 )
 
+const {
+
+  openWallet,
+
+  walletHistory
+
+} = require(
+  '../handlers/walletHandler'
+)
+
   /*
   |--------------------------------------------------------------------------
   | ACCEPT RULES
@@ -367,6 +377,40 @@ module.exports = (bot) => {
 
     }
   )
+  
+  /*
+|--------------------------------------------------------------------------
+| WALLET
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'wallet_panel',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openWallet(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  'wallet_history',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await walletHistory(ctx)
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------

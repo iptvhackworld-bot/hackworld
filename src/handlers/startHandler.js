@@ -213,6 +213,11 @@ ${averageRating}/5
           Markup.button.callback(
             '⚙️ Admin',
             'admin_panel'
+          ),
+		  
+		  Markup.button.callback(
+            '🏦 Wallet',
+            'wallet_panel'
           )
 
         ]

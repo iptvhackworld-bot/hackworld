@@ -1,49 +1,146 @@
-const {
+const env =
+require(
+  '../config/env'
+)
 
-  getTotalUsers,
+const User =
+require(
+  '../models/User'
+)
 
-  getTotalUses,
-
-  getAverageRating
-
-} = require(
-  '../services/statsService'
+const Content =
+require(
+  '../models/Content'
 )
 
 /*
 |--------------------------------------------------------------------------
-| SHOW STATS
+| ADMIN STATS
 |--------------------------------------------------------------------------
 */
 
 const showStats =
 async (ctx) => {
 
+  /*
+  |--------------------------------------------------------------------------
+  | OWNER ONLY
+  |--------------------------------------------------------------------------
+  */
+
+  if (
+
+    ctx.from.id.toString()
+
+    !==
+
+    env.ownerId.toString()
+
+  ) {
+
+    return ctx.reply(
+      '❌ Accès refusé'
+    )
+
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | LOAD
+  |--------------------------------------------------------------------------
+  */
+
+  const users =
+    await User.find()
+
   const totalUsers =
-    await getTotalUsers()
+    users.length
 
-  const totalUses =
-    getTotalUses()
+  const totalContents =
+    await Content.countDocuments()
 
-  const averageRating =
-    await getAverageRating()
+  /*
+  |--------------------------------------------------------------------------
+  | CALCULS
+  |--------------------------------------------------------------------------
+  */
+
+  let totalXP = 0
+
+  let totalMoney = 0
+
+  let totalMessages = 0
+
+  users.forEach((user) => {
+
+    totalXP +=
+      user.xp || 0
+
+    totalMoney +=
+      user.money || 0
+
+    totalMessages +=
+      user.messages || 0
+
+  })
+
+  /*
+  |--------------------------------------------------------------------------
+  | TOP USER
+  |--------------------------------------------------------------------------
+  */
+
+  const topUser =
+    users.sort(
+
+      (a, b) =>
+
+        b.xp - a.xp
+
+    )[0]
+
+  /*
+  |--------------------------------------------------------------------------
+  | MESSAGE
+  |--------------------------------------------------------------------------
+  */
 
   await ctx.reply(
 `
-📊 STATISTIQUES
+╔══════════════════╗
+  HACKWORLD STATS
+╚══════════════════╝
+
+📊 Statistiques globales
 
 ━━━━━━━━━━━━━━━━━━
 
 👥 Utilisateurs :
 ${totalUsers}
 
-🚀 Utilisations :
-${totalUses}
+📂 Contenus :
+${totalContents}
 
-⭐ Note moyenne :
-${averageRating}/5
+⭐ XP Total :
+${totalXP}
+
+💰 Argent Total :
+${totalMoney}$
+
+💬 Messages Total :
+${totalMessages}
 
 ━━━━━━━━━━━━━━━━━━
+
+🏆 Top utilisateur :
+
+${topUser
+  ? `@${topUser.username}`
+  : 'Aucun'}
+
+━━━━━━━━━━━━━━━━━━
+
+🚀 Bot opérationnel
 `
   )
 
