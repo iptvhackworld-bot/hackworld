@@ -217,10 +217,10 @@ module.exports = {
 
   getListing,
 
-  markSold
-  
-  addSellerReview
-  
+  markSold,
+
+  addSellerReview,
+
   featureListing
 
 }
