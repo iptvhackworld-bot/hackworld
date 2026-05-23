@@ -1,14 +1,6 @@
-const {
-
-  getUser
-
-} = require(
-  '../services/userService'
-)
-
-const formatMoney =
+const User =
 require(
-  '../utils/formatMoney'
+  '../models/User'
 )
 
 /*
@@ -17,56 +9,43 @@ require(
 |--------------------------------------------------------------------------
 */
 
-const showProfile =
+const openProfile =
 async (ctx) => {
 
   const user =
-    getUser(
-      ctx.from.id
-    )
+    await User.findOne({
 
-  /*
-  |--------------------------------------------------------------------------
-  | USER
-  |--------------------------------------------------------------------------
-  */
+      id: ctx.from.id
+
+    })
 
   if (!user) {
 
-    return ctx.reply(
-      '❌ Utilisateur introuvable'
-    )
+    return
 
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | SEND
-  |--------------------------------------------------------------------------
-  */
-
   await ctx.reply(
 `
-👤 PROFIL
+👤 PROFILE
 
 ━━━━━━━━━━━━━━━━━━
 
-🆔 ID :
-${user.id}
+🆔 @${user.username}
 
-👤 Username :
-@${user.username || 'Aucun'}
+⭐ Level :
+${user.level}
 
-💰 Coins :
-${formatMoney(
-  user.money
-)}
-
-⭐ XP :
+📈 XP :
 ${user.xp}
 
-🏆 Niveau :
-${user.level}
+👑 Prestige :
+${user.prestige}
+
+💰 Money :
+${user.money}$
+
+━━━━━━━━━━━━━━━━━━
 `
   )
 
@@ -74,6 +53,6 @@ ${user.level}
 
 module.exports = {
 
-  showProfile
+  openProfile
 
 }

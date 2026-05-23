@@ -136,18 +136,29 @@ async (ctx) => {
   */
 
   let badge =
-    '👤 Seller'
+  '👤 Seller'
 
-  if (
+if (
 
-    user.trustedSeller
+  user.verifiedSeller
 
-  ) {
+) {
 
-    badge =
-      '👑 Trusted Seller'
+  badge =
+    '👑 VERIFIED SELLER'
 
-  }
+}
+
+else if (
+
+  user.trustedSeller
+
+) {
+
+  badge =
+    '🔥 Trusted Seller'
+
+}
 
   /*
   |--------------------------------------------------------------------------

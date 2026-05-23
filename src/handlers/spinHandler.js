@@ -6,26 +6,100 @@ const {
   '../services/walletService'
 )
 
-const User =
-require(
-  '../models/User'
+const {
+
+  addCrypto
+
+} = require(
+  '../services/cryptoService'
 )
 
 const {
 
-  checkPremium
+  createSubscription
 
 } = require(
   '../services/premiumService'
 )
 
+const User =
+require(
+  '../models/User'
+)
+
 /*
 |--------------------------------------------------------------------------
-| DAILY REWARD
+| REWARDS
 |--------------------------------------------------------------------------
 */
 
-const claimDaily =
+const rewards = [
+
+  {
+
+    type: 'money',
+
+    value: 50
+
+  },
+
+  {
+
+    type: 'money',
+
+    value: 100
+
+  },
+
+  {
+
+    type: 'money',
+
+    value: 500
+
+  },
+
+  {
+
+    type: 'money',
+
+    value: 1000
+
+  },
+
+  {
+
+    type: 'crypto',
+
+    value: 25
+
+  },
+
+  {
+
+    type: 'vip',
+
+    value: 7
+
+  },
+
+  {
+
+    type: 'nothing',
+
+    value: 0
+
+  }
+
+]
+
+/*
+|--------------------------------------------------------------------------
+| SPIN
+|--------------------------------------------------------------------------
+*/
+
+const spinWheel =
 async (ctx) => {
 
   const user =
@@ -47,11 +121,11 @@ async (ctx) => {
 
   /*
   |--------------------------------------------------------------------------
-  | CHECK TIME
+  | COOLDOWN
   |--------------------------------------------------------------------------
   */
 
-  if (user.lastDaily) {
+  if (user.lastSpin) {
 
     const diff =
 
@@ -60,7 +134,7 @@ async (ctx) => {
       -
 
       new Date(
-        user.lastDaily
+        user.lastSpin
       ).getTime()
 
     const hours =
@@ -70,9 +144,9 @@ async (ctx) => {
 
       return ctx.reply(
 `
-⏳ Daily déjà récupéré.
+⏳ Spin déjà utilisé.
 
-🕒 Revenez plus tard.
+🎡 Revenez demain.
 `
       )
 
@@ -82,77 +156,114 @@ async (ctx) => {
 
   /*
   |--------------------------------------------------------------------------
-  | STREAK
+  | RANDOM
   |--------------------------------------------------------------------------
   */
 
-  user.dailyStreak +=
-    1
+  const reward =
+
+    rewards[
+      Math.floor(
+
+        Math.random()
+
+        *
+
+        rewards.length
+
+      )
+    ]
 
   /*
   |--------------------------------------------------------------------------
-  | BASE REWARD
+  | APPLY
   |--------------------------------------------------------------------------
   */
 
-  let reward =
+  let message = ''
 
-    user.dailyStreak * 100
+  if (
 
-  /*
-  |--------------------------------------------------------------------------
-  | PREMIUM BONUS
-  |--------------------------------------------------------------------------
-  */
+    reward.type ===
+    'money'
 
-  const premium =
-    await checkPremium(
+  ) {
 
-      ctx.from.id
+    await addMoney(
+
+      ctx.from.id,
+
+      reward.value,
+
+      'Spin reward'
 
     )
 
-  if (premium) {
-
-    if (
-
-      premium.plan ===
-      'VIP'
-
-    ) {
-
-      reward *= 2
-
-    }
-
-    if (
-
-      premium.plan ===
-      'SELLER+'
-
-    ) {
-
-      reward *= 3
-
-    }
+    message =
+`
+💰 ${reward.value}$ gagnés
+`
 
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | ADD MONEY
-  |--------------------------------------------------------------------------
-  */
+  else if (
 
-  await addMoney(
+    reward.type ===
+    'crypto'
 
-    ctx.from.id,
+  ) {
 
-    reward,
+    await addCrypto(
 
-    'Daily reward'
+      ctx.from.id,
 
-  )
+      'usdt',
+
+      reward.value
+
+    )
+
+    message =
+`
+💳 ${reward.value} USDT
+gagnés
+`
+
+  }
+
+  else if (
+
+    reward.type ===
+    'vip'
+
+  ) {
+
+    await createSubscription(
+
+      ctx.from.id,
+
+      'VIP',
+
+      reward.value
+
+    )
+
+    message =
+`
+👑 VIP activé
+
+📅 ${reward.value} jours
+`
+
+  }
+
+  else {
+
+    message =
+`
+❌ Aucun gain
+`
+  }
 
   /*
   |--------------------------------------------------------------------------
@@ -160,32 +271,28 @@ async (ctx) => {
   |--------------------------------------------------------------------------
   */
 
-  user.lastDaily =
+  user.lastSpin =
     new Date()
 
   await user.save()
 
   /*
   |--------------------------------------------------------------------------
-  | MESSAGE
+  | RESULT
   |--------------------------------------------------------------------------
   */
 
   await ctx.reply(
 `
-🎁 DAILY REWARD
+🎡 SPIN WHEEL
 
 ━━━━━━━━━━━━━━━━━━
 
-🔥 Streak :
-${user.dailyStreak}
-
-💰 Récompense :
-${reward}$
+${message}
 
 ━━━━━━━━━━━━━━━━━━
 
-✅ Daily récupéré.
+✅ Spin terminé
 `
   )
 
@@ -193,6 +300,6 @@ ${reward}$
 
 module.exports = {
 
-  claimDaily
+  spinWheel
 
 }

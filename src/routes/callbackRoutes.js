@@ -7,291 +7,333 @@ module.exports = (bot) => {
   */
 
   const {
-    showMainMenu
-  } = require(
-    '../handlers/startHandler'
-  )
 
-  const {
-    categoryHandler
-  } = require(
-    '../handlers/categoryHandler'
-  )
-
-  const navigationHandler =
-  require(
-    '../handlers/navigationHandler'
-  )
-
-  const {
-    openStaffMenu,
-    showAdmins,
-    showModerators,
-    showTopUsers
-  } = require(
-    '../handlers/staffHandler'
-  )
-
-  const {
     openAdminPanel
+
   } = require(
     '../handlers/adminHandler'
   )
 
   const {
-    openContentMenu
-  } = require(
-    '../handlers/adminContentMenuHandler'
-  )
 
-  const {
-    openAddContent
-  } = require(
-    '../handlers/adminContentHandler'
-  )
-
-  const {
-    showContentList
-  } = require(
-    '../handlers/adminEditHandler'
-  )
-
-  const {
-    startBroadcast
-  } = require(
-    '../handlers/broadcastHandler'
-  )
-
-  const {
-    showStats
-  } = require(
-    '../handlers/adminStatsHandler'
-  )
-
-  const {
-    showLogs
-  } = require(
-    '../handlers/adminLogsHandler'
-  )
-
-  const {
-    openSecurityPanel
-  } = require(
-    '../handlers/securityHandler'
-  )
-
-  const {
-    openUsersPanel,
-    openUserProfile,
-    openSearchUser,
-    handleAdminInput,
-    giveMoneyPanel,
-    giveXPPanel,
-    setAdmin,
-    setMod,
-    resetInventory,
-    resetUser
-  } = require(
-    '../handlers/manageUsersHandler'
-  )
-
-  const {
-    banUser,
-    unbanUser,
-    resetMoney,
-    resetXP
-  } = require(
-    '../services/userService'
-  )
-
-  const {
-    openDashboard
-  } = require(
-    '../handlers/dashboardHandler'
-  )
-
-  const {
-    showTopUsersAnalytics,
-    showRichestUsers,
-    showTopGamblers
-  } = require(
-    '../handlers/userAnalyticsHandler'
-  )
-
-  const {
-    openCasinoPanel,
-    rouletteHandler
-  } = require(
-    '../handlers/casinoHandler'
-  )
-
-  const {
-    openShop,
-    buyHandler
-  } = require(
-    '../handlers/shopHandler'
-  )
-
-  const {
     openModerationPanel,
+
     warnUserPanel,
-    removeWarnPanel,
+
     muteUserPanel,
-    unmuteUserPanel,
-    blacklistUserPanel,
-    unblacklistUserPanel,
-    openUserLogs,
-    openAntiSpamPanel,
+
+    banUserPanel,
+
+    unbanUserPanel,
+
     handleModerationInput
+
   } = require(
     '../handlers/moderationHandler'
   )
 
   const {
-    openSupportPanel,
-    openAdminTickets,
-    closeTicketPanel,
+
+    openTicketPanel,
+
     handleTicketInput,
-    handleAdminTicketInput
+
+    handleAdminTicketInput,
+
+    closeTicket
+
   } = require(
     '../handlers/ticketHandler'
   )
 
   const {
-    openShopAdmin,
-    addItemPanel,
-    handleShopAdminInput,
-    viewShopItems
+
+    openMarket,
+
+    createListingPanel,
+
+    featureListingPanel,
+
+    handleMarketInput,
+
+    viewMarket,
+
+    buyMarketItem,
+
+    rateSeller,
+
+    marketDeliveryHandler,
+
+    marketDisputeHandler
+
+  } = require(
+    '../handlers/marketHandler'
+  )
+
+  const {
+
+    openSellerDashboard,
+
+    openSellerAnalytics
+
+  } = require(
+    '../handlers/sellerHandler'
+  )
+
+  const {
+
+    openCryptoPanel,
+
+    openDepositPanel,
+
+    askDepositAmount,
+
+    openWithdrawPanel,
+
+    askWithdrawAmount,
+
+    handleCryptoInput,
+
+    openCryptoHistory
+
+  } = require(
+    '../handlers/cryptoHandler'
+  )
+
+  const {
+
+    openPremiumPanel,
+
+    buyPremiumPlan
+
+  } = require(
+    '../handlers/premiumHandler'
+  )
+
+  const {
+
+    openFinancePanel,
+
+    showFinanceLogs,
+
+    showWalletStats,
+
+    freezeWalletPanel,
+
+    unfreezeWalletPanel,
+
+    handleFinanceInput
+
+  } = require(
+    '../handlers/adminFinanceHandler'
+  )
+
+  const {
+
+    addDigitalProductPanel,
+
+    handleShopAdminInput
+
   } = require(
     '../handlers/adminShopHandler'
+  )
+
+  const {
+
+    handleEscrowInput
+
+  } = require(
+    '../handlers/escrowHandler'
+  )
+
+  const {
+
+    handleWalletInput
+
+  } = require(
+    '../handlers/walletHandler'
+  )
+
+  const {
+
+    handleAdminInput
+
+  } = require(
+    '../handlers/adminInputHandler'
   )
   
   const {
 
-  openEscrowPanel,
-
-  createEscrowPanel,
-
-  handleEscrowInput,
-
-  buyerConfirmHandler,
-
-  sellerConfirmHandler,
-
-  disputeHandler
+  openFraudLogs
 
 } = require(
-  '../handlers/escrowHandler'
+  '../handlers/fraudHandler'
 )
 
 const {
 
-  openWallet,
-
-  walletHistory,
-
-  transferPanel,
-
-  handleWalletInput
+  verifySeller
 
 } = require(
-  '../handlers/walletHandler'
+  '../handlers/verifyHandler'
 )
 
 const {
 
-  openFinancePanel,
-
-  showFinanceLogs,
-
-  showWalletStats,
-
-  freezeWalletPanel,
-
-  unfreezeWalletPanel,
-
-  handleFinanceInput
+  openMarketAnalytics
 
 } = require(
-  '../handlers/adminFinanceHandler'
+  '../handlers/marketAnalyticsHandler'
 )
 
 const {
 
-  openMarket,
+  openMoneyLeaderboard,
 
-  createListingPanel,
+  openSellerLeaderboard,
 
-  handleMarketInput,
+  openXpLeaderboard,
 
-  viewMarket,
-
-  buyMarketItem,
-
-  rateSeller,
-
-  marketDeliveryHandler,
-
-  marketDisputeHandler
+  openCryptoLeaderboard
 
 } = require(
-  '../handlers/marketHandler'
+  '../handlers/leaderboardHandler'
 )
 
 const {
 
-  openSellerDashboard,
-
-  openSellerAnalytics
+  openLeaderboardPanel
 
 } = require(
-  '../handlers/sellerHandler'
+  '../handlers/leaderboardMenuHandler'
 )
 
 const {
 
-  openCryptoPanel,
+  openRoulette,
 
-  openDepositPanel,
+  askRouletteBet,
 
-  askDepositAmount,
-
-  openWithdrawPanel,
-
-  askWithdrawAmount,
-
-  handleCryptoInput,
-
-  openCryptoHistory
+  handleRouletteInput
 
 } = require(
-  '../handlers/cryptoHandler'
+  '../handlers/rouletteHandler'
 )
 
+const {
 
+  openBlackjack,
 
-  /*
-  |--------------------------------------------------------------------------
-  | ACCEPT RULES
-  |--------------------------------------------------------------------------
-  */
+  handleBlackjackInput,
 
-  bot.action(
-    'accept_rules',
-    async (ctx) => {
+  blackjackHit,
 
-      await ctx.answerCbQuery()
+  blackjackStand
 
-      try {
+} = require(
+  '../handlers/blackjackHandler'
+)
 
-        await ctx.deleteMessage()
+const {
 
-      } catch (error) {}
+  openMines,
 
-      await showMainMenu(ctx)
+  handleMinesInput,
 
-    }
-  )
+  pickMineTile,
+
+  minesCashout
+
+} = require(
+  '../handlers/minesHandler'
+)
+
+const {
+
+  openCrash,
+
+  handleCrashInput,
+
+  crashCashout
+
+} = require(
+  '../handlers/crashHandler'
+)
+
+const {
+
+  openJackpot,
+
+  joinJackpot,
+
+  drawJackpot
+
+} = require(
+  '../handlers/jackpotHandler'
+)
+
+const {
+
+  claimDaily
+
+} = require(
+  '../handlers/dailyHandler'
+)
+
+const {
+
+  spinWheel
+
+} = require(
+  '../handlers/spinHandler'
+)
+
+const {
+
+  openLootboxes,
+
+  openLootboxReward
+
+} = require(
+  '../handlers/lootboxHandler'
+)
+
+const {
+
+  openQuests,
+
+  claimQuestReward
+
+} = require(
+  '../handlers/questHandler'
+)
+
+const {
+
+  openProfile
+
+} = require(
+  '../handlers/profileHandler'
+)
+
+const {
+
+  prestigeAccount
+
+} = require(
+  '../handlers/prestigeHandler'
+)
+
+const {
+
+  openDice,
+
+  handleDiceInput
+
+} = require(
+  '../handlers/diceHandler'
+)
+
 
   /*
   |--------------------------------------------------------------------------
@@ -300,7 +342,9 @@ const {
   */
 
   bot.action(
+
     'admin_panel',
+
     async (ctx) => {
 
       await ctx.answerCbQuery()
@@ -308,45 +352,7 @@ const {
       await openAdminPanel(ctx)
 
     }
-  )
 
-  /*
-  |--------------------------------------------------------------------------
-  | ADMIN SHOP
-  |--------------------------------------------------------------------------
-  */
-
-  bot.action(
-    'admin_shop',
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await openShopAdmin(ctx)
-
-    }
-  )
-
-  bot.action(
-    'add_shop_item',
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await addItemPanel(ctx)
-
-    }
-  )
-
-  bot.action(
-    'view_shop_items',
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await viewShopItems(ctx)
-
-    }
   )
 
   /*
@@ -356,7 +362,9 @@ const {
   */
 
   bot.action(
+
     'admin_moderation',
+
     async (ctx) => {
 
       await ctx.answerCbQuery()
@@ -364,10 +372,13 @@ const {
       await openModerationPanel(ctx)
 
     }
+
   )
 
   bot.action(
+
     'warn_user',
+
     async (ctx) => {
 
       await ctx.answerCbQuery()
@@ -375,21 +386,13 @@ const {
       await warnUserPanel(ctx)
 
     }
+
   )
 
   bot.action(
-    'removewarn_user',
-    async (ctx) => {
 
-      await ctx.answerCbQuery()
-
-      await removeWarnPanel(ctx)
-
-    }
-  )
-
-  bot.action(
     'mute_user',
+
     async (ctx) => {
 
       await ctx.answerCbQuery()
@@ -397,96 +400,36 @@ const {
       await muteUserPanel(ctx)
 
     }
+
   )
 
   bot.action(
-    'unmute_user',
+
+    'ban_user',
+
     async (ctx) => {
 
       await ctx.answerCbQuery()
 
-      await unmuteUserPanel(ctx)
+      await banUserPanel(ctx)
 
     }
+
   )
 
   bot.action(
-    'blacklist_user',
+
+    'unban_user',
+
     async (ctx) => {
 
       await ctx.answerCbQuery()
 
-      await blacklistUserPanel(ctx)
+      await unbanUserPanel(ctx)
 
     }
+
   )
-
-  bot.action(
-    'unblacklist_user',
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await unblacklistUserPanel(ctx)
-
-    }
-  )
-
-  bot.action(
-    'user_logs',
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await openUserLogs(ctx)
-
-    }
-  )
-
-  bot.action(
-    'antispam_panel',
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await openAntiSpamPanel(ctx)
-
-    }
-  )
-  
-  /*
-|--------------------------------------------------------------------------
-| WALLET
-|--------------------------------------------------------------------------
-*/
-
-bot.action(
-
-  'wallet_panel',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await openWallet(ctx)
-
-  }
-
-)
-
-bot.action(
-
-  'wallet_history',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await walletHistory(ctx)
-
-  }
-
-)
 
   /*
   |--------------------------------------------------------------------------
@@ -495,330 +438,521 @@ bot.action(
   */
 
   bot.action(
+
     'support_panel',
+
     async (ctx) => {
 
       await ctx.answerCbQuery()
 
-      await openSupportPanel(ctx)
+      await openTicketPanel(ctx)
 
     }
+
   )
 
   bot.action(
-    'admin_tickets',
-    async (ctx) => {
 
-      await ctx.answerCbQuery()
-
-      await openAdminTickets(ctx)
-
-    }
-  )
-
-  bot.action(
     'close_ticket',
+
     async (ctx) => {
 
       await ctx.answerCbQuery()
 
-      await closeTicketPanel(ctx)
+      await closeTicket(ctx)
 
     }
+
   )
-  
-  /*
-|--------------------------------------------------------------------------
-| ESCROW
-|--------------------------------------------------------------------------
-*/
-
-bot.action(
-
-  'escrow_panel',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await openEscrowPanel(ctx)
-
-  }
-
-)
-
-bot.action(
-
-  'create_escrow',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await createEscrowPanel(ctx)
-
-  }
-
-)
-
-bot.action(
-
-  /^buyer_confirm_(.+)$/,
-
-  async (ctx) => {
-
-    const id =
-      ctx.match[1]
-
-    await buyerConfirmHandler(
-      ctx,
-      id
-    )
-
-  }
-
-)
-
-bot.action(
-
-  /^seller_confirm_(.+)$/,
-
-  async (ctx) => {
-
-    const id =
-      ctx.match[1]
-
-    await sellerConfirmHandler(
-      ctx,
-      id
-    )
-
-  }
-
-)
-
-bot.action(
-
-  /^escrow_dispute_(.+)$/,
-
-  async (ctx) => {
-
-    const id =
-      ctx.match[1]
-
-    await disputeHandler(
-      ctx,
-      id
-    )
-
-  }
-
-)
 
   /*
   |--------------------------------------------------------------------------
-  | SHOP
+  | MARKETPLACE
   |--------------------------------------------------------------------------
   */
 
   bot.action(
-    'shop_menu',
+
+    'market_panel',
+
     async (ctx) => {
 
       await ctx.answerCbQuery()
 
-      await openShop(ctx)
+      await openMarket(ctx)
 
     }
+
   )
 
   bot.action(
-    /^buy_(.+)$/,
+
+    'create_listing',
+
     async (ctx) => {
 
       await ctx.answerCbQuery()
 
-      await buyHandler(ctx)
+      await createListingPanel(ctx)
 
     }
-  )
 
-  /*
-  |--------------------------------------------------------------------------
-  | CASINO
-  |--------------------------------------------------------------------------
-  */
-
-  bot.action(
-    'casino_menu',
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await openCasinoPanel(ctx)
-
-    }
   )
 
   bot.action(
-    'casino_roulette',
+
+    'view_market',
+
     async (ctx) => {
 
       await ctx.answerCbQuery()
 
-      await rouletteHandler(ctx)
+      await viewMarket(ctx)
 
     }
+
   )
 
-  /*
-  |--------------------------------------------------------------------------
-  | STAFF
-  |--------------------------------------------------------------------------
-  */
-
   bot.action(
-    'cat_staff',
+
+    'feature_listing',
+
     async (ctx) => {
 
       await ctx.answerCbQuery()
 
-      await openStaffMenu(ctx)
+      await featureListingPanel(ctx)
 
     }
+
   )
 
-  /*
-  |--------------------------------------------------------------------------
-  | CATEGORIES
-  |--------------------------------------------------------------------------
-  */
-
   bot.action(
-    /cat_(.+)/,
+
+    /^buy_market_(.+)$/,
+
     async (ctx) => {
 
-      await ctx.answerCbQuery()
+      const id =
+        ctx.match[1]
 
-      await categoryHandler(ctx)
+      await buyMarketItem(
 
-    }
-  )
-
-  /*
-  |--------------------------------------------------------------------------
-  | NAVIGATION
-  |--------------------------------------------------------------------------
-  */
-
-  bot.action(
-    /next_(.+)_(\d+)/,
-    async (ctx) => {
-
-      await ctx.answerCbQuery()
-
-      await navigationHandler(
         ctx,
-        'next'
+
+        id
+
       )
 
     }
+
   )
 
   bot.action(
-    /prev_(.+)_(\d+)/,
+
+    /^rate_(.+)_(.+)$/,
+
     async (ctx) => {
 
-      await ctx.answerCbQuery()
+      const id =
+        ctx.match[1]
 
-      await navigationHandler(
+      const rating =
+        Number(
+          ctx.match[2]
+        )
+
+      await rateSeller(
+
         ctx,
-        'prev'
+
+        id,
+
+        rating
+
       )
 
     }
+
+  )
+
+  bot.action(
+
+    /^market_delivered_(.+)$/,
+
+    async (ctx) => {
+
+      const escrowId =
+        ctx.match[1]
+
+      await marketDeliveryHandler(
+
+        ctx,
+
+        escrowId
+
+      )
+
+    }
+
+  )
+
+  bot.action(
+
+    /^market_dispute_(.+)$/,
+
+    async (ctx) => {
+
+      const escrowId =
+        ctx.match[1]
+
+      await marketDisputeHandler(
+
+        ctx,
+
+        escrowId
+
+      )
+
+    }
+
   )
 
   /*
   |--------------------------------------------------------------------------
-  | BACK
+  | SELLER
   |--------------------------------------------------------------------------
   */
 
   bot.action(
-    'back_menu',
+
+    'seller_dashboard',
+
     async (ctx) => {
 
       await ctx.answerCbQuery()
 
-      await showMainMenu(ctx)
+      await openSellerDashboard(ctx)
 
     }
+
+  )
+
+  bot.action(
+
+    'seller_analytics',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openSellerAnalytics(ctx)
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | CRYPTO
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'crypto_panel',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openCryptoPanel(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'crypto_history',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openCryptoHistory(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'crypto_deposit',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openDepositPanel(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'crypto_withdraw',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openWithdrawPanel(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    /^deposit_(.+)$/,
+
+    async (ctx) => {
+
+      const coin =
+        ctx.match[1]
+
+      await askDepositAmount(
+
+        ctx,
+
+        coin
+
+      )
+
+    }
+
+  )
+
+  bot.action(
+
+    /^withdraw_(.+)$/,
+
+    async (ctx) => {
+
+      const coin =
+        ctx.match[1]
+
+      await askWithdrawAmount(
+
+        ctx,
+
+        coin
+
+      )
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | PREMIUM
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'premium_panel',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openPremiumPanel(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'buy_vip',
+
+    async (ctx) => {
+
+      await buyPremiumPlan(
+
+        ctx,
+
+        'VIP',
+
+        10,
+
+        30
+
+      )
+
+    }
+
+  )
+
+  bot.action(
+
+    'buy_premium',
+
+    async (ctx) => {
+
+      await buyPremiumPlan(
+
+        ctx,
+
+        'PREMIUM',
+
+        25,
+
+        30
+
+      )
+
+    }
+
+  )
+
+  bot.action(
+
+    'buy_seller_plus',
+
+    async (ctx) => {
+
+      await buyPremiumPlan(
+
+        ctx,
+
+        'SELLER+',
+
+        50,
+
+        30
+
+      )
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | FINANCE
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_finance',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await openFinancePanel(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'wallet_logs',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await showFinanceLogs(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'wallet_stats',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await showWalletStats(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'freeze_wallet',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await freezeWalletPanel(ctx)
+
+    }
+
+  )
+
+  bot.action(
+
+    'unfreeze_wallet',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await unfreezeWalletPanel(ctx)
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | DIGITAL PRODUCTS
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'add_digital_product',
+
+    async (ctx) => {
+
+      await ctx.answerCbQuery()
+
+      await addDigitalProductPanel(ctx)
+
+    }
+
   )
   
-    /*
+   /*
   |--------------------------------------------------------------------------
-  | WALLET TRANSFERT 
+  | ANTI FRAUD LOGS 
   |--------------------------------------------------------------------------
   */
   
   bot.action(
 
-  'wallet_transfer',
+  'fraud_logs',
 
   async (ctx) => {
 
     await ctx.answerCbQuery()
 
-    await transferPanel(ctx)
-
-  }
-
-)
-
-/*
-|--------------------------------------------------------------------------
-| FINANCE
-|--------------------------------------------------------------------------
-*/
-
-bot.action(
-
-  'admin_finance',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await openFinancePanel(ctx)
-
-  }
-
-)
-
-bot.action(
-
-  'finance_logs',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await showFinanceLogs(ctx)
-
-  }
-
-)
-
-bot.action(
-
-  'finance_stats',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await showWalletStats(ctx)
+    await openFraudLogs(ctx)
 
   }
 
@@ -826,65 +960,26 @@ bot.action(
 
 /*
   |--------------------------------------------------------------------------
-  | Freeze walet 
+  | VERIFY SELLER 
   |--------------------------------------------------------------------------
   */
   
   bot.action(
 
-  'freeze_wallet',
+  /^verify_seller_(.+)$/,
 
   async (ctx) => {
 
-    await ctx.answerCbQuery()
-
-    await freezeWalletPanel(ctx)
-
-  }
-
-)
-
-bot.action(
-
-  'unfreeze_wallet',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await unfreezeWalletPanel(ctx)
-
-  }
-
-)
-
-/*
-  |--------------------------------------------------------------------------
-  | RATE 
-  |--------------------------------------------------------------------------
-  */
-  
-  bot.action(
-
-  /^rate_(.+)_(\d)$/,
-
-  async (ctx) => {
-
-    const id =
-      ctx.match[1]
-
-    const rating =
+    const userId =
       Number(
-        ctx.match[2]
+        ctx.match[1]
       )
 
-    await rateSeller(
+    await verifySeller(
 
       ctx,
 
-      id,
-
-      rating
+      userId
 
     )
 
@@ -894,47 +989,19 @@ bot.action(
 
 /*
   |--------------------------------------------------------------------------
-  | MARKET DELIVERED 
+  | MARKET ANALYSTICS
   |--------------------------------------------------------------------------
   */
   
   bot.action(
 
-  /^market_delivered_(.+)$/,
+  'market_analytics',
 
   async (ctx) => {
 
-    const escrowId =
-      ctx.match[1]
+    await ctx.answerCbQuery()
 
-    await marketDeliveryHandler(
-
-      ctx,
-
-      escrowId
-
-    )
-
-  }
-
-)
-
-bot.action(
-
-  /^market_dispute_(.+)$/,
-
-  async (ctx) => {
-
-    const escrowId =
-      ctx.match[1]
-
-    await marketDisputeHandler(
-
-      ctx,
-
-      escrowId
-
-    )
+    await openMarketAnalytics(ctx)
 
   }
 
@@ -942,19 +1009,19 @@ bot.action(
 
 /*
 |--------------------------------------------------------------------------
-| MARKETPLACE
+| LEADERBOARDS
 |--------------------------------------------------------------------------
 */
 
 bot.action(
 
-  'market_panel',
+  'top_money',
 
   async (ctx) => {
 
     await ctx.answerCbQuery()
 
-    await openMarket(ctx)
+    await openMoneyLeaderboard(ctx)
 
   }
 
@@ -962,13 +1029,13 @@ bot.action(
 
 bot.action(
 
-  'create_listing',
+  'top_sellers',
 
   async (ctx) => {
 
     await ctx.answerCbQuery()
 
-    await createListingPanel(ctx)
+    await openSellerLeaderboard(ctx)
 
   }
 
@@ -976,13 +1043,13 @@ bot.action(
 
 bot.action(
 
-  'view_market',
+  'top_xp',
 
   async (ctx) => {
 
     await ctx.answerCbQuery()
 
-    await viewMarket(ctx)
+    await openXpLeaderboard(ctx)
 
   }
 
@@ -990,114 +1057,33 @@ bot.action(
 
 bot.action(
 
-  /^buy_market_(.+)$/,
+  'top_crypto',
 
   async (ctx) => {
 
-    const id =
-      ctx.match[1]
+    await ctx.answerCbQuery()
 
-    await buyMarketItem(
-
-      ctx,
-
-      id
-
-    )
+    await openCryptoLeaderboard(ctx)
 
   }
 
 )
 
 /*
-|--------------------------------------------------------------------------
-| SELLER DASHBOARD
-|--------------------------------------------------------------------------
-*/
-
-bot.action(
-
-  'seller_dashboard',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await openSellerDashboard(ctx)
-
-  }
-
-)
-
-/*
-|--------------------------------------------------------------------------
-| SELLER ANALYSTICS 
-|--------------------------------------------------------------------------
-*/
-
-bot.action(
-
-  'seller_analytics',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await openSellerAnalytics(ctx)
-
-  }
-
-)
-
-/*
-|--------------------------------------------------------------------------
-| CRYPTO
-|--------------------------------------------------------------------------
-*/
-
-bot.action(
-
-  'crypto_panel',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await openCryptoPanel(ctx)
-
-  }
-
-)
-
- /*
   |--------------------------------------------------------------------------
-  | CRYPTO DEPOSIT 
+  | LEADERBOARDS
   |--------------------------------------------------------------------------
   */
   
   bot.action(
 
-  'crypto_deposit',
+  'leaderboards',
 
   async (ctx) => {
 
     await ctx.answerCbQuery()
 
-    await openDepositPanel(ctx)
-
-  }
-
-)
-
-bot.action(
-
-  'crypto_withdraw',
-
-  async (ctx) => {
-
-    await ctx.answerCbQuery()
-
-    await openWithdrawPanel(ctx)
+    await openLeaderboardPanel(ctx)
 
   }
 
@@ -1105,77 +1091,521 @@ bot.action(
 
 /*
 |--------------------------------------------------------------------------
-| DEPOSIT COINS
+| BLACKJACK
 |--------------------------------------------------------------------------
 */
 
 bot.action(
 
-  /^deposit_(.+)$/,
+  'blackjack_panel',
 
   async (ctx) => {
 
-    const coin =
-      ctx.match[1]
+    await ctx.answerCbQuery()
 
-    await askDepositAmount(
-
-      ctx,
-
-      coin
-
-    )
+    await openBlackjack(ctx)
 
   }
 
 )
-
-/*
-|--------------------------------------------------------------------------
-| WITHDRAW COINS
-|--------------------------------------------------------------------------
-*/
 
 bot.action(
 
-  /^withdraw_(.+)$/,
+  'blackjack_hit',
 
   async (ctx) => {
 
-    const coin =
-      ctx.match[1]
-
-    await askWithdrawAmount(
-
-      ctx,
-
-      coin
-
-    )
+    await blackjackHit(ctx)
 
   }
 
 )
 
- /*
-  |--------------------------------------------------------------------------
-  | CRYPTO history
-  |--------------------------------------------------------------------------
-  */
+bot.action(
+
+  'blackjack_stand',
+
+  async (ctx) => {
+
+    await blackjackStand(ctx)
+
+  }
+
+)
   
-  bot.action(
+  /*
+|--------------------------------------------------------------------------
+| ROULETTE
+|--------------------------------------------------------------------------
+*/
 
-  'crypto_history',
+bot.action(
+
+  'roulette_panel',
 
   async (ctx) => {
 
     await ctx.answerCbQuery()
 
-    await openCryptoHistory(ctx)
+    await openRoulette(ctx)
 
   }
 
 )
+
+bot.action(
+
+  'roulette_red',
+
+  async (ctx) => {
+
+    await askRouletteBet(
+
+      ctx,
+
+      'red'
+
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'roulette_black',
+
+  async (ctx) => {
+
+    await askRouletteBet(
+
+      ctx,
+
+      'black'
+
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'roulette_green',
+
+  async (ctx) => {
+
+    await askRouletteBet(
+
+      ctx,
+
+      'green'
+
+    )
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| MINES
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'mines_panel',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openMines(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  /^mine_(.+)$/,
+
+  async (ctx) => {
+
+    const index =
+      Number(
+        ctx.match[1]
+      )
+
+    await pickMineTile(
+
+      ctx,
+
+      index
+
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'mines_cashout',
+
+  async (ctx) => {
+
+    await minesCashout(ctx)
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| CRASH
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'crash_panel',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openCrash(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  'crash_cashout',
+
+  async (ctx) => {
+
+    await crashCashout(ctx)
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| JACKPOT
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'jackpot_panel',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openJackpot(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  'join_jackpot',
+
+  async (ctx) => {
+
+    await joinJackpot(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  'draw_jackpot',
+
+  async (ctx) => {
+
+    await drawJackpot(ctx)
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| DAILY
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'daily_reward',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await claimDaily(ctx)
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| SPIN WHEEL
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'spin_wheel',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await spinWheel(ctx)
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| LOOTBOXES
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'lootboxes_panel',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openLootboxes(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  'lootbox_common',
+
+  async (ctx) => {
+
+    await openLootboxReward(
+
+      ctx,
+
+      'common'
+
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'lootbox_rare',
+
+  async (ctx) => {
+
+    await openLootboxReward(
+
+      ctx,
+
+      'rare'
+
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'lootbox_legendary',
+
+  async (ctx) => {
+
+    await openLootboxReward(
+
+      ctx,
+
+      'legendary'
+
+    )
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| PETS
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'pets_panel',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openPets(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  'open_pet_box',
+
+  async (ctx) => {
+
+    await openPetBox(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  /^activate_pet_(.+)$/,
+
+  async (ctx) => {
+
+    const petId =
+      ctx.match[1]
+
+    await activatePetHandler(
+
+      ctx,
+
+      petId
+
+    )
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| QUESTS
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'quests_panel',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openQuests(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  /^claim_quest_(.+)$/,
+
+  async (ctx) => {
+
+    const questId =
+      ctx.match[1]
+
+    await claimQuestReward(
+
+      ctx,
+
+      questId
+
+    )
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| PROFILE
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'profile_panel',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openProfile(ctx)
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| PRESTIGE
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'prestige_account',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await prestigeAccount(ctx)
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| DICE
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'dice_panel',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openDice(ctx)
+
+  }
+
+)
+
 
   /*
   |--------------------------------------------------------------------------
@@ -1185,33 +1615,42 @@ bot.action(
 
   bot.on(
 
-  'text',
+    'text',
 
-  async (ctx) => {
+    async (ctx) => {
 
-    await handleModerationInput(ctx)
+      await handleModerationInput(ctx)
 
-    await handleTicketInput(ctx)
+      await handleTicketInput(ctx)
 
-    await handleAdminTicketInput(ctx)
+      await handleAdminTicketInput(ctx)
 
-    await handleShopAdminInput(ctx)
+      await handleShopAdminInput(ctx)
 
-    await handleEscrowInput(ctx)
+      await handleEscrowInput(ctx)
 
-    await handleWalletInput(ctx)
+      await handleWalletInput(ctx)
 
-    await handleFinanceInput(ctx)
+      await handleFinanceInput(ctx)
 
-    await handleMarketInput(ctx)
-	
-	await handleCryptoInput(ctx)
-	
-	await handleAdminInput(ctx)
-	
+      await handleMarketInput(ctx)
 
-  }
+      await handleCryptoInput(ctx)
+	  
+	  await handleDiceInput(ctx)
+	  
+	  await handleCrashInput(ctx)
+	  
+	  await handleMinesInput(ctx)
+	  
+	  await handleBlackjackInput(ctx)
+	  
+	  await handleRouletteInput(ctx)
 
-)
+      await handleAdminInput(ctx)
+
+    }
+
+  )
 
 }

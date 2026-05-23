@@ -12,6 +12,52 @@ if (!global.shopAdminSessions) {
 
 }
 
+const {
+
+  createDigitalProduct
+
+} = require(
+  '../services/deliveryService'
+)
+
+if (!global.digitalSessions) {
+
+  global.digitalSessions = {}
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| DIGITAL PRODUCT PANEL
+|--------------------------------------------------------------------------
+*/
+
+const addDigitalProductPanel =
+async (ctx) => {
+
+  global.digitalSessions[
+    ctx.from.id
+  ] = {
+
+    action:
+    'add_digital'
+
+  }
+
+  await ctx.reply(
+`
+📦 Envoyez :
+
+listingId | contenu
+
+Exemple :
+
+685abc123 | netflix@mail.com:password
+`
+  )
+
+}
+
 /*
 |--------------------------------------------------------------------------
 | SHOP ADMIN PANEL
@@ -45,6 +91,11 @@ Gestion boutique
         Markup.button.callback(
           '❌ Supprimer',
           'delete_shop_item'
+        ),
+		
+		Markup.button.callback(
+          '🤖 Produit Digital',
+          'add_digital_product'
         )
 
       ],
@@ -135,6 +186,63 @@ async (ctx) => {
     return false
 
   }
+  
+  /*
+|--------------------------------------------------------------------------
+| DIGITAL PRODUCT
+|--------------------------------------------------------------------------
+*/
+
+const digitalSession =
+
+  global.digitalSessions[
+    ctx.from.id
+  ]
+
+if (digitalSession) {
+
+  const args =
+    ctx.message.text.split('|')
+
+  if (
+
+    args.length < 2
+
+  ) {
+
+    return ctx.reply(
+`
+❌ Format invalide.
+`
+    )
+
+  }
+
+  const listingId =
+    args[0].trim()
+
+  const content =
+    args[1].trim()
+
+  await createDigitalProduct(
+
+    listingId,
+
+    content
+
+  )
+
+  delete global.digitalSessions[
+    ctx.from.id
+  ]
+
+  return ctx.reply(
+`
+✅ Produit digital ajouté.
+`
+  )
+
+}
 
   /*
   |--------------------------------------------------------------------------
@@ -270,6 +378,8 @@ module.exports = {
 
   handleShopAdminInput,
 
-  viewShopItems
+  viewShopItems,
+  
+  addDigitalProductPanel
 
 }

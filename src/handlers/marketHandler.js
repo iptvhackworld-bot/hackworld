@@ -10,8 +10,10 @@ const {
   getListing,
 
   markSold,
-  
-  addSellerReview
+
+  addSellerReview,
+
+  featureListing
 
 } = require(
   '../services/marketService'
@@ -19,17 +21,13 @@ const {
 
 const {
 
-  removeMoney
+  removeMoney,
+
+  addMoney
 
 } = require(
   '../services/walletService'
 )
-
-if (!global.marketSessions) {
-
-  global.marketSessions = {}
-
-}
 
 const {
 
@@ -41,15 +39,47 @@ const {
 
 const {
 
-  addMoney
+  getDigitalProduct,
+
+  markDelivered
 
 } = require(
-  '../services/walletService'
+  '../services/deliveryService'
+)
+
+const {
+
+  autoFlagUser
+
+} = require(
+  '../services/fraudService'
+)
+
+const {
+
+  addTrustScore,
+
+  removeTrustScore
+
+} = require(
+  '../services/trustService'
 )
 
 /*
 |--------------------------------------------------------------------------
-| PANEL
+| SESSIONS
+|--------------------------------------------------------------------------
+*/
+
+if (!global.marketSessions) {
+
+  global.marketSessions = {}
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| MARKET PANEL
 |--------------------------------------------------------------------------
 */
 
@@ -68,27 +98,43 @@ async (ctx) => {
 ━━━━━━━━━━━━━━━━━━
 `,
 
-    Markup.inlineKeyboard([
+Markup.inlineKeyboard([
 
-      [
+  [
 
-        Markup.button.callback(
-          '➕ Créer annonce',
-          'create_listing'
-        )
+    Markup.button.callback(
+      '➕ Créer annonce',
+      'create_listing'
+    )
 
-      ],
+  ],
 
-      [
+  [
 
-        Markup.button.callback(
-          '📜 Voir annonces',
-          'view_market'
-        )
+    Markup.button.callback(
+      '📜 Voir annonces',
+      'view_market'
+    )
 
-      ]
+  ],
+  
+  [
+    Markup.button.callback(
+      '📈 Analytics',
+      'market_analytics'
+    )
+  ],
 
-    ])
+  [
+
+    Markup.button.callback(
+      '🚀 Booster annonce',
+      'feature_listing'
+    )
+
+  ]
+
+])
 
   )
 
@@ -96,7 +142,7 @@ async (ctx) => {
 
 /*
 |--------------------------------------------------------------------------
-| CREATE PANEL
+| CREATE LISTING PANEL
 |--------------------------------------------------------------------------
 */
 
@@ -128,7 +174,33 @@ Netflix Premium | 50
 
 /*
 |--------------------------------------------------------------------------
-| HANDLE INPUT
+| FEATURE LISTING PANEL
+|--------------------------------------------------------------------------
+*/
+
+const featureListingPanel =
+async (ctx) => {
+
+  global.marketSessions[
+    ctx.from.id
+  ] = {
+
+    action:
+    'feature_listing'
+
+  }
+
+  await ctx.reply(
+`
+🚀 Envoyez ID annonce.
+`
+  )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| HANDLE MARKET INPUT
 |--------------------------------------------------------------------------
 */
 
@@ -146,6 +218,12 @@ async (ctx) => {
     return false
 
   }
+
+  /*
+  |--------------------------------------------------------------------------
+  | CREATE LISTING
+  |--------------------------------------------------------------------------
+  */
 
   if (
 
@@ -179,20 +257,19 @@ async (ctx) => {
         args[1]
       )
 
-    const listing =
-      await createListing({
+    await createListing({
 
-        sellerId:
-        ctx.from.id,
+      sellerId:
+      ctx.from.id,
 
-        sellerUsername:
-        ctx.from.username,
+      sellerUsername:
+      ctx.from.username,
 
-        title,
+      title,
 
-        price
+      price
 
-      })
+    })
 
     delete global.marketSessions[
       ctx.from.id
@@ -205,6 +282,43 @@ async (ctx) => {
 📦 ${title}
 
 💰 ${price}$
+`
+    )
+
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | FEATURE LISTING
+  |--------------------------------------------------------------------------
+  */
+
+  if (
+
+    session.action ===
+    'feature_listing'
+
+  ) {
+
+    const listingId =
+      ctx.message.text.trim()
+
+    await featureListing(
+
+      listingId,
+
+      7
+
+    )
+
+    delete global.marketSessions[
+      ctx.from.id
+    ]
+
+    return ctx.reply(
+`
+🚀 Annonce boostée
+pendant 7 jours.
 `
     )
 
@@ -224,11 +338,19 @@ async (ctx) => {
   const listings =
     await getListings()
 
-  if (
+  listings.sort((a, b) => {
 
-    !listings.length
+    return (
 
-  ) {
+      b.featured -
+
+      a.featured
+
+    )
+
+  })
+
+  if (!listings.length) {
 
     return ctx.reply(
 `
@@ -243,27 +365,35 @@ async (ctx) => {
     await ctx.reply(
 
 `
+${item.featured
+? '🚀 FEATURED\n'
+: ''}
+
 📦 ${item.title}
 
 👤 @${item.sellerUsername}
+
+${item.verifiedSeller
+? '👑 VERIFIED SELLER'
+: ''}
 
 💰 ${item.price}$
 
 ━━━━━━━━━━━━━━━━━━
 `,
 
-      Markup.inlineKeyboard([
+Markup.inlineKeyboard([
 
-        [
+  [
 
-          Markup.button.callback(
-            '💳 Acheter',
-            `buy_market_${item._id}`
-          )
+    Markup.button.callback(
+      '💳 Acheter',
+      `buy_market_${item._id}`
+    )
 
-        ]
+  ]
 
-      ])
+])
 
     )
 
@@ -273,7 +403,7 @@ async (ctx) => {
 
 /*
 |--------------------------------------------------------------------------
-| BUY
+| BUY MARKET ITEM
 |--------------------------------------------------------------------------
 */
 
@@ -305,6 +435,12 @@ async (
 
   }
 
+  /*
+  |--------------------------------------------------------------------------
+  | PAYMENT
+  |--------------------------------------------------------------------------
+  */
+
   const paid =
     await removeMoney(
 
@@ -312,7 +448,7 @@ async (
 
       item.price,
 
-      `Achat marketplace`
+      'Achat marketplace'
 
     )
 
@@ -345,7 +481,105 @@ async (
 
     )
 
+  /*
+  |--------------------------------------------------------------------------
+  | MARK SOLD
+  |--------------------------------------------------------------------------
+  */
+
   await markSold(id)
+
+  /*
+  |--------------------------------------------------------------------------
+  | AUTO DELIVERY
+  |--------------------------------------------------------------------------
+  */
+
+  const digital =
+    await getDigitalProduct(
+
+      item._id.toString()
+
+    )
+
+  if (digital) {
+
+    try {
+
+      await ctx.telegram.sendMessage(
+
+        ctx.from.id,
+
+`
+🤖 AUTO DELIVERY
+
+━━━━━━━━━━━━━━━━━━
+
+📦 Produit :
+
+${item.title}
+
+━━━━━━━━━━━━━━━━━━
+
+${digital.content}
+
+━━━━━━━━━━━━━━━━━━
+
+✅ Livraison automatique
+effectuée.
+`
+
+      )
+
+    } catch (error) {}
+
+    /*
+    |--------------------------------------------------------------------------
+    | MARK DELIVERED
+    |--------------------------------------------------------------------------
+    */
+
+    await markDelivered(
+      digital._id
+    )
+
+    /*
+    |--------------------------------------------------------------------------
+    | COMPLETE ESCROW
+    |--------------------------------------------------------------------------
+    */
+
+    escrow.status =
+      'completed'
+
+    escrow.buyerConfirmed =
+      true
+
+    await escrow.save()
+
+    /*
+    |--------------------------------------------------------------------------
+    | PAY SELLER
+    |--------------------------------------------------------------------------
+    */
+
+    await addMoney(
+
+      escrow.sellerId,
+
+      escrow.amount,
+
+      'Auto delivery payout'
+
+    )
+
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | FINAL MESSAGE
+  |--------------------------------------------------------------------------
+  */
 
   await ctx.reply(
 
@@ -362,9 +596,6 @@ async (
 💰 ${item.price}$
 
 ━━━━━━━━━━━━━━━━━━
-
-📦 Le vendeur doit
-maintenant livrer.
 `,
 
 Markup.inlineKeyboard([
@@ -516,6 +747,20 @@ async (
     true
 
   await escrow.save()
+  
+  /*
+|--------------------------------------------------------------------------
+| TRUST SCORE
+|--------------------------------------------------------------------------
+*/
+
+await addTrustScore(
+
+  escrow.sellerId,
+
+  10
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -586,6 +831,22 @@ async (
     'dispute'
 
   await escrow.save()
+  
+  /*
+|--------------------------------------------------------------------------
+| AUTO FRAUD CHECK
+|--------------------------------------------------------------------------
+*/
+
+await autoFlagUser(
+
+  escrow.sellerId,
+
+  'Marketplace dispute opened',
+
+  25
+
+)
 
   await ctx.reply(
 `
@@ -597,11 +858,29 @@ Un admin interviendra.
 
 }
 
+/*
+|--------------------------------------------------------------------------
+| REMOVE TRUST
+|--------------------------------------------------------------------------
+*/
+
+await removeTrustScore(
+
+  escrow.sellerId,
+
+  15
+
+)
+
+
+
 module.exports = {
 
   openMarket,
 
   createListingPanel,
+
+  featureListingPanel,
 
   handleMarketInput,
 
@@ -613,6 +892,8 @@ module.exports = {
 
   marketDeliveryHandler,
 
-  marketDisputeHandler
+  marketDisputeHandler,
+  
+  
 
 }

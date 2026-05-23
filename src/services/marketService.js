@@ -158,6 +158,57 @@ async (
 
 }
 
+/*
+|--------------------------------------------------------------------------
+| FEATURE LISTING
+|--------------------------------------------------------------------------
+*/
+
+const featureListing =
+async (
+
+  listingId,
+
+  days
+
+) => {
+
+  const expiresAt =
+    new Date(
+
+      Date.now()
+
+      +
+
+      days *
+
+      24 *
+
+      60 *
+
+      60 *
+
+      1000
+
+    )
+
+  return await MarketListing.findByIdAndUpdate(
+
+    listingId,
+
+    {
+
+      featured: true,
+
+      featuredExpiresAt:
+      expiresAt
+
+    }
+
+  )
+
+}
+
 module.exports = {
 
   createListing,
@@ -169,5 +220,7 @@ module.exports = {
   markSold
   
   addSellerReview
+  
+  featureListing
 
 }

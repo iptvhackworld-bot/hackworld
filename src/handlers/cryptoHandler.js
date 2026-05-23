@@ -29,6 +29,16 @@ if (!global.cryptoSessions) {
 
 }
 
+const {
+
+  autoFlagUser
+
+} = require(
+  '../services/fraudService'
+)
+
+
+
 /*
 |--------------------------------------------------------------------------
 | CRYPTO PANEL
@@ -370,6 +380,30 @@ ${session.coin}
     'withdraw'
 
   ) {
+	  
+	  /*
+|--------------------------------------------------------------------------
+| LARGE WITHDRAW
+|--------------------------------------------------------------------------
+*/
+
+if (
+
+  amount >= 1000
+
+) {
+
+  await autoFlagUser(
+
+    ctx.from.id,
+
+    'Large crypto withdraw',
+
+    15
+
+  )
+
+}
 
     const removed =
       await removeCrypto(
