@@ -108,6 +108,16 @@ async (
     await getWallet(
       userId
     )
+	
+	if (
+
+  wallet.locked
+
+) {
+
+  return false
+
+}
 
   if (
 
@@ -168,6 +178,59 @@ async (userId) => {
 
 }
 
+/*
+|--------------------------------------------------------------------------
+| LOCK WALLET
+|--------------------------------------------------------------------------
+*/
+
+const lockWallet =
+async (userId) => {
+
+  return await Wallet.findOneAndUpdate(
+
+    {
+
+      userId
+
+    },
+
+    {
+
+      locked: true
+
+    }
+
+  )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| UNLOCK WALLET
+|--------------------------------------------------------------------------
+*/
+
+const unlockWallet =
+async (userId) => {
+
+  return await Wallet.findOneAndUpdate(
+
+    {
+
+      userId
+
+    },
+
+    {
+
+      locked: false
+
+    }
+
+  )
+
+}
 module.exports = {
 
   getWallet,
@@ -176,6 +239,11 @@ module.exports = {
 
   removeMoney,
 
-  getTransactions
+  getTransactions,
+
+  lockWallet,
+
+  unlockWallet
 
 }
+

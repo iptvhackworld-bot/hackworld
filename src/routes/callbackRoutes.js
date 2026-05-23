@@ -198,6 +198,22 @@ const {
   '../handlers/walletHandler'
 )
 
+const {
+
+  openFinancePanel,
+
+  showFinanceLogs,
+
+  showWalletStats,
+
+  freezeWalletPanel,
+
+  unfreezeWalletPanel,
+
+  handleFinanceInput
+
+}
+
   /*
   |--------------------------------------------------------------------------
   | ACCEPT RULES
@@ -704,6 +720,88 @@ bot.action(
 
 )
 
+/*
+|--------------------------------------------------------------------------
+| FINANCE
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'admin_finance',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openFinancePanel(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  'finance_logs',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await showFinanceLogs(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  'finance_stats',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await showWalletStats(ctx)
+
+  }
+
+)
+
+/*
+  |--------------------------------------------------------------------------
+  | Freeze walet 
+  |--------------------------------------------------------------------------
+  */
+  
+  bot.action(
+
+  'freeze_wallet',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await freezeWalletPanel(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  'unfreeze_wallet',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await unfreezeWalletPanel(ctx)
+
+  }
+
+)
+
   /*
   |--------------------------------------------------------------------------
   | TEXT INPUTS
@@ -729,6 +827,8 @@ bot.action(
     await handleAdminInput(ctx)
 	
 	await handleWalletInput(ctx)
+	
+	await handleFinanceInput(ctx)
 	
 	await handleAdminInput(ctx)
 

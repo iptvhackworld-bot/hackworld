@@ -105,6 +105,11 @@ async (ctx) => {
         Markup.button.callback(
           '💰 Economy',
           'admin_economy'
+        ),
+		
+		Markup.button.callback(
+          '💰 Finance',
+          'admin_finance'
         )
 
       ],
