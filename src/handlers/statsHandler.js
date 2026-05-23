@@ -1,3 +1,6 @@
+const env =
+require('../config/env')
+
 const {
 
   userService
@@ -16,7 +19,8 @@ const {
 |--------------------------------------------------------------------------
 */
 
-const showStats = async (ctx) => {
+const showStats =
+async (ctx) => {
 
   /*
   |--------------------------------------------------------------------------
@@ -25,8 +29,13 @@ const showStats = async (ctx) => {
   */
 
   if (
-    ctx.from.id.toString() !==
-    env.ownerId
+
+    ctx.from.id.toString()
+
+    !==
+
+    env.ownerId.toString()
+
   ) {
 
     return ctx.reply(
@@ -41,9 +50,17 @@ const showStats = async (ctx) => {
   |--------------------------------------------------------------------------
   */
 
-  const users = userService()
+  const users =
 
-  const contents = contentService()
+    userService
+      ? userService()
+      : []
+
+  const contents =
+
+    contentService
+      ? contentService()
+      : []
 
   /*
   |--------------------------------------------------------------------------
@@ -65,9 +82,11 @@ const showStats = async (ctx) => {
 
   users.forEach((user) => {
 
-    totalXP += user.xp || 0
+    totalXP +=
+      user.xp || 0
 
-    totalMoney += user.money || 0
+    totalMoney +=
+      user.money || 0
 
     totalMessages +=
       user.messages || 0
@@ -80,9 +99,18 @@ const showStats = async (ctx) => {
   |--------------------------------------------------------------------------
   */
 
-  const topUser = users.sort(
-    (a, b) => b.xp - a.xp
-  )[0]
+  const topUser =
+
+    users.length
+
+      ? users.sort(
+          (a, b) =>
+            (b.xp || 0)
+            -
+            (a.xp || 0)
+        )[0]
+
+      : null
 
   /*
   |--------------------------------------------------------------------------
@@ -119,15 +147,18 @@ ${totalMessages}
 
 🏆 Top utilisateur :
 
-${topUser
-  ? `@${topUser.username}`
-  : 'Aucun'}
+${
+  topUser
+    ? `@${topUser.username || 'unknown'}`
+    : 'Aucun'
+}
 
 ━━━━━━━━━━━━━━━━━━
 
 🚀 Bot opérationnel
 `
   )
+
 }
 
 module.exports = {
