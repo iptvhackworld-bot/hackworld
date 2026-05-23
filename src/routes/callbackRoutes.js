@@ -212,7 +212,9 @@ const {
 
   handleFinanceInput
 
-}
+} = require(
+  '../handlers/adminFinanceHandler'
+)
 
 const {
 
@@ -226,9 +228,15 @@ const {
 
   buyMarketItem,
 
-  rateSeller
+  rateSeller,
 
-}
+  marketDeliveryHandler,
+
+  marketDisputeHandler
+
+} = require(
+  '../handlers/marketHandler'
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -852,6 +860,123 @@ bot.action(
 
 )
 
+/*
+  |--------------------------------------------------------------------------
+  | MARKET DELIVERED 
+  |--------------------------------------------------------------------------
+  */
+  
+  bot.action(
+
+  /^market_delivered_(.+)$/,
+
+  async (ctx) => {
+
+    const escrowId =
+      ctx.match[1]
+
+    await marketDeliveryHandler(
+
+      ctx,
+
+      escrowId
+
+    )
+
+  }
+
+)
+
+bot.action(
+
+  /^market_dispute_(.+)$/,
+
+  async (ctx) => {
+
+    const escrowId =
+      ctx.match[1]
+
+    await marketDisputeHandler(
+
+      ctx,
+
+      escrowId
+
+    )
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| MARKETPLACE
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'market_panel',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openMarket(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  'create_listing',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await createListingPanel(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  'view_market',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await viewMarket(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  /^buy_market_(.+)$/,
+
+  async (ctx) => {
+
+    const id =
+      ctx.match[1]
+
+    await buyMarketItem(
+
+      ctx,
+
+      id
+
+    )
+
+  }
+
+)
+
 
   /*
   |--------------------------------------------------------------------------
@@ -875,16 +1000,14 @@ bot.action(
 
     await handleEscrowInput(ctx)
 
+    await handleWalletInput(ctx)
+
+    await handleFinanceInput(ctx)
+
+    await handleMarketInput(ctx)
+
     await handleAdminInput(ctx)
-	
-	await handleWalletInput(ctx)
-	
-	await handleFinanceInput(ctx)
-	
-	await handleAdminInput(ctx)
 
   }
 
 )
-
-}

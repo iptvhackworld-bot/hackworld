@@ -139,6 +139,41 @@ async (id) => {
 
 }
 
+/*
+|--------------------------------------------------------------------------
+| CREATE MARKET ESCROW
+|--------------------------------------------------------------------------
+*/
+
+const createMarketEscrow =
+async (
+
+  buyerId,
+
+  sellerId,
+
+  amount,
+
+  marketItemId
+
+) => {
+
+  return await Escrow.create({
+
+    buyerId,
+
+    sellerId,
+
+    amount,
+
+    marketItemId,
+
+    status: 'pending'
+
+  })
+
+}
+
 module.exports = {
 
   createEscrow,
@@ -151,6 +186,8 @@ module.exports = {
 
   completeEscrow,
 
-  disputeEscrow
+  disputeEscrow,
+  
+  createMarketEscrow
 
 }

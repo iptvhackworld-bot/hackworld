@@ -31,6 +31,22 @@ if (!global.marketSessions) {
 
 }
 
+const {
+
+  createMarketEscrow
+
+} = require(
+  '../services/escrowService'
+)
+
+const {
+
+  addMoney
+
+} = require(
+  '../services/walletService'
+)
+
 /*
 |--------------------------------------------------------------------------
 | PANEL
@@ -310,17 +326,102 @@ async (
 
   }
 
+  /*
+  |--------------------------------------------------------------------------
+  | CREATE ESCROW
+  |--------------------------------------------------------------------------
+  */
+
+  const escrow =
+    await createMarketEscrow(
+
+      ctx.from.id,
+
+      item.sellerId,
+
+      item.price,
+
+      item._id.toString()
+
+    )
+
   await markSold(id)
 
   await ctx.reply(
+
 `
-✅ Achat effectué.
+💰 Escrow créé.
+
+🆔 ${escrow._id}
 
 📦 ${item.title}
 
 👤 vendeur :
 @${item.sellerUsername}
-`
+
+💰 ${item.price}$
+
+━━━━━━━━━━━━━━━━━━
+
+📦 Le vendeur doit
+maintenant livrer.
+`,
+
+Markup.inlineKeyboard([
+
+  [
+
+    Markup.button.callback(
+      '📦 Livraison reçue',
+      `market_delivered_${escrow._id}`
+    )
+
+  ],
+
+  [
+
+    Markup.button.callback(
+      '⚠️ Ouvrir dispute',
+      `market_dispute_${escrow._id}`
+    )
+
+  ],
+
+  [
+
+    Markup.button.callback(
+      '⭐ 1',
+      `rate_${item._id}_1`
+    ),
+
+    Markup.button.callback(
+      '⭐ 2',
+      `rate_${item._id}_2`
+    ),
+
+    Markup.button.callback(
+      '⭐ 3',
+      `rate_${item._id}_3`
+    )
+
+  ],
+
+  [
+
+    Markup.button.callback(
+      '⭐ 4',
+      `rate_${item._id}_4`
+    ),
+
+    Markup.button.callback(
+      '⭐ 5',
+      `rate_${item._id}_5`
+    )
+
+  ]
+
+])
+
   )
 
 }
@@ -373,6 +474,129 @@ ${rating}/5
 
 }
 
+/*
+|--------------------------------------------------------------------------
+| DELIVERY CONFIRM
+|--------------------------------------------------------------------------
+*/
+
+const marketDeliveryHandler =
+async (
+
+  ctx,
+
+  escrowId
+
+) => {
+
+  const Escrow =
+  require(
+    '../models/Escrow'
+  )
+
+  const escrow =
+    await Escrow.findById(
+      escrowId
+    )
+
+  if (!escrow) {
+
+    return ctx.reply(
+`
+❌ Escrow introuvable.
+`
+    )
+
+  }
+
+  escrow.status =
+    'completed'
+
+  escrow.buyerConfirmed =
+    true
+
+  await escrow.save()
+
+  /*
+  |--------------------------------------------------------------------------
+  | PAY SELLER
+  |--------------------------------------------------------------------------
+  */
+
+  await addMoney(
+
+    escrow.sellerId,
+
+    escrow.amount,
+
+    'Marketplace escrow'
+
+  )
+
+  await ctx.reply(
+`
+✅ Livraison confirmée.
+
+💰 Fonds envoyés
+au vendeur.
+`
+  )
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| MARKET DISPUTE
+|--------------------------------------------------------------------------
+*/
+
+const marketDisputeHandler =
+async (
+
+  ctx,
+
+  escrowId
+
+) => {
+
+  const Escrow =
+  require(
+    '../models/Escrow'
+  )
+
+  const escrow =
+    await Escrow.findById(
+      escrowId
+    )
+
+  if (!escrow) {
+
+    return ctx.reply(
+`
+❌ Escrow introuvable.
+`
+    )
+
+  }
+
+  escrow.disputed =
+    true
+
+  escrow.status =
+    'dispute'
+
+  await escrow.save()
+
+  await ctx.reply(
+`
+⚠️ Dispute ouverte.
+
+Un admin interviendra.
+`
+  )
+
+}
+
 module.exports = {
 
   openMarket,
@@ -383,6 +607,12 @@ module.exports = {
 
   viewMarket,
 
-  buyMarketItem
+  buyMarketItem,
+
+  rateSeller,
+
+  marketDeliveryHandler,
+
+  marketDisputeHandler
 
 }
