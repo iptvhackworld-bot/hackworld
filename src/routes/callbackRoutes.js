@@ -188,7 +188,11 @@ const {
 
   openWallet,
 
-  walletHistory
+  walletHistory,
+
+  transferPanel,
+
+  handleWalletInput
 
 } = require(
   '../handlers/walletHandler'
@@ -679,6 +683,26 @@ bot.action(
 
     }
   )
+  
+    /*
+  |--------------------------------------------------------------------------
+  | WALLET TRANSFERT 
+  |--------------------------------------------------------------------------
+  */
+  
+  bot.action(
+
+  'wallet_transfer',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await transferPanel(ctx)
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -703,6 +727,10 @@ bot.action(
     await handleEscrowInput(ctx)
 
     await handleAdminInput(ctx)
+	
+	await handleWalletInput(ctx)
+	
+	await handleAdminInput(ctx)
 
   }
 
