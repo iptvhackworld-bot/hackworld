@@ -22,13 +22,17 @@ new mongoose.Schema({
 
   username: {
 
-    type: String
+    type: String,
+
+    default: ''
 
   },
 
   firstName: {
 
-    type: String
+    type: String,
+
+    default: ''
 
   },
 
@@ -47,6 +51,22 @@ new mongoose.Schema({
   },
 
   xp: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  level: {
+
+    type: Number,
+
+    default: 1
+
+  },
+
+  prestige: {
 
     type: Number,
 
@@ -144,59 +164,95 @@ new mongoose.Schema({
 
   },
 
-/*
-|--------------------------------------------------------------------------
-| MARKETPLACE
-|--------------------------------------------------------------------------
-*/
+  /*
+  |--------------------------------------------------------------------------
+  | MARKETPLACE
+  |--------------------------------------------------------------------------
+  */
 
-sellerRating: {
+  sellerRating: {
 
-  type: Number,
+    type: Number,
 
-  default: 5
+    default: 5
 
-},
+  },
 
-sellerReviews: {
+  sellerReviews: {
 
-  type: Number,
+    type: Number,
 
-  default: 0
+    default: 0
 
-},
+  },
 
-sellerSales: {
+  sellerSales: {
 
-  type: Number,
+    type: Number,
 
-  default: 0
+    default: 0
 
-},
+  },
 
-trustedSeller: {
+  trustedSeller: {
 
-  type: Boolean,
+    type: Boolean,
 
-  default: false
+    default: false
 
-},
+  },
 
-verifiedSeller: {
+  verifiedSeller: {
 
-  type: Boolean,
+    type: Boolean,
 
-  default: false
+    default: false
 
-},
+  },
 
-trustScore: {
+  trustScore: {
 
-  type: Number,
+    type: Number,
 
-  default: 0
+    default: 0
 
-},
+  },
+
+  /*
+  |--------------------------------------------------------------------------
+  | DAILY
+  |--------------------------------------------------------------------------
+  */
+
+  dailyStreak: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  lastDaily: {
+
+    type: Date,
+
+    default: null
+
+  },
+
+  /*
+  |--------------------------------------------------------------------------
+  | SPIN
+  |--------------------------------------------------------------------------
+  */
+
+  lastSpin: {
+
+    type: Date,
+
+    default: null
+
+  },
 
   /*
   |--------------------------------------------------------------------------
@@ -213,86 +269,6 @@ trustScore: {
   }
 
 })
-
-/*
-|--------------------------------------------------------------------------
-| VERIFICATION
-|--------------------------------------------------------------------------
-*/
-
-verifiedSeller: {
-
-  type: Boolean,
-
-  default: false
-
-},
-
-trustScore: {
-
-  type: Number,
-
-  default: 0
-
-},
-
-/*
-|--------------------------------------------------------------------------
-| DAILY REWARDS
-|--------------------------------------------------------------------------
-*/
-
-dailyStreak: {
-
-  type: Number,
-
-  default: 0
-
-},
-
-lastDaily: {
-
-  type: Date,
-
-  default: null
-
-},
-
-/*
-|--------------------------------------------------------------------------
-| SPIN
-|--------------------------------------------------------------------------
-*/
-
-lastSpin: {
-
-  type: Date,
-
-  default: null
-
-},
-
-/*
-|--------------------------------------------------------------------------
-| LEVEL SYSTEM
-|--------------------------------------------------------------------------
-*/
-
-level: {
-
-  type: Number,
-
-  default: 1
-
-},
-
-prestige: {
-
-  type: Number,
-
-  default: 0
-
-},
 
 module.exports =
 mongoose.model(
