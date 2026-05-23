@@ -1,10 +1,16 @@
-const fs = require('fs')
+const fs =
+require('fs')
 
-const path = require('path')
+const path =
+require('path')
 
-const filePath = path.join(
+const filePath =
+path.join(
+
   __dirname,
+
   'inventory.json'
+
 )
 
 /*
@@ -13,55 +19,75 @@ const filePath = path.join(
 |--------------------------------------------------------------------------
 */
 
-if (!fs.existsSync(filePath)) {
+if (
+
+  !fs.existsSync(filePath)
+
+) {
 
   fs.writeFileSync(
+
     filePath,
+
     JSON.stringify([], null, 2)
+
   )
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| LOAD
+| LOAD INVENTORY
 |--------------------------------------------------------------------------
 */
 
-const inventoryService = () => {
+const loadInventory =
+() => {
 
-  const data = fs.readFileSync(
-    filePath,
-    'utf8'
-  )
+  const data =
+    fs.readFileSync(
+
+      filePath,
+
+      'utf8'
+
+    )
 
   return JSON.parse(data)
+
 }
 
 /*
 |--------------------------------------------------------------------------
-| SAVE
+| SAVE INVENTORY
 |--------------------------------------------------------------------------
 */
 
-const inventoryService = (
-  inventory
-) => {
+const saveInventory =
+(inventory) => {
 
   fs.writeFileSync(
+
     filePath,
+
     JSON.stringify(
+
       inventory,
+
       null,
+
       2
+
     )
+
   )
+
 }
 
 module.exports = {
 
-  inventoryService,
+  loadInventory,
 
-  inventoryService
+  saveInventory
 
 }

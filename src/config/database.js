@@ -1,17 +1,34 @@
-const mongoose = require('mongoose')
+const mongoose =
+require('mongoose')
 
-const connectDB = async () => {
+const connectDB =
+async () => {
+
   try {
-    await mongoose.connect(process.env.MONGO_URI)
 
-    logger(...)
-logInfo(...)
-logError(...) MongoDB connecté')
+    await mongoose.connect(
+      process.env.MONGO_URI
+    )
+
+    console.log(
+      '[HACKWORLD]'
+    )
+
+    console.log(
+      '✅ MongoDB connecté'
+    )
+
   } catch (error) {
-    logger(...)
-logInfo(...)
-logError(...)ror)
+
+    console.log(
+      '❌ MongoDB erreur'
+    )
+
+    console.log(error)
+
   }
+
 }
 
-module.exports = connectDB
+module.exports =
+connectDB
