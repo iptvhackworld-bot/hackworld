@@ -165,6 +165,24 @@ module.exports = (bot) => {
   } = require(
     '../handlers/adminShopHandler'
   )
+  
+  const {
+
+  openEscrowPanel,
+
+  createEscrowPanel,
+
+  handleEscrowInput,
+
+  buyerConfirmHandler,
+
+  sellerConfirmHandler,
+
+  disputeHandler
+
+} = require(
+  '../handlers/escrowHandler'
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -388,6 +406,94 @@ module.exports = (bot) => {
 
     }
   )
+  
+  /*
+|--------------------------------------------------------------------------
+| ESCROW
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'escrow_panel',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openEscrowPanel(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  'create_escrow',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await createEscrowPanel(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  /^buyer_confirm_(.+)$/,
+
+  async (ctx) => {
+
+    const id =
+      ctx.match[1]
+
+    await buyerConfirmHandler(
+      ctx,
+      id
+    )
+
+  }
+
+)
+
+bot.action(
+
+  /^seller_confirm_(.+)$/,
+
+  async (ctx) => {
+
+    const id =
+      ctx.match[1]
+
+    await sellerConfirmHandler(
+      ctx,
+      id
+    )
+
+  }
+
+)
+
+bot.action(
+
+  /^escrow_dispute_(.+)$/,
+
+  async (ctx) => {
+
+    const id =
+      ctx.match[1]
+
+    await disputeHandler(
+      ctx,
+      id
+    )
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -537,20 +643,23 @@ module.exports = (bot) => {
   */
 
   bot.on(
-    'text',
-    async (ctx) => {
 
-      await handleModerationInput(ctx)
+  'text',
 
-      await handleTicketInput(ctx)
+  async (ctx) => {
 
-      await handleAdminTicketInput(ctx)
+    await handleModerationInput(ctx)
 
-      await handleShopAdminInput(ctx)
+    await handleTicketInput(ctx)
 
-      await handleAdminInput(ctx)
+    await handleAdminTicketInput(ctx)
 
-    }
-  )
+    await handleShopAdminInput(ctx)
 
-}
+    await handleEscrowInput(ctx)
+
+    await handleAdminInput(ctx)
+
+  }
+
+)
