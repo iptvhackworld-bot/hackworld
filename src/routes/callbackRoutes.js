@@ -334,6 +334,18 @@ const {
   '../handlers/diceHandler'
 )
 
+const {
+
+  openPets,
+
+  openPetBox,
+
+  activatePetHandler
+
+} = require(
+  '../handlers/petHandler'
+)
+
 
   /*
   |--------------------------------------------------------------------------
