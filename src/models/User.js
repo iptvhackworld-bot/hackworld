@@ -144,43 +144,59 @@ new mongoose.Schema({
 
   },
 
-  /*
-  |--------------------------------------------------------------------------
-  | MARKETPLACE
-  |--------------------------------------------------------------------------
-  */
+/*
+|--------------------------------------------------------------------------
+| MARKETPLACE
+|--------------------------------------------------------------------------
+*/
 
-  sellerRating: {
+sellerRating: {
 
-    type: Number,
+  type: Number,
 
-    default: 5
+  default: 5
 
-  },
+},
 
-  sellerReviews: {
+sellerReviews: {
 
-    type: Number,
+  type: Number,
 
-    default: 0
+  default: 0
 
-  },
+},
 
-  sellerSales: {
+sellerSales: {
 
-    type: Number,
+  type: Number,
 
-    default: 0
+  default: 0
 
-  },
+},
 
-  trustedSeller: {
+trustedSeller: {
 
-    type: Boolean,
+  type: Boolean,
 
-    default: false
+  default: false
 
-  },
+},
+
+verifiedSeller: {
+
+  type: Boolean,
+
+  default: false
+
+},
+
+trustScore: {
+
+  type: Number,
+
+  default: 0
+
+},
 
   /*
   |--------------------------------------------------------------------------
