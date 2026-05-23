@@ -848,6 +848,14 @@ await autoFlagUser(
 
 )
 
+await removeTrustScore(
+
+  escrow.sellerId,
+
+  15
+
+)
+
   await ctx.reply(
 `
 ⚠️ Dispute ouverte.
@@ -857,22 +865,6 @@ Un admin interviendra.
   )
 
 }
-
-/*
-|--------------------------------------------------------------------------
-| REMOVE TRUST
-|--------------------------------------------------------------------------
-*/
-
-await removeTrustScore(
-
-  escrow.sellerId,
-
-  15
-
-)
-
-
 
 module.exports = {
 
@@ -892,8 +884,6 @@ module.exports = {
 
   marketDeliveryHandler,
 
-  marketDisputeHandler,
-  
-  
+  marketDisputeHandler
 
 }
