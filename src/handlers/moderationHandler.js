@@ -370,13 +370,9 @@ async (ctx) => {
 
   if (isNaN(userId)) {
 
-    return ctx.reply(
-`
-❌ ID invalide.
-`
-    )
+  return false
 
-  }
+}
 
   const user =
     await User.findOne({
