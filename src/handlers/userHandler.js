@@ -48,7 +48,15 @@ async (ctx) => {
   |--------------------------------------------------------------------------
   */
 
-  if (!userId) {
+  if (
+
+    !userId ||
+
+    !ctx.from ||
+
+    !ctx.from.id
+
+  ) {
 
     return null
 
@@ -76,42 +84,26 @@ async (ctx) => {
   | CREATE
   |--------------------------------------------------------------------------
   */
-  
-  const registerUser =
-async (ctx) => {
 
-  if (
-
-    !ctx.from ||
-
-    !ctx.from.id
-
-  ) {
-
-    return
-
-  }
-
-  let user =
-    await getUserById(
-      ctx.from.id
-    )
-
-  if (!user) {
-
+  user =
     await createUser({
 
-      id: ctx.from.id,
+      id:
+      ctx.from.id,
 
       username:
-      ctx.from.username,
+      ctx.from.username ||
+
+      'unknown',
 
       firstName:
-      ctx.from.first_name
+      ctx.from.first_name ||
+
+      'Unknown'
 
     })
 
-  }
+  return user
 
 }
 
