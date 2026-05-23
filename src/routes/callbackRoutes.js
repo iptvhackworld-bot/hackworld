@@ -244,7 +244,9 @@ const {
 
   openSellerAnalytics
 
-}
+} = require(
+  '../handlers/sellerHandler'
+)
 
 
   /*
