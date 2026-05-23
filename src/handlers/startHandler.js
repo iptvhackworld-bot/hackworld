@@ -195,47 +195,47 @@ ${averageRating}/5
           Markup.button.callback(
             '🎁 Lootbox',
             'lootbox'
-          )
+          ),
 		  
 		  Markup.button.callback(
             '🏆 Leaderboards',
             'leaderboards'
-          )
+          ),
 		  
 		  Markup.button.callback(
             '🎰 Roulette',
             'roulette_panel'
-          )
+          ),
 		  
 		  Markup.button.callback(
             '🃏 Blackjack',
             'blackjack_panel'
-          )
+          ),
 		  
 		  Markup.button.callback(
             '💣 Mines',
             'mines_panel'
-          )
+          ),
 		  
 		  Markup.button.callback(
             '📈 Crash',
             'crash_panel'
-          )
+          ),
 		  
 		  Markup.button.callback(
             '🏆 Jackpot',
             'jackpot_panel'
-          )
+          ),
 		  
 		  Markup.button.callback(
             '🎁 Daily',
             'daily_reward'
-          )
+          ),
 		  
 		  Markup.button.callback(
             '🎡 Spin',
             'spin_wheel'
-          )
+          ),
 		  
 		  Markup.button.callback(
             '🎟 Lootboxes',
@@ -258,27 +258,27 @@ ${averageRating}/5
 		  Markup.button.callback(
             '👑 Premium',
             'premium_panel'
-          )
+          ),
 		  
 		  Markup.button.callback(
             '💳 Crypto',
             'crypto_panel'
-          )
+          ),
 		  
 		  Markup.button.callback(
             '🐉 Pets',
             'pets_panel'
-          )
+          ),
 		  
 		  Markup.button.callback(
             '⚔️ Quests',
             'quests_panel'
-          )
+          ),
 		  
 		  Markup.button.callback(
             '👤 Profile',
             'profile_panel'
-          )
+          ),
 		  
 		  Markup.button.callback(
             '🎲 Dice',
