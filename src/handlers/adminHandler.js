@@ -100,7 +100,7 @@ async (ctx) => {
 		Markup.button.callback(
           '🔒 Fermer Ticket',
           'close_ticket'
-        )
+        ),
 
         Markup.button.callback(
           '💰 Economy',
