@@ -214,6 +214,22 @@ const {
 
 }
 
+const {
+
+  openMarket,
+
+  createListingPanel,
+
+  handleMarketInput,
+
+  viewMarket,
+
+  buyMarketItem,
+
+  rateSeller
+
+}
+
   /*
   |--------------------------------------------------------------------------
   | ACCEPT RULES
@@ -801,6 +817,41 @@ bot.action(
   }
 
 )
+
+/*
+  |--------------------------------------------------------------------------
+  | RATE 
+  |--------------------------------------------------------------------------
+  */
+  
+  bot.action(
+
+  /^rate_(.+)_(\d)$/,
+
+  async (ctx) => {
+
+    const id =
+      ctx.match[1]
+
+    const rating =
+      Number(
+        ctx.match[2]
+      )
+
+    await rateSeller(
+
+      ctx,
+
+      id,
+
+      rating
+
+    )
+
+  }
+
+)
+
 
   /*
   |--------------------------------------------------------------------------

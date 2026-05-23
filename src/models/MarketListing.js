@@ -1,120 +1,74 @@
 const mongoose =
 require('mongoose')
 
-const userSchema =
+const marketListingSchema =
 new mongoose.Schema({
 
   /*
   |--------------------------------------------------------------------------
-  | TELEGRAM
+  | SELLER
   |--------------------------------------------------------------------------
   */
 
-  id: {
+  sellerId: {
 
     type: Number,
 
-    unique: true,
-	
     required: true
 
   },
 
-  username: {
-
-    type: String
-
-  },
-
-  firstName: {
-
-    type: String
-
-  },
-
-  /*
-  |--------------------------------------------------------------------------
-  | ECONOMY
-  |--------------------------------------------------------------------------
-  */
-
-  money: {
-
-    type: Number,
-
-    default: 0
-
-  },
-
-  xp: {
-
-    type: Number,
-
-    default: 0
-
-  },
-
-  /*
-  |--------------------------------------------------------------------------
-  | CASINO
-  |--------------------------------------------------------------------------
-  */
-
-  casinoPlayed: {
-
-    type: Number,
-
-    default: 0
-
-  },
-
-  casinoWon: {
-
-    type: Number,
-
-    default: 0
-
-  },
-
-  /*
-  |--------------------------------------------------------------------------
-  | ADMIN
-  |--------------------------------------------------------------------------
-  */
-
-  role: {
+  sellerUsername: {
 
     type: String,
 
-    default: 'user'
+    default: 'unknown'
 
   },
 
-  banned: {
+  /*
+  |--------------------------------------------------------------------------
+  | ITEM
+  |--------------------------------------------------------------------------
+  */
 
-    type: Boolean,
+  title: {
 
-    default: false
+    type: String,
+
+    required: true
 
   },
 
-  warns: {
+  description: {
+
+    type: String,
+
+    default: 'Aucune'
+
+  },
+
+  /*
+  |--------------------------------------------------------------------------
+  | PRICE
+  |--------------------------------------------------------------------------
+  */
+
+  price: {
 
     type: Number,
 
-    default: 0
+    required: true
 
   },
 
-  muted: {
+  /*
+  |--------------------------------------------------------------------------
+  | STATUS
+  |--------------------------------------------------------------------------
+  */
 
-    type: Boolean,
-
-    default: false
-
-  },
-
-  blacklisted: {
+  sold: {
 
     type: Boolean,
 
@@ -128,15 +82,7 @@ new mongoose.Schema({
   |--------------------------------------------------------------------------
   */
 
-  messages: {
-
-    type: Number,
-
-    default: 0
-
-  },
-
-  rating: {
+  views: {
 
     type: Number,
 
@@ -146,7 +92,7 @@ new mongoose.Schema({
 
   /*
   |--------------------------------------------------------------------------
-  | DATES
+  | DATE
   |--------------------------------------------------------------------------
   */
 
@@ -160,49 +106,11 @@ new mongoose.Schema({
 
 })
 
-/*
-|--------------------------------------------------------------------------
-| MARKETPLACE
-|--------------------------------------------------------------------------
-*/
-
-sellerRating: {
-
-  type: Number,
-
-  default: 5
-
-},
-
-sellerReviews: {
-
-  type: Number,
-
-  default: 0
-
-},
-
-sellerSales: {
-
-  type: Number,
-
-  default: 0
-
-},
-
-trustedSeller: {
-
-  type: Boolean,
-
-  default: false
-
-},
-
 module.exports =
 mongoose.model(
 
-  'User',
+  'MarketListing',
 
-  userSchema
+  marketListingSchema
 
 )
