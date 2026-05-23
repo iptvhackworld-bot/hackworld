@@ -209,6 +209,11 @@ ${averageRating}/5
 		  Markup.button.callback(
             '👑 Seller',
             'seller_dashboard'
+          ),
+		  
+		  Markup.button.callback(
+            '💳 Crypto',
+            'crypto_panel'
           )
 
         ],

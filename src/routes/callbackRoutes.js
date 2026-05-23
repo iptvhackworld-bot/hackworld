@@ -248,6 +248,27 @@ const {
   '../handlers/sellerHandler'
 )
 
+const {
+
+  openCryptoPanel,
+
+  openDepositPanel,
+
+  askDepositAmount,
+
+  openWithdrawPanel,
+
+  askWithdrawAmount,
+
+  handleCryptoInput,
+
+  openCryptoHistory
+
+} = require(
+  '../handlers/cryptoHandler'
+)
+
+
 
   /*
   |--------------------------------------------------------------------------
@@ -1028,6 +1049,134 @@ bot.action(
 
 )
 
+/*
+|--------------------------------------------------------------------------
+| CRYPTO
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'crypto_panel',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openCryptoPanel(ctx)
+
+  }
+
+)
+
+ /*
+  |--------------------------------------------------------------------------
+  | CRYPTO DEPOSIT 
+  |--------------------------------------------------------------------------
+  */
+  
+  bot.action(
+
+  'crypto_deposit',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openDepositPanel(ctx)
+
+  }
+
+)
+
+bot.action(
+
+  'crypto_withdraw',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openWithdrawPanel(ctx)
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| DEPOSIT COINS
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  /^deposit_(.+)$/,
+
+  async (ctx) => {
+
+    const coin =
+      ctx.match[1]
+
+    await askDepositAmount(
+
+      ctx,
+
+      coin
+
+    )
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| WITHDRAW COINS
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  /^withdraw_(.+)$/,
+
+  async (ctx) => {
+
+    const coin =
+      ctx.match[1]
+
+    await askWithdrawAmount(
+
+      ctx,
+
+      coin
+
+    )
+
+  }
+
+)
+
+ /*
+  |--------------------------------------------------------------------------
+  | CRYPTO history
+  |--------------------------------------------------------------------------
+  */
+  
+  bot.action(
+
+  'crypto_history',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await openCryptoHistory(ctx)
+
+  }
+
+)
+
   /*
   |--------------------------------------------------------------------------
   | TEXT INPUTS
@@ -1055,8 +1204,11 @@ bot.action(
     await handleFinanceInput(ctx)
 
     await handleMarketInput(ctx)
-
-    await handleAdminInput(ctx)
+	
+	await handleCryptoInput(ctx)
+	
+	await handleAdminInput(ctx)
+	
 
   }
 
