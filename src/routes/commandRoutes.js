@@ -16,19 +16,19 @@ module.exports = (bot) => {
 
   const {
 
-    showProfile
+  openProfile
 
-  } = require(
-    '../handlers/profileHandler'
-  )
+} = require(
+  '../handlers/profileHandler'
+)
 
   const {
 
-    dailyReward
+  claimDaily
 
-  } = require(
-    '../handlers/dailyHandler'
-  )
+} = require(
+  '../handlers/dailyHandler'
+)
 
   const {
 
@@ -56,11 +56,11 @@ module.exports = (bot) => {
 
   bot.command(
 
-    'profile',
+  'profile',
 
-    showProfile
+  openProfile
 
-  )
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -70,11 +70,11 @@ module.exports = (bot) => {
 
   bot.command(
 
-    'daily',
+  'daily',
 
-    dailyReward
+  claimDaily
 
-  )
+)
 
   /*
   |--------------------------------------------------------------------------
