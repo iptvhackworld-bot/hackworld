@@ -76,19 +76,7 @@ async (
 
       amount <= 0
 
-    )
-
-await createLog(
-
-  'economy',
-
-  userId,
-
-  'ADD_MONEY',
-
-  `${amount}$`
-
-)	{
+    ) {
 
       return false
 
@@ -111,6 +99,28 @@ await createLog(
 
     await user.save()
 
+    /*
+    |--------------------------------------------------------------------------
+    | LOGS
+    |--------------------------------------------------------------------------
+    */
+
+    logEconomy(
+      `ADD ${amount}$ -> ${userId}`
+    )
+
+    await createLog(
+
+      'economy',
+
+      userId,
+
+      'ADD_MONEY',
+
+      `${amount}$`
+
+    )
+
     return true
 
   } catch (error) {
@@ -122,10 +132,6 @@ await createLog(
   }
 
 }
-
-logEconomy(
-  `ADD ${amount}$ -> ${userId}`
-)
 
 /*
 |--------------------------------------------------------------------------
@@ -141,18 +147,6 @@ async (
   amount
 
 ) => {
-	
-	await createLog(
-
-  'economy',
-
-  userId,
-
-  'REMOVE_MONEY',
-
-  `${amount}$`
-
-)
 
   try {
 
@@ -192,6 +186,28 @@ async (
     user.money -= amount
 
     await user.save()
+
+    /*
+    |--------------------------------------------------------------------------
+    | LOGS
+    |--------------------------------------------------------------------------
+    */
+
+    logEconomy(
+      `REMOVE ${amount}$ -> ${userId}`
+    )
+
+    await createLog(
+
+      'economy',
+
+      userId,
+
+      'REMOVE_MONEY',
+
+      `${amount}$`
+
+    )
 
     return true
 
