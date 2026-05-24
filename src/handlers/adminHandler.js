@@ -32,12 +32,11 @@ async (ctx) => {
     */
 
     const allowed =
-  await isOwner(
-    ctx.from.id
-  )
+      await isOwner(
+        ctx.from.id
+      )
 
-if (!allowed)
-    ) {
+    if (!allowed) {
 
       return ctx.answerCbQuery(
 
@@ -113,20 +112,6 @@ if (!allowed)
           ),
 
           Markup.button.callback(
-            '🛒 Shop',
-            'admin_shop'
-          )
-
-        ],
-
-        [
-
-          Markup.button.callback(
-            '🎰 Casino',
-            'admin_casino'
-          ),
-
-          Markup.button.callback(
             '📦 Market',
             'market_analytics'
           )
@@ -136,8 +121,8 @@ if (!allowed)
         [
 
           Markup.button.callback(
-            '🤖 Fraud Logs',
-            'fraud_logs'
+            '🎰 Casino',
+            'admin_casino'
           ),
 
           Markup.button.callback(
