@@ -92,7 +92,7 @@ async (bot) => {
 
       () => {
 
-        logger(
+        console.log(
 `
 🚀 Bot lancé en webhook
 🌐 Port : ${PORT}

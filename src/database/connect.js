@@ -24,8 +24,8 @@ async () => {
 
     )
 
-    logger(
-      '✅ MongoDB connecté'
+    console.log(
+      'Mongo connecté'
     )
 
   }
