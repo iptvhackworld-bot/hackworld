@@ -1,18 +1,6 @@
 const { Markup } =
 require('telegraf')
 
-const {
-
-  getTotalUsers,
-
-  getTotalUses,
-
-  getAverageRating
-
-} = require(
-  '../services/statsService'
-)
-
 const fs =
 require('fs')
 
@@ -24,15 +12,6 @@ require('fs')
 
 const showMainMenu =
 async (ctx) => {
-
-  const totalUsers =
-    await getTotalUsers()
-
-  const totalUses =
-    getTotalUses()
-
-  const averageRating =
-    await getAverageRating()
 
   await ctx.replyWithPhoto(
 
@@ -51,28 +30,14 @@ async (ctx) => {
 
       caption:
 `
-╔══════════════════╗
-      HACKWORLD
-╚══════════════════╝
-
-🛒 MARKETPLACE HACKWORLD
+🚀 HACKWORLD MARKETPLACE
 
 ━━━━━━━━━━━━━━━━━━
 
-👥 Utilisateurs :
-${totalUsers}
-
-🚀 Utilisations :
-${totalUses}
-
-⭐ Note moyenne :
-${averageRating}/5
-
-━━━━━━━━━━━━━━━━━━
-
-✅ Système opérationnel
-🔒 Sécurité active
-👤 Connecté avec succès
+✅ Marketplace sécurisé
+✅ Paiements crypto
+✅ Premium system
+✅ Notifications temps réel
 
 ━━━━━━━━━━━━━━━━━━
 `,
@@ -84,34 +49,6 @@ ${averageRating}/5
           Markup.button.callback(
             '🛒 Marketplace',
             'market_panel'
-          )
-
-        ],
-
-        [
-
-          Markup.button.callback(
-            '📜 Annonces',
-            'view_market'
-          ),
-
-          Markup.button.callback(
-            '➕ Créer',
-            'create_listing'
-          )
-
-        ],
-
-        [
-
-          Markup.button.callback(
-            '❤️ Favoris',
-            'favorites_panel'
-          ),
-
-          Markup.button.callback(
-            '📂 Catégories',
-            'market_categories'
           )
 
         ],
@@ -202,33 +139,10 @@ ${averageRating}/5
 const startHandler =
 async (ctx) => {
 
-  await ctx.replyWithPhoto(
-
-    {
-
-      source:
-      fs.createReadStream(
-
-        'src/assets/hackworld.jpg'
-
-      )
-
-    }
-
-  )
-
   await ctx.reply(
 
 `
-📜 BIENVENUE SUR HACKWORLD
-
-━━━━━━━━━━━━━━━━━━
-
-✅ Marketplace sécurisé
-✅ Escrow disponible
-✅ Paiements crypto
-✅ Système premium
-✅ Support actif
+📜 Bienvenue sur HackWorld
 
 ━━━━━━━━━━━━━━━━━━
 

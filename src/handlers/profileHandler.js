@@ -3,83 +3,60 @@ require(
   '../models/User'
 )
 
-const MarketListing =
-require(
-  '../models/MarketListing'
-)
-
 /*
 |--------------------------------------------------------------------------
-| OPEN SELLER PROFILE
+| PROFILE
 |--------------------------------------------------------------------------
 */
 
-const openSellerProfile =
-async (
-
-  ctx,
-
-  sellerId
-
-) => {
+const openProfile =
+async (ctx) => {
 
   try {
 
-    const seller =
+    const user =
       await User.findOne({
 
-        id: Number(sellerId)
+        id: ctx.from.id
 
       })
 
-    if (!seller) {
+    if (!user) {
 
       return ctx.reply(
 `
-❌ Vendeur introuvable.
+❌ Profil introuvable.
 `
       )
 
     }
 
-    const listings =
-      await MarketListing.find({
-
-        sellerId:
-        seller.id,
-
-        sold: false
-
-      })
-
     await ctx.reply(
 `
-👤 PROFIL VENDEUR
+👤 PROFIL
 
 ━━━━━━━━━━━━━━━━━━
 
-🪪 Username :
-@${seller.username || 'unknown'}
+🆔 ID :
+${user.id}
 
-💰 Ventes :
-${seller.sellerSales || 0}
+👤 Username :
+@${user.username || 'unknown'}
 
-⭐ Note :
-${seller.sellerRating || 0}/5
+💰 Argent :
+${user.money || 0}$
 
-📝 Avis :
-${seller.sellerReviews || 0}
+⭐ XP :
+${user.xp || 0}
 
-${seller.verifiedSeller
-? '✅ Vérifié'
-: '❌ Non vérifié'}
+🏆 Niveau :
+${user.level || 1}
 
-${seller.trustedSeller
-? '🛡 Trusted Seller'
-: ''}
+🔥 Prestige :
+${user.prestige || 0}
 
-📦 Listings actifs :
-${listings.length}
+💬 Messages :
+${user.messages || 0}
 
 ━━━━━━━━━━━━━━━━━━
 `
@@ -95,6 +72,6 @@ ${listings.length}
 
 module.exports = {
 
-  openSellerProfile
+  openProfile
 
 }
