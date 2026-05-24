@@ -14,29 +14,17 @@ module.exports = (bot) => {
 
     banMember,
 
-    muteMember
+    muteMember,
+
+    unbanMember,
+
+    unmuteMember,
+
+    demoteAdmin
 
   } = require(
     '../handlers/staffHandler'
   )
-  
-  const {
-
-  promoteAdmin,
-
-  banMember,
-
-  muteMember,
-
-  unbanMember,
-
-  unmuteMember,
-
-  demoteAdmin
-
-} = require(
-  '../handlers/staffHandler'
-)
 
   /*
   |--------------------------------------------------------------------------
@@ -167,201 +155,201 @@ module.exports = (bot) => {
     }
 
   )
-  
+
   /*
-|--------------------------------------------------------------------------
-| UNBAN
-|--------------------------------------------------------------------------
-*/
+  |--------------------------------------------------------------------------
+  | UNBAN
+  |--------------------------------------------------------------------------
+  */
 
-bot.command(
+  bot.command(
 
-  'unban',
+    'unban',
 
-  async (ctx) => {
+    async (ctx) => {
 
-    try {
+      try {
 
-      const allowed =
-        await isAdmin(
-          ctx.from.id
-        )
+        const allowed =
+          await isAdmin(
+            ctx.from.id
+          )
 
-      if (!allowed) {
+        if (!allowed) {
 
-        return ctx.reply(
+          return ctx.reply(
 `
 ❌ Permission refusée.
 `
-        )
+          )
 
-      }
+        }
 
-      const args =
-        ctx.message.text.split(' ')
+        const args =
+          ctx.message.text.split(' ')
 
-      const userId =
-        Number(args[1])
+        const userId =
+          Number(args[1])
 
-      if (!userId) {
+        if (!userId) {
 
-        return ctx.reply(
+          return ctx.reply(
 `
 ❌ Utilisation :
 
 /unban ID
 `
+          )
+
+        }
+
+        await unbanMember(
+
+          ctx,
+
+          userId
+
         )
 
+      } catch (error) {
+
+        console.log(error)
+
       }
-
-      await unbanMember(
-
-        ctx,
-
-        userId
-
-      )
-
-    } catch (error) {
-
-      console.log(error)
 
     }
 
-  }
+  )
 
-)
+  /*
+  |--------------------------------------------------------------------------
+  | UNMUTE
+  |--------------------------------------------------------------------------
+  */
 
-/*
-|--------------------------------------------------------------------------
-| UNMUTE
-|--------------------------------------------------------------------------
-*/
+  bot.command(
 
-bot.command(
+    'unmute',
 
-  'unmute',
+    async (ctx) => {
 
-  async (ctx) => {
+      try {
 
-    try {
+        const allowed =
+          await isAdmin(
+            ctx.from.id
+          )
 
-      const allowed =
-        await isAdmin(
-          ctx.from.id
-        )
+        if (!allowed) {
 
-      if (!allowed) {
-
-        return ctx.reply(
+          return ctx.reply(
 `
 ❌ Permission refusée.
 `
-        )
+          )
 
-      }
+        }
 
-      const args =
-        ctx.message.text.split(' ')
+        const args =
+          ctx.message.text.split(' ')
 
-      const userId =
-        Number(args[1])
+        const userId =
+          Number(args[1])
 
-      if (!userId) {
+        if (!userId) {
 
-        return ctx.reply(
+          return ctx.reply(
 `
 ❌ Utilisation :
 
 /unmute ID
 `
+          )
+
+        }
+
+        await unmuteMember(
+
+          ctx,
+
+          userId
+
         )
 
+      } catch (error) {
+
+        console.log(error)
+
       }
-
-      await unmuteMember(
-
-        ctx,
-
-        userId
-
-      )
-
-    } catch (error) {
-
-      console.log(error)
 
     }
 
-  }
+  )
 
-)
+  /*
+  |--------------------------------------------------------------------------
+  | DEMOTE
+  |--------------------------------------------------------------------------
+  */
 
-/*
-|--------------------------------------------------------------------------
-| DEMOTE
-|--------------------------------------------------------------------------
-*/
+  bot.command(
 
-bot.command(
+    'demote',
 
-  'demote',
+    async (ctx) => {
 
-  async (ctx) => {
+      try {
 
-    try {
+        const allowed =
+          await isAdmin(
+            ctx.from.id
+          )
 
-      const allowed =
-        await isAdmin(
-          ctx.from.id
-        )
+        if (!allowed) {
 
-      if (!allowed) {
-
-        return ctx.reply(
+          return ctx.reply(
 `
 ❌ Permission refusée.
 `
-        )
+          )
 
-      }
+        }
 
-      const args =
-        ctx.message.text.split(' ')
+        const args =
+          ctx.message.text.split(' ')
 
-      const userId =
-        Number(args[1])
+        const userId =
+          Number(args[1])
 
-      if (!userId) {
+        if (!userId) {
 
-        return ctx.reply(
+          return ctx.reply(
 `
 ❌ Utilisation :
 
 /demote ID
 `
+          )
+
+        }
+
+        await demoteAdmin(
+
+          ctx,
+
+          userId
+
         )
+
+      } catch (error) {
+
+        console.log(error)
 
       }
 
-      await demoteAdmin(
-
-        ctx,
-
-        userId
-
-      )
-
-    } catch (error) {
-
-      console.log(error)
-
     }
 
-  }
-
-)
+  )
 
   /*
   |--------------------------------------------------------------------------
