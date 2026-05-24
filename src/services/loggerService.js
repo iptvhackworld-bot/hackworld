@@ -3,11 +3,6 @@ require(
   '../config/env'
 )
 
-const logger =
-require(
-  '../utils/logger'
-)
-
 const {
 
   addLog
@@ -26,7 +21,7 @@ const logInfo = (
   message
 ) => {
 
-  logger(
+  console.log(
     `ℹ️ ${message}`
   )
 
@@ -43,13 +38,13 @@ const logError = (
   error = null
 ) => {
 
-  logger(
+  console.error(
     `❌ ${message}`
   )
 
   if (error) {
 
-    console.log(error)
+    console.error(error)
 
   }
 
@@ -122,10 +117,11 @@ async (
 
     } catch (err) {
 
-      logError(
-        'Erreur log Telegram',
-        err
+      console.error(
+        'Erreur log Telegram'
       )
+
+      console.error(err)
 
     }
 
