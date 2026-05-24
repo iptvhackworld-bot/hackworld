@@ -25,12 +25,6 @@ require('fs')
 const showMainMenu =
 async (ctx) => {
 
-  /*
-  |--------------------------------------------------------------------------
-  | STATS
-  |--------------------------------------------------------------------------
-  */
-
   const totalUsers =
     await getTotalUsers()
 
@@ -39,12 +33,6 @@ async (ctx) => {
 
   const averageRating =
     await getAverageRating()
-
-  /*
-  |--------------------------------------------------------------------------
-  | MENU
-  |--------------------------------------------------------------------------
-  */
 
   await ctx.replyWithPhoto(
 
@@ -64,18 +52,11 @@ async (ctx) => {
       caption:
 `
 ╔══════════════════╗
-      HACKWORLD 
+      HACKWORLD
 ╚══════════════════╝
 
-⚡ INTERFACE PRINCIPALE
+🛒 MARKETPLACE HACKWORLD
 
-🛡 Bienvenue sur notre bot 
-
-🔒 SÉCURITÉ & RAPPEL 🔒
-
-Pour votre sécurité :
-
-✅ Nous ne vous contacterons jamais en message privé
 ━━━━━━━━━━━━━━━━━━
 
 👥 Utilisateurs :
@@ -89,9 +70,9 @@ ${averageRating}/5
 
 ━━━━━━━━━━━━━━━━━━
 
-👤 Utilisateur connecté
-🛡 Accès sécurisé activé
-🚀 Système opérationnel
+✅ Système opérationnel
+🔒 Sécurité active
+👤 Connecté avec succès
 
 ━━━━━━━━━━━━━━━━━━
 `,
@@ -101,13 +82,22 @@ ${averageRating}/5
         [
 
           Markup.button.callback(
-            '🛠 Tool',
-            'cat_tool'
+            '🛒 Marketplace',
+            'market_panel'
+          )
+
+        ],
+
+        [
+
+          Markup.button.callback(
+            '📜 Annonces',
+            'view_market'
           ),
 
           Markup.button.callback(
-            '📤 Partage',
-            'cat_partage'
+            '➕ Créer',
+            'create_listing'
           )
 
         ],
@@ -115,13 +105,13 @@ ${averageRating}/5
         [
 
           Markup.button.callback(
-            '🎓 Formation',
-            'cat_formation'
+            '❤️ Favoris',
+            'favorites_panel'
           ),
 
           Markup.button.callback(
-            '🎁 Gratuit',
-            'cat_gratuit'
+            '📂 Catégories',
+            'market_categories'
           )
 
         ],
@@ -129,13 +119,13 @@ ${averageRating}/5
         [
 
           Markup.button.callback(
-            '🤝 Partenaire',
-            'cat_partenaire'
+            '👤 Profil',
+            'profile_panel'
           ),
 
           Markup.button.callback(
-            '📢 Pub',
-            'cat_pub'
+            '🏦 Wallet',
+            'wallet_panel'
           )
 
         ],
@@ -143,8 +133,13 @@ ${averageRating}/5
         [
 
           Markup.button.callback(
-            '👥 Nos Groupes',
-            'cat_nosgroupes'
+            '🎁 Daily',
+            'daily_reward'
+          ),
+
+          Markup.button.callback(
+            '🏆 Leaderboards',
+            'leaderboards'
           )
 
         ],
@@ -152,8 +147,22 @@ ${averageRating}/5
         [
 
           Markup.button.callback(
-            '👑 Staff',
-            'cat_staff'
+            '🎰 Casino',
+            'casino_panel'
+          )
+
+        ],
+
+        [
+
+          Markup.button.callback(
+            '👑 Premium',
+            'premium_panel'
+          ),
+
+          Markup.button.callback(
+            '💳 Crypto',
+            'crypto_panel'
           )
 
         ],
@@ -170,153 +179,8 @@ ${averageRating}/5
         [
 
           Markup.button.callback(
-            '🎒 Inventaire',
-            'inventory'
-          )
-
-        ],
-
-        [
-
-          Markup.button.callback(
-            '👤 Profil',
-            'profile_menu'
-          )
-
-        ],
-
-        [
-  Markup.button.callback(
-    '🎰 Casino',
-    'casino_menu'
-  ),
-
-  Markup.button.callback(
-    '🎁 Lootbox',
-    'lootbox'
-  )
-],
-
-[
-  Markup.button.callback(
-    '🏆 Leaderboards',
-    'leaderboards'
-  ),
-
-  Markup.button.callback(
-    '🎰 Roulette',
-    'roulette_panel'
-  )
-],
-
-[
-  Markup.button.callback(
-    '🃏 Blackjack',
-    'blackjack_panel'
-  ),
-
-  Markup.button.callback(
-    '💣 Mines',
-    'mines_panel'
-  )
-],
-
-[
-  Markup.button.callback(
-    '📈 Crash',
-    'crash_panel'
-  ),
-
-  Markup.button.callback(
-    '🏆 Jackpot',
-    'jackpot_panel'
-  )
-],
-
-[
-  Markup.button.callback(
-    '🎁 Daily',
-    'daily_reward'
-  ),
-
-  Markup.button.callback(
-    '🎡 Spin',
-    'spin_wheel'
-  )
-],
-
-[
-  Markup.button.callback(
-    '🎟 Lootboxes',
-    'lootboxes_panel'
-  )
-],
-
-[
-  Markup.button.callback(
-    '🛒 Shop',
-    'shop_menu'
-  ),
-
-  Markup.button.callback(
-    '👑 Seller',
-    'seller_dashboard'
-  )
-],
-
-[
-  Markup.button.callback(
-    '👑 Premium',
-    'premium_panel'
-  ),
-
-  Markup.button.callback(
-    '💳 Crypto',
-    'crypto_panel'
-  )
-],
-
-[
-  Markup.button.callback(
-    '🐉 Pets',
-    'pets_panel'
-  ),
-
-  Markup.button.callback(
-    '⚔️ Quests',
-    'quests_panel'
-  )
-],
-
-[
-  Markup.button.callback(
-    '👤 Profile',
-    'profile_panel'
-  ),
-
-  Markup.button.callback(
-    '🎲 Dice',
-    'dice_panel'
-  )
-],
-
-[
-  Markup.button.callback(
-    '👑 Prestige',
-    'prestige_account'
-  )
-],
-
-        [
-
-          Markup.button.callback(
             '⚙️ Admin',
             'admin_panel'
-          ),
-		  
-		  Markup.button.callback(
-            '🏦 Wallet',
-            'wallet_panel'
           )
 
         ]
@@ -338,12 +202,6 @@ ${averageRating}/5
 const startHandler =
 async (ctx) => {
 
-  /*
-  |--------------------------------------------------------------------------
-  | IMAGE
-  |--------------------------------------------------------------------------
-  */
-
   await ctx.replyWithPhoto(
 
     {
@@ -359,64 +217,28 @@ async (ctx) => {
 
   )
 
-  /*
-  |--------------------------------------------------------------------------
-  | RULES
-  |--------------------------------------------------------------------------
-  */
-
   await ctx.reply(
 
 `
-📜 RÈGLEMENT OFFICIEL — HACKWORLD 📜
-
-❤️ Bienvenue à tous les nouveaux membres ❤️
-
-Le groupe a été créé dans un esprit de partage, d’entraide et de respect mutuel.
-Merci de lire attentivement le règlement ci-dessous afin d’éviter toute sanction.
+📜 BIENVENUE SUR HACKWORLD
 
 ━━━━━━━━━━━━━━━━━━
-⛔ INTERDICTIONS ⛔
-━━━━━━━━━━━━━━━━━━
 
-1. Publicité sauvage 🚫
-2. Drogues 🚫
-3. Armes 🚫
-4. Pornographie 🚫
-5. Racisme / discrimination 🚫
-6. Religion / débats religieux 🚫
-7. Insultes / irrespect 🚫
-8. Arnaques / usurpation 🚫
-9. Faux staff / MP frauduleux 🚫
+✅ Marketplace sécurisé
+✅ Escrow disponible
+✅ Paiements crypto
+✅ Système premium
+✅ Support actif
 
 ━━━━━━━━━━━━━━━━━━
-⚠️ SANCTIONS ⚠️
-━━━━━━━━━━━━━━━━━━
 
-• BAN IMMÉDIAT ⛔
-• Aucun avertissement pour cas graves 📛
-• Décisions staff finales ✅
+⚠️ Aucun staff ne vous contactera en privé.
+
+⚠️ Vérifiez toujours les comptes officiels.
 
 ━━━━━━━━━━━━━━━━━━
-🔒 SÉCURITÉ 🔒
-━━━━━━━━━━━━━━━━━━
 
-✅ Aucun MP du staff
-✅ Vérifiez toujours les @ officiels
-✅ Escrow obligatoire
-
-━━━━━━━━━━━━━━━━━━
-📌 IMPORTANT 📌
-━━━━━━━━━━━━━━━━━━
-
-• Respect obligatoire
-• Contactez un admin si besoin
-• Le règlement peut être modifié
-
-⚠️ En cliquant sur ACCEPTER,
-vous acceptez automatiquement ce règlement.
-
-— L’Équipe HackWorld
+Cliquez sur ACCEPTER pour continuer.
 `,
 
     Markup.inlineKeyboard([

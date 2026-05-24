@@ -14,30 +14,44 @@ module.exports = (bot) => {
 
   require('./marketRoutes')(bot)
 
-  require('./adminRoutes')(bot)
+  require('./favoriteRoutes')(bot)
 
-  require('./casinoRoutes')(bot)
+  require('./purchaseRoutes')(bot)
 
-  require('./escrowRoutes')(bot)
+  require('./searchRoutes')(bot)
+
+  require('./filterRoutes')(bot)
+
+  require('./notificationRoutes')(bot)
+
+  require('./premiumRoutes')(bot)
+
+  require('./paymentRoutes')(bot)
+
+  /*
+  |--------------------------------------------------------------------------
+  | SYSTEM
+  |--------------------------------------------------------------------------
+  */
 
   require('./leaderboardRoutes')(bot)
 
-  require('./searchRoutes')(bot)
-  
+  require('./casinoRoutes')(bot)
+
   require('./verificationRoutes')(bot)
-  
-  require('./purchaseRoutes')(bot)
-  
+
+  require('./escrowRoutes')(bot)
+
   require('./disputeRoutes')(bot)
-  
+
   require('./logRoutes')(bot)
-  
-  require('./searchRoutes')(bot)
-  
-  require('./filterRoutes')(bot)
-  
-  require('./notificationRoutes')(bot)
-  
-  require('./premiumRoutes')(bot)
+
+  /*
+  |--------------------------------------------------------------------------
+  | ADMIN
+  |--------------------------------------------------------------------------
+  */
+
+  require('./adminRoutes')(bot)
 
 }
