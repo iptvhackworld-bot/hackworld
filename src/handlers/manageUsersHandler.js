@@ -3,11 +3,6 @@ require(
   '../models/User'
 )
 
-const Inventory =
-require(
-  '../models/Inventory'
-)
-
 const { Markup } =
 require('telegraf')
 
@@ -119,25 +114,6 @@ async (ctx) => {
 
   }
 
-  const inventory =
-    await Inventory.findOne({
-
-      userId
-
-    })
-
-  const inventoryCount =
-
-    inventory
-
-    ?
-
-    inventory.items.length
-
-    :
-
-    0
-
   await ctx.reply(
 
 `
@@ -157,9 +133,6 @@ ${user.money}
 ⭐ XP :
 ${user.xp}
 
-🎒 Inventory :
-${inventoryCount} items
-
 🛡 Role :
 ${user.role || 'user'}
 
@@ -168,9 +141,6 @@ ${user.banned ? 'Oui' : 'Non'}
 
 📛 Warns :
 ${user.warns || 0}
-
-📜 Logs :
-Disponible
 
 📅 Arrivé :
 ${new Date(user.createdAt).toLocaleDateString()}
@@ -190,15 +160,6 @@ ${new Date(user.createdAt).toLocaleDateString()}
         Markup.button.callback(
           '⭐ Give XP',
           `givexp_${user.id}`
-        )
-
-      ],
-
-      [
-
-        Markup.button.callback(
-          '🎁 Give Item',
-          `giveitem_${user.id}`
         )
 
       ],
@@ -227,15 +188,6 @@ ${new Date(user.createdAt).toLocaleDateString()}
         Markup.button.callback(
           '✅ Unban',
           `unban_${user.id}`
-        )
-
-      ],
-
-      [
-
-        Markup.button.callback(
-          '🎒 Reset Inventory',
-          `resetinv_${user.id}`
         )
 
       ],
@@ -628,45 +580,6 @@ async (
 
 /*
 |--------------------------------------------------------------------------
-| RESET INVENTORY
-|--------------------------------------------------------------------------
-*/
-
-const resetInventory =
-async (
-
-  ctx,
-
-  userId
-
-) => {
-
-  await Inventory.findOneAndUpdate(
-
-    {
-
-      userId
-
-    },
-
-    {
-
-      items: []
-
-    }
-
-  )
-
-  await ctx.reply(
-`
-🎒 Inventaire reset.
-`
-  )
-
-}
-
-/*
-|--------------------------------------------------------------------------
 | RESET USER
 |--------------------------------------------------------------------------
 */
@@ -702,22 +615,6 @@ async (
 
   )
 
-  await Inventory.findOneAndUpdate(
-
-    {
-
-      userId
-
-    },
-
-    {
-
-      items: []
-
-    }
-
-  )
-
   await ctx.reply(
 `
 💀 Utilisateur reset.
@@ -743,8 +640,6 @@ module.exports = {
   setAdmin,
 
   setMod,
-
-  resetInventory,
 
   resetUser
 
