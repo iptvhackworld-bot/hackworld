@@ -292,8 +292,8 @@ module.exports = {
 
   banMember,
 
-  muteMember
-  
+  muteMember,
+
   unbanMember,
 
   unmuteMember,
