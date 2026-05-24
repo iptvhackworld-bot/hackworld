@@ -9,6 +9,7 @@ node_modules
 # Logs
 logs
 *.log
+npm-debug.log*
 
 # Backups
 backups
@@ -16,11 +17,16 @@ backups
 # Database
 data
 *.json
+mongod.lock
+WiredTiger*
 
 # Mongo / Binary
 *.wt
 *.ns
 *.pdb
+
+# Archives
+*.zip
 
 # OS
 .DS_Store
