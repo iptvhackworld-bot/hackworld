@@ -1,41 +1,57 @@
-const Wallet =
+const User =
 require(
-  '../models/Wallet'
+  '../models/User'
 )
 
-const Transaction =
-require(
-  '../models/Transaction'
+const {
+
+  logEconomy
+
+} = require(
+  '../utils/logger'
+)
+
+const {
+
+  createLog
+
+} = require(
+  './logService'
 )
 
 /*
 |--------------------------------------------------------------------------
-| GET WALLET
+| GET BALANCE
 |--------------------------------------------------------------------------
 */
 
-const getWallet =
+const getBalance =
 async (userId) => {
 
-  let wallet =
-    await Wallet.findOne({
+  try {
 
-      userId
+    const user =
+      await User.findOne({
 
-    })
-
-  if (!wallet) {
-
-    wallet =
-      await Wallet.create({
-
-        userId
+        id: userId
 
       })
 
-  }
+    if (!user) {
 
-  return wallet
+      return 0
+
+    }
+
+    return user.money || 0
+
+  } catch (error) {
+
+    console.log(error)
+
+    return 0
+
+  }
 
 }
 
@@ -50,41 +66,66 @@ async (
 
   userId,
 
-  amount,
-
-  description =
-  'Ajout'
+  amount
 
 ) => {
 
-  const wallet =
-    await getWallet(
-      userId
+  try {
+
+    if (
+
+      amount <= 0
+
     )
 
-  wallet.balance +=
-    amount
+await createLog(
 
-  wallet.totalReceived +=
-    amount
+  'economy',
 
-  await wallet.save()
+  userId,
 
-  await Transaction.create({
+  'ADD_MONEY',
 
-    userId,
+  `${amount}$`
 
-    type: 'add',
+)	{
 
-    amount,
+      return false
 
-    description
+    }
 
-  })
+    const user =
+      await User.findOne({
 
-  return wallet
+        id: userId
+
+      })
+
+    if (!user) {
+
+      return false
+
+    }
+
+    user.money += amount
+
+    await user.save()
+
+    return true
+
+  } catch (error) {
+
+    console.log(error)
+
+    return false
+
+  }
 
 }
+
+logEconomy(
+  `ADD ${amount}$ -> ${userId}`
+)
 
 /*
 |--------------------------------------------------------------------------
@@ -97,153 +138,79 @@ async (
 
   userId,
 
-  amount,
-
-  description =
-  'Retrait'
+  amount
 
 ) => {
-
-  const wallet =
-    await getWallet(
-      userId
-    )
 	
-	if (
+	await createLog(
 
-  wallet.locked
+  'economy',
 
-) {
+  userId,
 
-  return false
+  'REMOVE_MONEY',
 
-}
+  `${amount}$`
 
-  if (
+)
 
-    wallet.balance < amount
+  try {
 
-  ) {
+    if (
+
+      amount <= 0
+
+    ) {
+
+      return false
+
+    }
+
+    const user =
+      await User.findOne({
+
+        id: userId
+
+      })
+
+    if (!user) {
+
+      return false
+
+    }
+
+    if (
+
+      user.money < amount
+
+    ) {
+
+      return false
+
+    }
+
+    user.money -= amount
+
+    await user.save()
+
+    return true
+
+  } catch (error) {
+
+    console.log(error)
 
     return false
 
   }
 
-  wallet.balance -=
-    amount
-
-  wallet.totalSent +=
-    amount
-
-  await wallet.save()
-
-  await Transaction.create({
-
-    userId,
-
-    type: 'remove',
-
-    amount,
-
-    description
-
-  })
-
-  return true
-
 }
 
-/*
-|--------------------------------------------------------------------------
-| GET TRANSACTIONS
-|--------------------------------------------------------------------------
-*/
-
-const getTransactions =
-async (userId) => {
-
-  return await Transaction.find({
-
-    userId
-
-  })
-
-  .sort({
-
-    createdAt: -1
-
-  })
-
-  .limit(10)
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| LOCK WALLET
-|--------------------------------------------------------------------------
-*/
-
-const lockWallet =
-async (userId) => {
-
-  return await Wallet.findOneAndUpdate(
-
-    {
-
-      userId
-
-    },
-
-    {
-
-      locked: true
-
-    }
-
-  )
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| UNLOCK WALLET
-|--------------------------------------------------------------------------
-*/
-
-const unlockWallet =
-async (userId) => {
-
-  return await Wallet.findOneAndUpdate(
-
-    {
-
-      userId
-
-    },
-
-    {
-
-      locked: false
-
-    }
-
-  )
-
-}
 module.exports = {
 
-  getWallet,
+  getBalance,
 
   addMoney,
 
-  removeMoney,
-
-  getTransactions,
-
-  lockWallet,
-
-  unlockWallet
+  removeMoney
 
 }
-

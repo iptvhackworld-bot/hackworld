@@ -10,48 +10,50 @@ require(
 */
 
 const createTicket =
-async (
+async (data) => {
 
-  user,
+  try {
 
-  reason
+    return await Ticket.create(
+      data
+    )
 
-) => {
+  } catch (error) {
 
-  return await Ticket.create({
+    console.log(error)
 
-    userId:
-    user.id,
+    return null
 
-    username:
-    user.username || 'Unknown',
-
-    reason
-
-  })
+  }
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| GET OPEN TICKETS
+| GET TICKETS
 |--------------------------------------------------------------------------
 */
 
-const getOpenTickets =
+const getTickets =
 async () => {
 
-  return await Ticket.find({
+  try {
 
-    status: 'open'
+    return await Ticket.find()
 
-  })
+    .sort({
 
-  .sort({
+      createdAt: -1
 
-    createdAt: -1
+    })
 
-  })
+  } catch (error) {
+
+    console.log(error)
+
+    return []
+
+  }
 
 }
 
@@ -61,49 +63,76 @@ async () => {
 |--------------------------------------------------------------------------
 */
 
-const closeTicket =
-async (ticketId) => {
+const closeTicketById =
+async (id) => {
 
-  return await Ticket.findByIdAndUpdate(
+  try {
 
-    ticketId,
+    return await Ticket.findByIdAndUpdate(
 
-    {
+      id,
 
-      status: 'closed'
+      {
 
-    }
+        status: 'closed'
 
-  )
+      }
+
+    )
+
+  } catch (error) {
+
+    console.log(error)
+
+    return false
+
+  }
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| REPLY TICKET
+| ADD REPLY
 |--------------------------------------------------------------------------
 */
 
-const replyTicket =
+const addReply =
 async (
 
   ticketId,
 
-  message
+  replyData
 
 ) => {
 
-  return await Ticket.findByIdAndUpdate(
+  try {
 
-    ticketId,
+    const ticket =
+      await Ticket.findById(
+        ticketId
+      )
 
-    {
+    if (!ticket) {
 
-      adminReply: message
+      return false
 
     }
 
-  )
+    ticket.replies.push(
+      replyData
+    )
+
+    await ticket.save()
+
+    return ticket
+
+  } catch (error) {
+
+    console.log(error)
+
+    return false
+
+  }
 
 }
 
@@ -111,10 +140,10 @@ module.exports = {
 
   createTicket,
 
-  getOpenTickets,
+  getTickets,
 
-  closeTicket,
-
-  replyTicket
+  closeTicketById,
+  
+  addReply
 
 }

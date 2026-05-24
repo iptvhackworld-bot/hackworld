@@ -1,16 +1,38 @@
 const mongoose =
 require('mongoose')
 
-const petSchema =
+const disputeSchema =
 new mongoose.Schema({
 
   /*
   |--------------------------------------------------------------------------
-  | USER
+  | PURCHASE
   |--------------------------------------------------------------------------
   */
 
-  userId: {
+  purchaseId: {
+
+    type: mongoose.Schema.Types.ObjectId,
+
+    required: true
+
+  },
+
+  /*
+  |--------------------------------------------------------------------------
+  | USERS
+  |--------------------------------------------------------------------------
+  */
+
+  buyerId: {
+
+    type: Number,
+
+    required: true
+
+  },
+
+  sellerId: {
 
     type: Number,
 
@@ -20,75 +42,35 @@ new mongoose.Schema({
 
   /*
   |--------------------------------------------------------------------------
-  | PET
+  | REASON
   |--------------------------------------------------------------------------
   */
 
-  name: {
+  reason: {
 
     type: String,
 
-    required: true
-
-  },
-
-  rarity: {
-
-    type: String,
-
-    default: 'common'
-
-  },
-
-  bonusType: {
-
-    type: String,
-
-    required: true
-
-  },
-
-  bonusValue: {
-
-    type: Number,
-
-    default: 0
-
-  },
-
-  level: {
-
-    type: Number,
-
-    default: 1
-
-  },
-
-  xp: {
-
-    type: Number,
-
-    default: 0
+    default: ''
 
   },
 
   /*
   |--------------------------------------------------------------------------
-  | ACTIVE
+  | STATUS
   |--------------------------------------------------------------------------
   */
 
-  active: {
+  status: {
 
-    type: Boolean,
+    type: String,
 
-    default: false
+    default: 'open'
 
   },
 
   /*
   |--------------------------------------------------------------------------
-  | DATES
+  | DATE
   |--------------------------------------------------------------------------
   */
 
@@ -105,8 +87,8 @@ new mongoose.Schema({
 module.exports =
 mongoose.model(
 
-  'Pet',
+  'Dispute',
 
-  petSchema
+  disputeSchema
 
 )

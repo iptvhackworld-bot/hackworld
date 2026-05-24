@@ -1,178 +1,93 @@
-const { Markup } =
-require('telegraf')
-
 const {
 
-  createSubscription,
+  addPremium,
 
-  checkPremium
+  isPremium
 
 } = require(
   '../services/premiumService'
 )
 
-const {
-
-  removeMoney
-
-} = require(
-  '../services/walletService'
+const env =
+require(
+  '../config/env'
 )
 
 /*
 |--------------------------------------------------------------------------
-| PREMIUM PANEL
+| BUY PREMIUM
 |--------------------------------------------------------------------------
 */
 
-const openPremiumPanel =
+const buyPremium =
 async (ctx) => {
 
-  const sub =
-    await checkPremium(
+  try {
 
-      ctx.from.id
+    await addPremium(
+
+      ctx.from.id,
+
+      30
 
     )
 
-  let status =
-    '❌ Aucun abonnement'
-
-  if (sub) {
-
-    status =
+    await ctx.reply(
 `
-✅ ${sub.plan}
-
-📅 expire :
-${sub.expiresAt.toDateString()}
+👑 Premium activé 30 jours.
 `
+    )
+
+  } catch (error) {
+
+    console.log(error)
+
   }
-
-  await ctx.reply(
-
-`
-👑 PREMIUM SYSTEM
-
-━━━━━━━━━━━━━━━━━━
-
-${status}
-
-━━━━━━━━━━━━━━━━━━
-
-VIP :
-10$
-
-PREMIUM :
-25$
-
-SELLER+ :
-50$
-
-━━━━━━━━━━━━━━━━━━
-`,
-
-Markup.inlineKeyboard([
-
-  [
-
-    Markup.button.callback(
-      '👑 VIP',
-      'buy_vip'
-    )
-
-  ],
-
-  [
-
-    Markup.button.callback(
-      '💎 PREMIUM',
-      'buy_premium'
-    )
-
-  ],
-
-  [
-
-    Markup.button.callback(
-      '🚀 SELLER+',
-      'buy_seller_plus'
-    )
-
-  ]
-
-])
-
-  )
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| BUY PLAN
+| PREMIUM STATUS
 |--------------------------------------------------------------------------
 */
 
-const buyPremiumPlan =
-async (
+const openPremium =
+async (ctx) => {
 
-  ctx,
+  try {
 
-  plan,
+    const premium =
+      await isPremium(
+        ctx.from.id
+      )
 
-  price,
+    await ctx.reply(
 
-  days
+premium
 
-) => {
+? `
+👑 Vous êtes Premium.
+`
 
-  const paid =
-    await removeMoney(
-
-      ctx.from.id,
-
-      price,
-
-      `Premium ${plan}`
+: `
+❌ Vous n'êtes pas Premium.
+`
 
     )
 
-  if (!paid) {
+  } catch (error) {
 
-    return ctx.reply(
-`
-❌ Fonds insuffisants.
-`
-    )
+    console.log(error)
 
   }
-
-  await createSubscription(
-
-    ctx.from.id,
-
-    plan,
-
-    days
-
-  )
-
-  await ctx.reply(
-`
-✅ Abonnement activé.
-
-👑 ${plan}
-
-📅 ${days} jours
-`
-  )
 
 }
 
 module.exports = {
 
-  openPremiumPanel,
+  buyPremium,
 
-  buyPremiumPlan
+  openPremium
 
 }

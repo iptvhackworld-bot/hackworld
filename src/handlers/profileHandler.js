@@ -3,56 +3,98 @@ require(
   '../models/User'
 )
 
+const MarketListing =
+require(
+  '../models/MarketListing'
+)
+
 /*
 |--------------------------------------------------------------------------
-| PROFILE
+| OPEN SELLER PROFILE
 |--------------------------------------------------------------------------
 */
 
-const openProfile =
-async (ctx) => {
+const openSellerProfile =
+async (
 
-  const user =
-    await User.findOne({
+  ctx,
 
-      id: ctx.from.id
+  sellerId
 
-    })
+) => {
 
-  if (!user) {
+  try {
 
-    return
+    const seller =
+      await User.findOne({
+
+        id: Number(sellerId)
+
+      })
+
+    if (!seller) {
+
+      return ctx.reply(
+`
+❌ Vendeur introuvable.
+`
+      )
+
+    }
+
+    const listings =
+      await MarketListing.find({
+
+        sellerId:
+        seller.id,
+
+        sold: false
+
+      })
+
+    await ctx.reply(
+`
+👤 PROFIL VENDEUR
+
+━━━━━━━━━━━━━━━━━━
+
+🪪 Username :
+@${seller.username || 'unknown'}
+
+💰 Ventes :
+${seller.sellerSales || 0}
+
+⭐ Note :
+${seller.sellerRating || 0}/5
+
+📝 Avis :
+${seller.sellerReviews || 0}
+
+${seller.verifiedSeller
+? '✅ Vérifié'
+: '❌ Non vérifié'}
+
+${seller.trustedSeller
+? '🛡 Trusted Seller'
+: ''}
+
+📦 Listings actifs :
+${listings.length}
+
+━━━━━━━━━━━━━━━━━━
+`
+    )
+
+  } catch (error) {
+
+    console.log(error)
 
   }
-
-  await ctx.reply(
-`
-👤 PROFILE
-
-━━━━━━━━━━━━━━━━━━
-
-🆔 @${user.username}
-
-⭐ Level :
-${user.level}
-
-📈 XP :
-${user.xp}
-
-👑 Prestige :
-${user.prestige}
-
-💰 Money :
-${user.money}$
-
-━━━━━━━━━━━━━━━━━━
-`
-  )
 
 }
 
 module.exports = {
 
-  openProfile
+  openSellerProfile
 
 }

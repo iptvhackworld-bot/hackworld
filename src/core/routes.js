@@ -20,6 +20,10 @@ const registerRoutes =
   require(
     '../routes/callbackRoutes'
   )(bot)
+  
+  require(
+  '../routes/staffCommandRoutes'
+)(bot)
 
 /*
 |--------------------------------------------------------------------------

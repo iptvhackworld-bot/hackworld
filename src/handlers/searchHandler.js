@@ -1,167 +1,89 @@
-const { Markup } = require('telegraf')
+const { Markup } =
+require('telegraf')
 
 const {
 
-  contentService
+  searchMarket
 
-} = require('../data/contentData')
-
-/*
-|--------------------------------------------------------------------------
-| START SEARCH
-|--------------------------------------------------------------------------
-*/
-
-const startSearch = async (ctx) => {
-
-  if (
-    ctx.from.id.toString() !==
-    env.ownerId
-  ) {
-
-    return ctx.reply(
-      '❌ Accès refusé'
-    )
-
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | SESSION
-  |--------------------------------------------------------------------------
-  */
-
-  if (!ctx.session) {
-
-    ctx.session = {}
-
-  }
-
-  ctx.session.step =
-    'search_content'
-
-  /*
-  |--------------------------------------------------------------------------
-  | ASK KEYWORD
-  |--------------------------------------------------------------------------
-  */
-
-  await ctx.reply(
-`
-🔎 RECHERCHE CONTENU
-
-━━━━━━━━━━━━━━━━━━
-
-📝 Envoyez un mot-clé.
-`
-  )
-}
+} = require(
+  '../services/searchService'
+)
 
 /*
 |--------------------------------------------------------------------------
-| HANDLE SEARCH
+| SEARCH MARKET
 |--------------------------------------------------------------------------
 */
 
-const handleSearch = async (ctx) => {
+const searchMarketplace =
+async (
 
-  if (
-    ctx.session.step !==
-    'search_content'
-  ) return
+  ctx,
 
-  const keyword =
-    ctx.message.text.toLowerCase()
+  query
 
-  const contentData = contentService()
+) => {
 
-  /*
-  |--------------------------------------------------------------------------
-  | FILTER
-  |--------------------------------------------------------------------------
-  */
+  try {
 
-  const results = contentData.filter(
-    item =>
-
-      item.title
-        .toLowerCase()
-        .includes(keyword)
-
-      ||
-
-      item.description
-        .toLowerCase()
-        .includes(keyword)
-  )
-
-  /*
-  |--------------------------------------------------------------------------
-  | RESET
-  |--------------------------------------------------------------------------
-  */
-
-  ctx.session.step = null
-
-  /*
-  |--------------------------------------------------------------------------
-  | EMPTY
-  |--------------------------------------------------------------------------
-  */
-
-  if (results.length === 0) {
-
-    return ctx.reply(
-`
-❌ Aucun résultat trouvé.
-`
-    )
-
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | BUTTONS
-  |--------------------------------------------------------------------------
-  */
-
-  const buttons = []
-
-  results.forEach((item) => {
-
-    buttons.push([
-
-      Markup.button.callback(
-        `📄 ${item.title}`,
-        `edit_${item.id}`
+    const results =
+      await searchMarket(
+        query
       )
 
-    ])
+    if (!results.length) {
 
-  })
-
-  /*
-  |--------------------------------------------------------------------------
-  | SEND
-  |--------------------------------------------------------------------------
-  */
-
-  await ctx.reply(
+      return ctx.reply(
 `
-🔎 RÉSULTATS RECHERCHE
+❌ Aucun résultat.
+`
+      )
+
+    }
+
+    for (const item of results) {
+
+      await ctx.reply(
+
+`
+📦 ${item.title}
+
+📂 ${item.category}
+
+👤 @${item.sellerUsername}
+
+💰 ${item.price}$
 
 ━━━━━━━━━━━━━━━━━━
-
-✅ ${results.length} résultat(s)
 `,
-    Markup.inlineKeyboard(buttons)
-  )
+
+        Markup.inlineKeyboard([
+
+          [
+
+            Markup.button.callback(
+              '💳 Acheter',
+              `buy_market_${item._id}`
+            )
+
+          ]
+
+        ])
+
+      )
+
+    }
+
+  } catch (error) {
+
+    console.log(error)
+
+  }
+
 }
 
 module.exports = {
 
-  startSearch,
-
-  handleSearch
+  searchMarketplace
 
 }

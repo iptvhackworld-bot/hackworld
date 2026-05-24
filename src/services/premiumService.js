@@ -1,72 +1,77 @@
-const PremiumSubscription =
+const Premium =
 require(
-  '../models/PremiumSubscription'
+  '../models/Premium'
 )
 
 /*
 |--------------------------------------------------------------------------
-| CREATE SUB
+| ADD PREMIUM
 |--------------------------------------------------------------------------
 */
 
-const createSubscription =
+const addPremium =
 async (
 
   userId,
 
-  plan,
-
-  days
+  days = 30
 
 ) => {
 
-  const expiresAt =
-    new Date(
+  try {
 
-      Date.now()
+    const expiresAt =
+      new Date(
 
-      +
+        Date.now()
 
-      days *
+        +
 
-      24 *
+        days *
 
-      60 *
+        24 *
 
-      60 *
+        60 *
 
-      1000
+        60 *
+
+        1000
+
+      )
+
+    return await Premium.findOneAndUpdate(
+
+      {
+
+        userId
+
+      },
+
+      {
+
+        userId,
+
+        expiresAt
+
+      },
+
+      {
+
+        upsert: true,
+
+        new: true
+
+      }
 
     )
 
-  return await PremiumSubscription.create({
+  } catch (error) {
 
-    userId,
+    console.log(error)
 
-    plan,
+    return false
 
-    expiresAt
-
-  })
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| GET SUB
-|--------------------------------------------------------------------------
-*/
-
-const getSubscription =
-async (userId) => {
-
-  return await PremiumSubscription.findOne({
-
-    userId,
-
-    active: true
-
-  })
+  }
 
 }
 
@@ -76,53 +81,77 @@ async (userId) => {
 |--------------------------------------------------------------------------
 */
 
-const checkPremium =
+const isPremium =
 async (userId) => {
 
-  const sub =
-    await getSubscription(
-      userId
+  try {
+
+    const premium =
+      await Premium.findOne({
+
+        userId
+
+      })
+
+    if (!premium) {
+
+      return false
+
+    }
+
+    return (
+
+      premium.expiresAt >
+
+      new Date()
+
     )
 
-  if (!sub) {
+  } catch (error) {
+
+    console.log(error)
 
     return false
 
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | EXPIRED
-  |--------------------------------------------------------------------------
-  */
+}
 
-  if (
+/*
+|--------------------------------------------------------------------------
+| CLEAN EXPIRED
+|--------------------------------------------------------------------------
+*/
 
-    new Date() >
+const cleanExpiredPremiums =
+async () => {
 
-    sub.expiresAt
+  try {
 
-  ) {
+    await Premium.deleteMany({
 
-    sub.active =
-      false
+      expiresAt: {
 
-    await sub.save()
+        $lt: new Date()
 
-    return false
+      }
+
+    })
+
+  } catch (error) {
+
+    console.log(error)
 
   }
-
-  return sub
 
 }
 
 module.exports = {
 
-  createSubscription,
+  addPremium,
 
-  getSubscription,
-
-  checkPremium
+  isPremium,
+  
+  cleanExpiredPremiums
 
 }

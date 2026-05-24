@@ -50,30 +50,6 @@ new mongoose.Schema({
 
   },
 
-  xp: {
-
-    type: Number,
-
-    default: 0
-
-  },
-
-  level: {
-
-    type: Number,
-
-    default: 1
-
-  },
-
-  prestige: {
-
-    type: Number,
-
-    default: 0
-
-  },
-
   /*
   |--------------------------------------------------------------------------
   | CASINO
@@ -118,19 +94,19 @@ new mongoose.Schema({
 
   },
 
-  warns: {
-
-    type: Number,
-
-    default: 0
-
-  },
-
   muted: {
 
     type: Boolean,
 
     default: false
+
+  },
+
+  warns: {
+
+    type: Number,
+
+    default: 0
 
   },
 
@@ -149,14 +125,6 @@ new mongoose.Schema({
   */
 
   messages: {
-
-    type: Number,
-
-    default: 0
-
-  },
-
-  rating: {
 
     type: Number,
 

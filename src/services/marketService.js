@@ -3,6 +3,11 @@ require(
   '../models/MarketListing'
 )
 
+const User =
+require(
+  '../models/User'
+)
+
 /*
 |--------------------------------------------------------------------------
 | CREATE LISTING
@@ -12,9 +17,19 @@ require(
 const createListing =
 async (data) => {
 
-  return await MarketListing.create(
-    data
-  )
+  try {
+
+    return await MarketListing.create(
+      data
+    )
+
+  } catch (error) {
+
+    console.log(error)
+
+    return false
+
+  }
 
 }
 
@@ -27,17 +42,370 @@ async (data) => {
 const getListings =
 async () => {
 
-  return await MarketListing.find({
+  try {
 
-    sold: false
+    const listings =
+      await MarketListing.find({
 
-  })
+        sold: false
 
-  .sort({
+      })
 
-    createdAt: -1
+      .sort({
 
-  })
+        featured: -1,
+
+        createdAt: -1
+
+      })
+
+    const formatted =
+
+      await Promise.all(
+
+        listings.map(
+
+          async (item) => {
+
+            const seller =
+              await User.findOne({
+
+                id:
+                item.sellerId
+
+              })
+
+            return {
+
+              ...item.toObject(),
+
+              verifiedSeller:
+
+              seller?.verifiedSeller
+
+              || false
+
+            }
+
+          }
+
+        )
+
+      )
+
+    return formatted
+
+  } catch (error) {
+
+    console.log(error)
+
+    return []
+
+  }
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| SEARCH LISTINGS
+|--------------------------------------------------------------------------
+*/
+
+const searchListings =
+async (
+
+  query
+
+) => {
+
+  try {
+
+    return await MarketListing.find({
+
+      sold: false,
+
+      title: {
+
+        $regex: query,
+
+        $options: 'i'
+
+      }
+
+    })
+
+    .sort({
+
+      featured: -1,
+
+      createdAt: -1
+
+    })
+
+  } catch (error) {
+
+    console.log(error)
+
+    return []
+
+  }
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| CATEGORY LISTINGS
+|--------------------------------------------------------------------------
+*/
+
+const getCategoryListings =
+async (
+
+  category
+
+) => {
+
+  try {
+
+    return await MarketListing.find({
+
+      sold: false,
+
+      category
+
+    })
+
+    .sort({
+
+      featured: -1,
+
+      createdAt: -1
+
+    })
+
+  } catch (error) {
+
+    console.log(error)
+
+    return []
+
+  }
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| ADVANCED FILTERS
+|--------------------------------------------------------------------------
+*/
+
+const filterListings =
+async (
+
+  filters = {}
+
+) => {
+
+  try {
+
+    const query = {
+
+      sold: false
+
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | PRICE
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+
+      filters.minPrice ||
+
+      filters.maxPrice
+
+    ) {
+
+      query.price = {}
+
+      if (
+
+        filters.minPrice
+
+      ) {
+
+        query.price.$gte =
+          Number(
+            filters.minPrice
+          )
+
+      }
+
+      if (
+
+        filters.maxPrice
+
+      ) {
+
+        query.price.$lte =
+          Number(
+            filters.maxPrice
+          )
+
+      }
+
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | FEATURED
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+
+      filters.featured
+
+    ) {
+
+      query.featured = true
+
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | CATEGORY
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+
+      filters.category
+
+    ) {
+
+      query.category =
+        filters.category
+
+    }
+
+    let listings =
+      await MarketListing.find(
+        query
+      )
+
+    /*
+    |--------------------------------------------------------------------------
+    | VERIFIED SELLERS
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+
+      filters.verifiedOnly
+
+    ) {
+
+      const verifiedUsers =
+        await User.find({
+
+          verifiedSeller: true
+
+        })
+
+        const ids =
+
+          verifiedUsers.map(
+
+            (u) => u.id
+
+          )
+
+      listings =
+        listings.filter(
+
+          (item) =>
+
+            ids.includes(
+              item.sellerId
+            )
+
+        )
+
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | SORT
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+
+      filters.sort ===
+      'price_asc'
+
+    ) {
+
+      listings.sort(
+
+        (a, b) =>
+
+          a.price - b.price
+
+      )
+
+    }
+
+    if (
+
+      filters.sort ===
+      'price_desc'
+
+    ) {
+
+      listings.sort(
+
+        (a, b) =>
+
+          b.price - a.price
+
+      )
+
+    }
+
+    if (
+
+      filters.sort ===
+      'rating'
+
+    ) {
+
+      listings.sort(
+
+        (a, b) =>
+
+          (b.averageRating || 0)
+
+          -
+
+          (a.averageRating || 0)
+
+      )
+
+    }
+
+    return listings
+
+  } catch (error) {
+
+    console.log(error)
+
+    return []
+
+  }
 
 }
 
@@ -50,7 +418,19 @@ async () => {
 const getListing =
 async (id) => {
 
-  return await MarketListing.findById(id)
+  try {
+
+    return await MarketListing.findById(
+      id
+    )
+
+  } catch (error) {
+
+    console.log(error)
+
+    return null
+
+  }
 
 }
 
@@ -63,23 +443,39 @@ async (id) => {
 const markSold =
 async (id) => {
 
-  return await MarketListing.findByIdAndUpdate(
+  try {
 
-    id,
+    return await MarketListing.findByIdAndUpdate(
 
-    {
+      id,
 
-      sold: true
+      {
 
-    }
+        sold: true
 
-  )
+      },
+
+      {
+
+        new: true
+
+      }
+
+    )
+
+  } catch (error) {
+
+    console.log(error)
+
+    return false
+
+  }
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| ADD REVIEW
+| ADD SELLER REVIEW
 |--------------------------------------------------------------------------
 */
 
@@ -92,69 +488,74 @@ async (
 
 ) => {
 
-  const User =
-  require(
-    '../models/User'
-  )
+  try {
 
-  const seller =
-    await User.findOne({
+    const seller =
+      await User.findOne({
 
-      id: sellerId
+        id: sellerId
 
-    })
+      })
 
-  if (!seller) {
+    if (!seller) {
+
+      return false
+
+    }
+
+    const total =
+      seller.sellerRating *
+
+      seller.sellerReviews
+
+    seller.sellerReviews += 1
+
+    seller.sellerRating =
+
+      (
+
+        total + rating
+
+      )
+
+      /
+
+      seller.sellerReviews
+
+    seller.sellerSales += 1
+
+    /*
+    |--------------------------------------------------------------------------
+    | TRUSTED
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+
+      seller.sellerSales >= 10
+
+      &&
+
+      seller.sellerRating >= 4.5
+
+    ) {
+
+      seller.trustedSeller =
+        true
+
+    }
+
+    await seller.save()
+
+    return seller
+
+  } catch (error) {
+
+    console.log(error)
 
     return false
 
   }
-
-  const total =
-    seller.sellerRating *
-
-    seller.sellerReviews
-
-  seller.sellerReviews +=
-    1
-
-  seller.sellerRating =
-
-    (
-
-      total + rating
-
-    )
-
-    /
-
-    seller.sellerReviews
-
-  seller.sellerSales +=
-    1
-
-  /*
-  |--------------------------------------------------------------------------
-  | TRUSTED
-  |--------------------------------------------------------------------------
-  */
-
-  if (
-
-    seller.sellerSales >= 10 &&
-
-    seller.sellerRating >= 4.5
-
-  ) {
-
-    seller.trustedSeller =
-      true
-
-  }
-
-  await seller.save()
-
-  return seller
 
 }
 
@@ -173,39 +574,55 @@ async (
 
 ) => {
 
-  const expiresAt =
-    new Date(
+  try {
 
-      Date.now()
+    const expiresAt =
+      new Date(
 
-      +
+        Date.now()
 
-      days *
+        +
 
-      24 *
+        days *
 
-      60 *
+        24 *
 
-      60 *
+        60 *
 
-      1000
+        60 *
+
+        1000
+
+      )
+
+    return await MarketListing.findByIdAndUpdate(
+
+      listingId,
+
+      {
+
+        featured: true,
+
+        featuredExpiresAt:
+        expiresAt
+
+      },
+
+      {
+
+        new: true
+
+      }
 
     )
 
-  return await MarketListing.findByIdAndUpdate(
+  } catch (error) {
 
-    listingId,
+    console.log(error)
 
-    {
+    return false
 
-      featured: true,
-
-      featuredExpiresAt:
-      expiresAt
-
-    }
-
-  )
+  }
 
 }
 
@@ -214,6 +631,12 @@ module.exports = {
   createListing,
 
   getListings,
+
+  searchListings,
+
+  getCategoryListings,
+
+  filterListings,
 
   getListing,
 

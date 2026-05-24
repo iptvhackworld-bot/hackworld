@@ -12,60 +12,68 @@ require(
 const createLog =
 async (
 
-  type,
+  userId,
 
-  admin,
+  username,
 
-  target,
+  action,
 
-  reason = 'Aucune raison'
+  details
 
 ) => {
 
-  await Log.create({
+  try {
 
-    type,
+    return await Log.create({
 
-    adminId:
-    admin.id,
+      userId,
 
-    adminUsername:
-    admin.username || 'Unknown',
+      username,
 
-    targetId:
-    target.id,
+      action,
 
-    targetUsername:
-    target.username || 'Unknown',
+      details
 
-    reason
+    })
 
-  })
+  } catch (error) {
+
+    console.log(error)
+
+    return false
+
+  }
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| GET USER LOGS
+| GET LOGS
 |--------------------------------------------------------------------------
 */
 
-const getUserLogs =
-async (userId) => {
+const getLogs =
+async () => {
 
-  return await Log.find({
+  try {
 
-    targetId: userId
+    return await Log.find()
 
-  })
+    .sort({
 
-  .sort({
+      createdAt: -1
 
-    createdAt: -1
+    })
 
-  })
+    .limit(50)
 
-  .limit(20)
+  } catch (error) {
+
+    console.log(error)
+
+    return []
+
+  }
 
 }
 
@@ -73,6 +81,6 @@ module.exports = {
 
   createLog,
 
-  getUserLogs
+  getLogs
 
 }

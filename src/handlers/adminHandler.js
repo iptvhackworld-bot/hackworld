@@ -1,10 +1,18 @@
+const { Markup } =
+require('telegraf')
+
 const env =
 require(
   '../config/env'
 )
 
-const { Markup } =
-require('telegraf')
+const {
+
+  isOwner
+
+} = require(
+  '../utils/permissions'
+)
 
 /*
 |--------------------------------------------------------------------------
@@ -15,43 +23,43 @@ require('telegraf')
 const openAdminPanel =
 async (ctx) => {
 
-  /*
-  |--------------------------------------------------------------------------
-  | OWNER ONLY
-  |--------------------------------------------------------------------------
-  */
+  try {
 
-  if (
+    /*
+    |--------------------------------------------------------------------------
+    | OWNER ONLY
+    |--------------------------------------------------------------------------
+    */
 
-    ctx.from.id.toString()
+    const allowed =
+  await isOwner(
+    ctx.from.id
+  )
 
-    !==
+if (!allowed)
+    ) {
 
-    env.ownerId.toString()
+      return ctx.answerCbQuery(
 
-  ) {
+        '❌ Accès refusé',
 
-    return ctx.answerCbQuery(
+        {
 
-      '❌ Accès refusé',
+          show_alert: true
 
-      {
+        }
 
-        show_alert: true
+      )
 
-      }
+    }
 
-    )
+    /*
+    |--------------------------------------------------------------------------
+    | PANEL
+    |--------------------------------------------------------------------------
+    */
 
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | PANEL
-  |--------------------------------------------------------------------------
-  */
-
-  await ctx.reply(
+    await ctx.reply(
 
 `
 👑 HACKWORLD ADMIN
@@ -67,126 +75,96 @@ async (ctx) => {
 ━━━━━━━━━━━━━━━━━━
 `,
 
-    Markup.inlineKeyboard([
+      Markup.inlineKeyboard([
 
-      [
+        [
 
-        Markup.button.callback(
-          '📦 Content',
-          'admin_content'
-        ),
+          Markup.button.callback(
+            '👥 Users',
+            'admin_users'
+          ),
 
-        Markup.button.callback(
-          '👥 Users',
-          'admin_users'
-        )
+          Markup.button.callback(
+            '🛡 Modération',
+            'admin_moderation'
+          )
 
-      ],
-	  
-	  [
-        Markup.button.callback(
-           '🛡 Modération',
-           'admin_moderation'
-        )
-      ],
-	  
-      [
+        ],
 
-        Markup.button.callback(
-          '🎫 Tickets',
-          'admin_tickets'
-        ),
-		
-		Markup.button.callback(
-          '🔒 Fermer Ticket',
-          'close_ticket'
-        ),
+        [
 
-        Markup.button.callback(
-          '💰 Economy',
-          'admin_economy'
-        ),
-		
-		Markup.button.callback(
-          '💰 Finance',
-          'admin_finance'
-        ),
-		
-		Markup.button.callback(
-          '🤖 Fraud Logs',
-          'fraud_logs'
-        )
+          Markup.button.callback(
+            '🎫 Tickets',
+            'support_panel'
+          ),
 
-      ],
+          Markup.button.callback(
+            '📊 Logs',
+            'admin_logs'
+          )
 
-      [
+        ],
 
-        Markup.button.callback(
-          '🛒 Shop',
-          'admin_shop'
-        ),
+        [
 
-        Markup.button.callback(
-          '🎰 Casino',
-          'admin_casino'
-        )
+          Markup.button.callback(
+            '💰 Finance',
+            'admin_finance'
+          ),
 
-      ],
+          Markup.button.callback(
+            '🛒 Shop',
+            'admin_shop'
+          )
 
-      [
+        ],
 
-        Markup.button.callback(
-          '🎁 Lootbox',
-          'admin_lootbox'
-        ),
+        [
 
-        Markup.button.callback(
-          '👮 Staff',
-          'admin_staff'
-        )
+          Markup.button.callback(
+            '🎰 Casino',
+            'admin_casino'
+          ),
 
-      ],
+          Markup.button.callback(
+            '📦 Market',
+            'market_analytics'
+          )
 
-      [
+        ],
 
-        Markup.button.callback(
-          '📊 Dashboard',
-          'admin_dashboard'
-        ),
+        [
 
-        Markup.button.callback(
-          '📜 Logs',
-          'admin_logs'
-        )
+          Markup.button.callback(
+            '🤖 Fraud Logs',
+            'fraud_logs'
+          ),
 
-      ],
+          Markup.button.callback(
+            '⚙️ Settings',
+            'admin_settings'
+          )
 
-      [
+        ],
 
-        Markup.button.callback(
-          '🔒 Security',
-          'admin_security'
-        ),
+        [
 
-        Markup.button.callback(
-          '⚙️ Settings',
-          'admin_settings'
-        )
+          Markup.button.callback(
+            '📢 Broadcast',
+            'admin_broadcast'
+          )
 
-      ],
+        ]
 
-      [
+      ])
 
-        Markup.button.callback(
-          '📢 Broadcast',
-          'admin_broadcast'
-        )
+    )
 
-      ]
+  } catch (error) {
 
-    ])
+    console.log(error)
 
-  )
+  }
 
 }
 

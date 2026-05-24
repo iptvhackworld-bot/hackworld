@@ -3,6 +3,54 @@ require('telegraf')
 
 const {
 
+  removeMoney
+
+} = require(
+  '../services/walletService'
+)
+
+const {
+
+  createReview
+
+} = require(
+  '../services/reviewService'
+)
+
+const {
+
+  createPurchase
+
+} = require(
+  '../services/purchaseService'
+)
+
+const {
+
+  createLog
+
+} = require(
+  '../services/logService'
+)
+
+const {
+
+  checkCooldown
+
+} = require(
+  '../middlewares/securityMiddleware'
+)
+
+const {
+
+  containsBlacklistedWord
+
+} = require(
+  '../middlewares/blacklistMiddleware'
+)
+
+const {
+
   createListing,
 
   getListings,
@@ -13,7 +61,9 @@ const {
 
   addSellerReview,
 
-  featureListing
+  searchListings,
+
+  getCategoryListings
 
 } = require(
   '../services/marketService'
@@ -21,48 +71,18 @@ const {
 
 const {
 
-  removeMoney,
-
-  addMoney
+  getNotificationUsers
 
 } = require(
-  '../services/walletService'
+  '../services/notificationService'
 )
 
 const {
 
-  createMarketEscrow
+  isPremium
 
 } = require(
-  '../services/escrowService'
-)
-
-const {
-
-  getDigitalProduct,
-
-  markDelivered
-
-} = require(
-  '../services/deliveryService'
-)
-
-const {
-
-  autoFlagUser
-
-} = require(
-  '../services/fraudService'
-)
-
-const {
-
-  addTrustScore,
-
-  removeTrustScore
-
-} = require(
-  '../services/trustService'
+  '../services/premiumService'
 )
 
 /*
@@ -86,7 +106,9 @@ if (!global.marketSessions) {
 const openMarket =
 async (ctx) => {
 
-  await ctx.reply(
+  try {
+
+    await ctx.reply(
 
 `
 🛒 MARKETPLACE
@@ -98,229 +120,416 @@ async (ctx) => {
 ━━━━━━━━━━━━━━━━━━
 `,
 
-Markup.inlineKeyboard([
+      Markup.inlineKeyboard([
 
-  [
+        [
 
-    Markup.button.callback(
-      '➕ Créer annonce',
-      'create_listing'
+          Markup.button.callback(
+            '➕ Créer annonce',
+            'create_listing'
+          )
+
+        ],
+
+        [
+
+          Markup.button.callback(
+            '📜 Voir annonces',
+            'view_market'
+          )
+
+        ],
+
+        [
+
+          Markup.button.callback(
+            '📊 Analytics',
+            'market_analytics'
+          )
+
+        ],
+
+        [
+
+          Markup.button.callback(
+            '📂 Catégories',
+            'market_categories'
+          )
+
+        ]
+
+      ])
+
     )
 
-  ],
+  } catch (error) {
 
-  [
+    console.log(error)
 
-    Markup.button.callback(
-      '📜 Voir annonces',
-      'view_market'
-    )
-
-  ],
-  
-  [
-    Markup.button.callback(
-      '📈 Analytics',
-      'market_analytics'
-    )
-  ],
-
-  [
-
-    Markup.button.callback(
-      '🚀 Booster annonce',
-      'feature_listing'
-    )
-
-  ]
-
-])
-
-  )
+  }
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| CREATE LISTING PANEL
+| CREATE PANEL
 |--------------------------------------------------------------------------
 */
 
 const createListingPanel =
 async (ctx) => {
 
-  global.marketSessions[
-    ctx.from.id
-  ] = {
+  try {
 
-    action:
-    'create_listing'
+    global.marketSessions[
+      ctx.from.id
+    ] = {
 
-  }
+      action:
+      'create_listing',
 
-  await ctx.reply(
+      step: 1
+
+    }
+
+    await ctx.reply(
 `
 📦 Envoyez :
 
-titre | prix
+titre | prix | catégorie
 
 Exemple :
 
-Netflix Premium | 50
+Netflix Premium | 50 | Accounts
 `
-  )
+    )
 
-}
+  } catch (error) {
 
-/*
-|--------------------------------------------------------------------------
-| FEATURE LISTING PANEL
-|--------------------------------------------------------------------------
-*/
-
-const featureListingPanel =
-async (ctx) => {
-
-  global.marketSessions[
-    ctx.from.id
-  ] = {
-
-    action:
-    'feature_listing'
+    console.log(error)
 
   }
 
-  await ctx.reply(
-`
-🚀 Envoyez ID annonce.
-`
-  )
-
 }
 
 /*
 |--------------------------------------------------------------------------
-| HANDLE MARKET INPUT
+| HANDLE INPUT
 |--------------------------------------------------------------------------
 */
 
 const handleMarketInput =
 async (ctx) => {
 
-  const session =
+  try {
 
-    global.marketSessions[
-      ctx.from.id
-    ]
+    const session =
 
-  if (!session) {
+      global.marketSessions[
+        ctx.from.id
+      ]
 
-    return false
+    if (!session) {
 
-  }
+      return false
 
-  /*
-  |--------------------------------------------------------------------------
-  | CREATE LISTING
-  |--------------------------------------------------------------------------
-  */
+    }
 
-  if (
-
-    session.action ===
-    'create_listing'
-
-  ) {
-
-    const args =
-      ctx.message.text.split('|')
+    /*
+    |--------------------------------------------------------------------------
+    | STEP 1
+    |--------------------------------------------------------------------------
+    */
 
     if (
 
-      args.length < 2
+      session.action ===
+      'create_listing'
+
+      &&
+
+      session.step === 1
 
     ) {
 
-      return ctx.reply(
+      const args =
+        ctx.message.text.split('|')
+
+      if (
+
+        args.length < 3
+
+      ) {
+
+        return ctx.reply(
 `
 ❌ Format invalide.
+
+Format :
+
+titre | prix | catégorie
+`
+        )
+
+      }
+
+      const title =
+        args[0].trim()
+
+      /*
+      |--------------------------------------------------------------------------
+      | BLACKLIST
+      |--------------------------------------------------------------------------
+      */
+
+      if (
+
+        containsBlacklistedWord(
+          title
+        )
+
+      ) {
+
+        return ctx.reply(
+`
+❌ Contenu interdit détecté.
+`
+        )
+
+      }
+
+      const price =
+        Number(
+          args[1]
+        )
+
+      const category =
+        args[2]?.trim()
+
+        || 'Other'
+
+      if (
+
+        isNaN(price)
+
+      ) {
+
+        return ctx.reply(
+`
+❌ Prix invalide.
+`
+        )
+
+      }
+
+      session.title =
+        title
+
+      session.price =
+        price
+
+      session.category =
+        category
+
+      session.step = 2
+
+      return ctx.reply(
+`
+📸 Envoyez maintenant l'image du produit.
 `
       )
 
     }
 
-    const title =
-      args[0].trim()
+    /*
+    |--------------------------------------------------------------------------
+    | IMAGE STEP
+    |--------------------------------------------------------------------------
+    */
 
-    const price =
-      Number(
-        args[1]
+    if (
+
+      session.action ===
+      'create_listing'
+
+      &&
+
+      session.step === 2
+
+    ) {
+
+      if (
+
+        !ctx.message.photo
+
+      ) {
+
+        return ctx.reply(
+`
+❌ Envoyez une image.
+`
+        )
+
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | COOLDOWN
+      |--------------------------------------------------------------------------
+      */
+
+      if (
+
+        !checkCooldown(
+
+          ctx.from.id,
+
+          'create_listing',
+
+          60
+
+        )
+
+      ) {
+
+        return ctx.reply(
+`
+⏳ Attendez avant de recréer une annonce.
+`
+        )
+
+      }
+
+      const photo =
+
+        ctx.message.photo[
+          ctx.message.photo.length - 1
+        ]
+
+      const fileId =
+        photo.file_id
+
+      /*
+      |--------------------------------------------------------------------------
+      | CREATE LISTING
+      |--------------------------------------------------------------------------
+      */
+
+      await createListing({
+
+        sellerId:
+        ctx.from.id,
+
+        sellerUsername:
+        ctx.from.username ||
+
+        'unknown',
+
+        title:
+        session.title,
+
+        price:
+        session.price,
+
+        category:
+        session.category,
+
+        imageUrl:
+        fileId
+
+      })
+
+      /*
+      |--------------------------------------------------------------------------
+      | NOTIFICATIONS
+      |--------------------------------------------------------------------------
+      */
+
+      const users =
+        getNotificationUsers()
+
+      for (const userId of users) {
+
+        try {
+
+          if (
+
+            Number(userId)
+
+            ===
+
+            ctx.from.id
+
+          ) {
+
+            continue
+
+          }
+
+          await ctx.telegram.sendMessage(
+
+            userId,
+
+`
+🆕 Nouvelle annonce
+
+📦 ${session.title}
+
+💰 ${session.price}$
+`
+          )
+
+        } catch (error) {
+
+          console.log(error)
+
+        }
+
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | CLEAN SESSION
+      |--------------------------------------------------------------------------
+      */
+
+      delete global.marketSessions[
+        ctx.from.id
+      ]
+
+      /*
+      |--------------------------------------------------------------------------
+      | LOG
+      |--------------------------------------------------------------------------
+      */
+
+      await createLog(
+
+        ctx.from.id,
+
+        ctx.from.username ||
+
+        'unknown',
+
+        'CREATE_LISTING',
+
+        `Création annonce ${session.title}`
+
       )
 
-    await createListing({
-
-      sellerId:
-      ctx.from.id,
-
-      sellerUsername:
-      ctx.from.username,
-
-      title,
-
-      price
-
-    })
-
-    delete global.marketSessions[
-      ctx.from.id
-    ]
-
-    return ctx.reply(
+      return ctx.reply(
 `
-✅ Annonce créée.
-
-📦 ${title}
-
-💰 ${price}$
+✅ Annonce créée avec image.
 `
-    )
+      )
 
-  }
+    }
 
-  /*
-  |--------------------------------------------------------------------------
-  | FEATURE LISTING
-  |--------------------------------------------------------------------------
-  */
+    return false
 
-  if (
+  } catch (error) {
 
-    session.action ===
-    'feature_listing'
-
-  ) {
-
-    const listingId =
-      ctx.message.text.trim()
-
-    await featureListing(
-
-      listingId,
-
-      7
-
-    )
-
-    delete global.marketSessions[
-      ctx.from.id
-    ]
-
-    return ctx.reply(
-`
-🚀 Annonce boostée
-pendant 7 jours.
-`
-    )
+    console.log(error)
 
   }
 
@@ -335,67 +544,178 @@ pendant 7 jours.
 const viewMarket =
 async (ctx) => {
 
-  const listings =
-    await getListings()
+  try {
 
-  listings.sort((a, b) => {
+    const listings =
+      await getListings()
 
-    return (
+    if (
 
-      b.featured -
+      !listings.length
 
-      a.featured
+    ) {
 
-    )
-
-  })
-
-  if (!listings.length) {
-
-    return ctx.reply(
+      return ctx.reply(
 `
 ❌ Aucune annonce.
 `
-    )
+      )
 
-  }
+    }
 
-  for (const item of listings) {
+    for (const item of listings) {
 
-    await ctx.reply(
+      if (item.imageUrl) {
 
+        await ctx.replyWithPhoto(
+
+          item.imageUrl,
+
+          {
+
+            caption:
 `
 ${item.featured
-? '🚀 FEATURED\n'
+? '⭐ FEATURED LISTING ⭐\n'
 : ''}
 
 📦 ${item.title}
 
+📂 ${item.category}
+
 👤 @${item.sellerUsername}
 
-${item.verifiedSeller
-? '👑 VERIFIED SELLER'
+${await isPremium(item.sellerId)
+? '👑 Premium Seller'
 : ''}
+
+${item.verifiedSeller
+? '✅ Vendeur vérifié'
+: '❌ Non vérifié'}
+
+💰 ${item.price}$
+
+⭐ ${item.averageRating || 0}/5
+
+📝 ${item.reviewCount || 0} avis
+`,
+
+            reply_markup:
+
+            Markup.inlineKeyboard([
+
+              [
+
+                Markup.button.callback(
+                  '💳 Acheter',
+                  `buy_market_${item._id}`
+                )
+
+              ],
+
+              [
+
+                Markup.button.callback(
+                  '❤️ Favori',
+                  `favorite_${item._id}`
+                )
+
+              ],
+
+              [
+
+                Markup.button.callback(
+                  '👤 Profil vendeur',
+                  `seller_${item.sellerId}`
+                )
+
+              ],
+
+              [
+
+                Markup.button.callback(
+                  '⭐ 5',
+                  `review_${item._id}_5`
+                ),
+
+                Markup.button.callback(
+                  '⭐ 4',
+                  `review_${item._id}_4`
+                ),
+
+                Markup.button.callback(
+                  '⭐ 3',
+                  `review_${item._id}_3`
+                )
+
+              ]
+
+            ]).reply_markup
+
+          }
+
+        )
+
+        continue
+
+      }
+
+      await ctx.reply(
+
+`
+${item.featured
+? '⭐ FEATURED LISTING ⭐\n'
+: ''}
+
+📦 ${item.title}
+
+📂 ${item.category}
+
+👤 @${item.sellerUsername}
 
 💰 ${item.price}$
 
 ━━━━━━━━━━━━━━━━━━
 `,
 
-Markup.inlineKeyboard([
+        Markup.inlineKeyboard([
 
-  [
+          [
 
-    Markup.button.callback(
-      '💳 Acheter',
-      `buy_market_${item._id}`
-    )
+            Markup.button.callback(
+              '💳 Acheter',
+              `buy_market_${item._id}`
+            )
 
-  ]
+          ],
 
-])
+          [
 
-    )
+            Markup.button.callback(
+              '❤️ Favori',
+              `favorite_${item._id}`
+            )
+
+          ],
+
+          [
+
+            Markup.button.callback(
+              '👤 Profil vendeur',
+              `seller_${item.sellerId}`
+            )
+
+          ]
+
+        ])
+
+      )
+
+    }
+
+  } catch (error) {
+
+    console.log(error)
 
   }
 
@@ -403,7 +723,7 @@ Markup.inlineKeyboard([
 
 /*
 |--------------------------------------------------------------------------
-| BUY MARKET ITEM
+| BUY
 |--------------------------------------------------------------------------
 */
 
@@ -416,244 +736,221 @@ async (
 
 ) => {
 
-  const item =
-    await getListing(id)
+  try {
 
-  if (
+    const item =
+      await getListing(id)
 
-    !item ||
+    if (
 
-    item.sold
+      !item ||
 
-  ) {
+      item.sold
 
-    return ctx.reply(
+    ) {
+
+      return ctx.reply(
 `
 ❌ Item indisponible.
 `
-    )
+      )
 
-  }
+    }
 
-  /*
-  |--------------------------------------------------------------------------
-  | PAYMENT
-  |--------------------------------------------------------------------------
-  */
-
-  const paid =
-    await removeMoney(
-
-      ctx.from.id,
-
-      item.price,
-
-      'Achat marketplace'
-
-    )
-
-  if (!paid) {
-
-    return ctx.reply(
-`
-❌ Solde insuffisant.
-`
-    )
-
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | CREATE ESCROW
-  |--------------------------------------------------------------------------
-  */
-
-  const escrow =
-    await createMarketEscrow(
-
-      ctx.from.id,
-
-      item.sellerId,
-
-      item.price,
-
-      item._id.toString()
-
-    )
-
-  /*
-  |--------------------------------------------------------------------------
-  | MARK SOLD
-  |--------------------------------------------------------------------------
-  */
-
-  await markSold(id)
-
-  /*
-  |--------------------------------------------------------------------------
-  | AUTO DELIVERY
-  |--------------------------------------------------------------------------
-  */
-
-  const digital =
-    await getDigitalProduct(
-
-      item._id.toString()
-
-    )
-
-  if (digital) {
-
-    try {
-
-      await ctx.telegram.sendMessage(
+    const paid =
+      await removeMoney(
 
         ctx.from.id,
 
-`
-🤖 AUTO DELIVERY
+        item.price,
 
-━━━━━━━━━━━━━━━━━━
-
-📦 Produit :
-
-${item.title}
-
-━━━━━━━━━━━━━━━━━━
-
-${digital.content}
-
-━━━━━━━━━━━━━━━━━━
-
-✅ Livraison automatique
-effectuée.
-`
+        'Marketplace achat'
 
       )
 
-    } catch (error) {}
+    if (!paid) {
 
-    /*
-    |--------------------------------------------------------------------------
-    | MARK DELIVERED
-    |--------------------------------------------------------------------------
-    */
-
-    await markDelivered(
-      digital._id
-    )
-
-    /*
-    |--------------------------------------------------------------------------
-    | COMPLETE ESCROW
-    |--------------------------------------------------------------------------
-    */
-
-    escrow.status =
-      'completed'
-
-    escrow.buyerConfirmed =
-      true
-
-    await escrow.save()
-
-    /*
-    |--------------------------------------------------------------------------
-    | PAY SELLER
-    |--------------------------------------------------------------------------
-    */
-
-    await addMoney(
-
-      escrow.sellerId,
-
-      escrow.amount,
-
-      'Auto delivery payout'
-
-    )
-
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | FINAL MESSAGE
-  |--------------------------------------------------------------------------
-  */
-
-  await ctx.reply(
-
+      return ctx.reply(
 `
-💰 Escrow créé.
+❌ Solde insuffisant.
+`
+      )
 
-🆔 ${escrow._id}
+    }
+
+    await markSold(id)
+
+    await createPurchase({
+
+      buyerId:
+      ctx.from.id,
+
+      buyerUsername:
+      ctx.from.username ||
+
+      'unknown',
+
+      sellerId:
+      item.sellerId,
+
+      sellerUsername:
+      item.sellerUsername,
+
+      listingId:
+      item._id,
+
+      title:
+      item.title,
+
+      category:
+      item.category,
+
+      price:
+      item.price
+
+    })
+
+    await createLog(
+
+      ctx.from.id,
+
+      ctx.from.username ||
+
+      'unknown',
+
+      'BUY_ITEM',
+
+      `Achat de ${item.title}`
+
+    )
+
+    await ctx.reply(
+`
+✅ Achat effectué.
 
 📦 ${item.title}
 
 👤 vendeur :
 @${item.sellerUsername}
-
-💰 ${item.price}$
-
-━━━━━━━━━━━━━━━━━━
-`,
-
-Markup.inlineKeyboard([
-
-  [
-
-    Markup.button.callback(
-      '📦 Livraison reçue',
-      `market_delivered_${escrow._id}`
+`
     )
 
-  ],
+  } catch (error) {
 
-  [
+    console.log(error)
 
-    Markup.button.callback(
-      '⚠️ Ouvrir dispute',
-      `market_dispute_${escrow._id}`
+  }
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| REVIEW PRODUCT
+|--------------------------------------------------------------------------
+*/
+
+const reviewProduct =
+async (
+
+  ctx,
+
+  listingId,
+
+  rating
+
+) => {
+
+  try {
+
+    const listing =
+      await getListing(
+        listingId
+      )
+
+    if (!listing) {
+
+      return ctx.reply(
+`
+❌ Produit introuvable.
+`
+      )
+
+    }
+
+    if (
+
+      !checkCooldown(
+
+        ctx.from.id,
+
+        'review',
+
+        30
+
+      )
+
+    ) {
+
+      return ctx.reply(
+`
+⏳ Attendez avant de renoter.
+`
+      )
+
+    }
+
+    const created =
+      await createReview(
+
+        ctx.from.id,
+
+        listing.sellerId,
+
+        listingId,
+
+        rating,
+
+        ''
+
+      )
+
+    if (!created) {
+
+      return ctx.reply(
+`
+❌ Vous avez déjà noté ce produit.
+`
+      )
+
+    }
+
+    await createLog(
+
+      ctx.from.id,
+
+      ctx.from.username ||
+
+      'unknown',
+
+      'REVIEW_PRODUCT',
+
+      `Review ${rating}/5 pour ${listing.title}`
+
     )
 
-  ],
+    await ctx.reply(
+`
+⭐ Avis ajouté :
 
-  [
-
-    Markup.button.callback(
-      '⭐ 1',
-      `rate_${item._id}_1`
-    ),
-
-    Markup.button.callback(
-      '⭐ 2',
-      `rate_${item._id}_2`
-    ),
-
-    Markup.button.callback(
-      '⭐ 3',
-      `rate_${item._id}_3`
+${rating}/5
+`
     )
 
-  ],
+  } catch (error) {
 
-  [
+    console.log(error)
 
-    Markup.button.callback(
-      '⭐ 4',
-      `rate_${item._id}_4`
-    ),
-
-    Markup.button.callback(
-      '⭐ 5',
-      `rate_${item._id}_5`
-    )
-
-  ]
-
-])
-
-  )
+  }
 
 }
 
@@ -674,195 +971,164 @@ async (
 
 ) => {
 
-  const item =
-    await getListing(id)
+  try {
 
-  if (!item) {
+    const item =
+      await getListing(id)
 
-    return ctx.reply(
+    if (!item) {
+
+      return ctx.reply(
 `
 ❌ Vente introuvable.
 `
+      )
+
+    }
+
+    await addSellerReview(
+
+      item.sellerId,
+
+      rating
+
     )
 
-  }
-
-  await addSellerReview(
-
-    item.sellerId,
-
-    rating
-
-  )
-
-  await ctx.reply(
+    await ctx.reply(
 `
-⭐ Note envoyée :
+⭐ Note vendeur envoyée :
 
 ${rating}/5
 `
-  )
+    )
+
+  } catch (error) {
+
+    console.log(error)
+
+  }
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| DELIVERY CONFIRM
+| SEARCH MARKET
 |--------------------------------------------------------------------------
 */
 
-const marketDeliveryHandler =
+const searchMarket =
 async (
 
   ctx,
 
-  escrowId
+  query
 
 ) => {
 
-  const Escrow =
-  require(
-    '../models/Escrow'
-  )
+  try {
 
-  const escrow =
-    await Escrow.findById(
-      escrowId
-    )
+    const listings =
+      await searchListings(
+        query
+      )
 
-  if (!escrow) {
+    if (!listings.length) {
 
-    return ctx.reply(
+      return ctx.reply(
 `
-❌ Escrow introuvable.
+❌ Aucun résultat.
 `
-    )
+      )
+
+    }
+
+    for (const item of listings) {
+
+      await ctx.reply(
+
+`
+${item.featured
+? '⭐ FEATURED LISTING ⭐\n'
+: ''}
+
+📦 ${item.title}
+
+📂 ${item.category}
+
+💰 ${item.price}$
+
+👤 @${item.sellerUsername}
+`
+      )
+
+    }
+
+  } catch (error) {
+
+    console.log(error)
 
   }
-
-  escrow.status =
-    'completed'
-
-  escrow.buyerConfirmed =
-    true
-
-  await escrow.save()
-  
-  /*
-|--------------------------------------------------------------------------
-| TRUST SCORE
-|--------------------------------------------------------------------------
-*/
-
-await addTrustScore(
-
-  escrow.sellerId,
-
-  10
-
-)
-
-  /*
-  |--------------------------------------------------------------------------
-  | PAY SELLER
-  |--------------------------------------------------------------------------
-  */
-
-  await addMoney(
-
-    escrow.sellerId,
-
-    escrow.amount,
-
-    'Marketplace escrow'
-
-  )
-
-  await ctx.reply(
-`
-✅ Livraison confirmée.
-
-💰 Fonds envoyés
-au vendeur.
-`
-  )
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| MARKET DISPUTE
+| OPEN CATEGORY
 |--------------------------------------------------------------------------
 */
 
-const marketDisputeHandler =
+const openCategory =
 async (
 
   ctx,
 
-  escrowId
+  category
 
 ) => {
 
-  const Escrow =
-  require(
-    '../models/Escrow'
-  )
+  try {
 
-  const escrow =
-    await Escrow.findById(
-      escrowId
-    )
+    const listings =
+      await getCategoryListings(
+        category
+      )
 
-  if (!escrow) {
+    if (!listings.length) {
 
-    return ctx.reply(
+      return ctx.reply(
 `
-❌ Escrow introuvable.
+❌ Aucun produit dans cette catégorie.
 `
-    )
+      )
+
+    }
+
+    for (const item of listings) {
+
+      await ctx.reply(
+
+`
+${item.featured
+? '⭐ FEATURED LISTING ⭐\n'
+: ''}
+
+📦 ${item.title}
+
+📂 ${item.category}
+
+💰 ${item.price}$
+
+👤 @${item.sellerUsername}
+`
+      )
+
+    }
+
+  } catch (error) {
+
+    console.log(error)
 
   }
-
-  escrow.disputed =
-    true
-
-  escrow.status =
-    'dispute'
-
-  await escrow.save()
-  
-  /*
-|--------------------------------------------------------------------------
-| AUTO FRAUD CHECK
-|--------------------------------------------------------------------------
-*/
-
-await autoFlagUser(
-
-  escrow.sellerId,
-
-  'Marketplace dispute opened',
-
-  25
-
-)
-
-await removeTrustScore(
-
-  escrow.sellerId,
-
-  15
-
-)
-
-  await ctx.reply(
-`
-⚠️ Dispute ouverte.
-
-Un admin interviendra.
-`
-  )
 
 }
 
@@ -872,18 +1138,18 @@ module.exports = {
 
   createListingPanel,
 
-  featureListingPanel,
-
   handleMarketInput,
 
   viewMarket,
 
   buyMarketItem,
 
+  reviewProduct,
+
   rateSeller,
 
-  marketDeliveryHandler,
+  searchMarket,
 
-  marketDisputeHandler
+  openCategory
 
 }

@@ -50,6 +50,29 @@ require('./core/scheduler')
 const connectDatabase =
 require('./database/connect')
 
+const securityMiddleware =
+require(
+  './middlewares/securityMiddleware'
+)
+
+const antiSpamMiddleware =
+require(
+  './middlewares/antiSpamMiddleware'
+)
+
+const {
+
+  logError
+
+} = require(
+  './utils/logger'
+)
+
+const autoModerationMiddleware =
+require(
+  './middlewares/autoModerationMiddleware'
+)
+
 /*
 |--------------------------------------------------------------------------
 | BOT
@@ -62,6 +85,28 @@ new Telegraf(
   env.botToken
 
 )
+
+const xpMiddleware =
+require(
+  './middlewares/xpMiddleware'
+)
+
+bot.use(
+  securityMiddleware
+)
+
+bot.use(
+  antiSpamMiddleware
+)
+
+bot.use(
+  autoModerationMiddleware
+)
+
+bot.use(
+  xpMiddleware
+)
+
 
 /*
 |--------------------------------------------------------------------------

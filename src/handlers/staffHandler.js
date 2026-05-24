@@ -1,163 +1,303 @@
-const { Markup } = require('telegraf')
+const {
+
+  setRole,
+
+  banUser,
+
+  unbanUser,
+
+  muteUser,
+
+  unmuteUser
+
+} = require(
+  '../services/staffService'
+)
 
 const {
 
-  getTopUsers
+  logStaffAction
 
-} = require('./userHandler')
+} = require(
+  '../utils/staffLogger'
+)
 
-/*
-|--------------------------------------------------------------------------
-| OPEN STAFF MENU
-|--------------------------------------------------------------------------
-*/
+const {
 
-const openStaffMenu = async (ctx) => {
+  createLog
 
-  await ctx.reply(
-`
-╔══════════════════╗
-       STAFF PANEL
-╚══════════════════╝
-
-🛡 Gestion équipe
-`,
-    Markup.inlineKeyboard([
-
-      [
-        Markup.button.callback(
-          '👑 Liste Admins',
-          'show_admins'
-        )
-      ],
-
-      [
-        Markup.button.callback(
-          '🛡 Liste Modérateurs',
-          'show_mods'
-        )
-      ],
-
-      [
-        Markup.button.callback(
-          '🏆 Top Utilisateurs',
-          'show_top_users'
-        )
-      ],
-
-      [
-        Markup.button.callback(
-          '🔙 Retour',
-          'back_menu'
-        )
-      ]
-
-    ])
-  )
-}
+} = require(
+  '../services/logService'
+)
 
 /*
 |--------------------------------------------------------------------------
-| ADMINS
+| PROMOTE ADMIN
 |--------------------------------------------------------------------------
 */
 
-const showAdmins = async (ctx) => {
+const promoteAdmin =
+async (
 
-  await ctx.reply(
+  ctx,
+
+  userId
+
+) => {
+	
+	logStaffAction(
+
+  'PROMOTE',
+
+  ctx.from.id,
+
+  userId
+
+)
+
+  try {
+
+    await setRole(
+
+      userId,
+
+      'admin'
+
+    )
+
+    await ctx.reply(
 `
-👑 LISTE ADMINS
-
-━━━━━━━━━━━━━━━━━━
-
-👤 HackWorld
-🆔 ${env.ownerId}
-`
-  )
-}
-
-/*
-|--------------------------------------------------------------------------
-| MODS
-|--------------------------------------------------------------------------
-*/
-
-const showModerators = async (ctx) => {
-
-  await ctx.reply(
-`
-🛡 LISTE MODÉRATEURS
-
-━━━━━━━━━━━━━━━━━━
-
-⚠️ Aucun modérateur.
-`
-  )
-}
-
-/*
-|--------------------------------------------------------------------------
-| TOP USERS
-|--------------------------------------------------------------------------
-*/
-
-const showTopUsers = async (ctx) => {
-
-  const users = getTopUsers()
-
-  /*
-  |--------------------------------------------------------------------------
-  | EMPTY
-  |--------------------------------------------------------------------------
-  */
-
-  if (users.length === 0) {
-
-    return ctx.reply(
-`
-❌ Aucun utilisateur.
+✅ Utilisateur promu admin.
 `
     )
 
+  } catch (error) {
+
+    console.log(error)
+
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | BUILD MESSAGE
-  |--------------------------------------------------------------------------
-  */
+}
 
-  let message =
+/*
+|--------------------------------------------------------------------------
+| BAN
+|--------------------------------------------------------------------------
+*/
+
+const banMember =
+async (
+
+  ctx,
+
+  userId
+
+) => {
+	
+	await createLog(
+
+  'staff',
+
+  ctx.from.id,
+
+  'BAN',
+
+  `Target: ${userId}`
+
+)
+	
+	logStaffAction(
+
+  'BAN',
+
+  ctx.from.id,
+
+  userId
+
+)
+
+  try {
+
+    await banUser(userId)
+
+    await ctx.reply(
 `
-🏆 TOP 30 UTILISATEURS
-
-━━━━━━━━━━━━━━━━━━
+🚫 Utilisateur banni.
 `
+    )
 
-  users.forEach((user, index) => {
+  } catch (error) {
 
-    message +=
+    console.log(error)
+
+  }
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| MUTE
+|--------------------------------------------------------------------------
+*/
+
+const muteMember =
+async (
+
+  ctx,
+
+  userId
+
+) => {
+	
+	logStaffAction(
+
+  'MUTE',
+
+  ctx.from.id,
+
+  userId
+
+)
+
+  try {
+
+    await muteUser(userId)
+
+    await ctx.reply(
 `
-${index + 1}. @${user.username}
-
-⭐ XP : ${user.xp}
-🏆 Niveau : ${user.level}
-💬 Messages : ${user.messages}
-
+🔇 Utilisateur mute.
 `
-  })
+    )
 
-  await ctx.reply(message)
+  } catch (error) {
+
+    console.log(error)
+
+  }
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| UNBAN
+|--------------------------------------------------------------------------
+*/
+
+const unbanMember =
+async (
+
+  ctx,
+
+  userId
+
+) => {
+
+  try {
+
+    await unbanUser(
+      userId
+    )
+
+    await ctx.reply(
+`
+✅ Utilisateur débanni.
+`
+    )
+
+  } catch (error) {
+
+    console.log(error)
+
+  }
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| UNMUTE
+|--------------------------------------------------------------------------
+*/
+
+const unmuteMember =
+async (
+
+  ctx,
+
+  userId
+
+) => {
+
+  try {
+
+    await unmuteUser(
+      userId
+    )
+
+    await ctx.reply(
+`
+✅ Utilisateur unmute.
+`
+    )
+
+  } catch (error) {
+
+    console.log(error)
+
+  }
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| DEMOTE
+|--------------------------------------------------------------------------
+*/
+
+const demoteAdmin =
+async (
+
+  ctx,
+
+  userId
+
+) => {
+
+  try {
+
+    await setRole(
+
+      userId,
+
+      'user'
+
+    )
+
+    await ctx.reply(
+`
+✅ Admin rétrogradé.
+`
+    )
+
+  } catch (error) {
+
+    console.log(error)
+
+  }
+
 }
 
 module.exports = {
 
-  openStaffMenu,
+  promoteAdmin,
 
-  showAdmins,
+  banMember,
 
-  showModerators,
+  muteMember
+  
+  unbanMember,
 
-  showTopUsers
+  unmuteMember,
+
+  demoteAdmin
 
 }

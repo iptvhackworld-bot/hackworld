@@ -6,75 +6,91 @@ const {
   '../services/logService'
 )
 
+const env =
+require(
+  '../config/env'
+)
+
 /*
 |--------------------------------------------------------------------------
-| SHOW LOGS
+| OPEN LOGS
 |--------------------------------------------------------------------------
 */
 
-const showLogs =
+const openLogs =
 async (ctx) => {
 
-  const logs =
-    await getLogs()
+  try {
 
-  /*
-  |--------------------------------------------------------------------------
-  | EMPTY
-  |--------------------------------------------------------------------------
-  */
+    if (
 
-  if (
-    logs.length === 0
-  ) {
+      ctx.from.id.toString()
 
-    return ctx.reply(
+      !==
+
+      env.ownerId
+
+    ) {
+
+      return
+    }
+
+    const logs =
+      await getLogs()
+
+    if (!logs.length) {
+
+      return ctx.reply(
 `
 ❌ Aucun log.
 `
-    )
+      )
 
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | MESSAGE
-  |--------------------------------------------------------------------------
-  */
-
-  let message =
-`
-📜 LOGS
-
-━━━━━━━━━━━━━━━━━━
-
-`
-
-  logs.slice(0, 20)
-  .forEach(
-
-    (log) => {
-
-      message +=
-`
-📌 ${log.type}
-
-📝 ${log.message}
-
-━━━━━━━━━━━━━━━━━━
-`
     }
 
-  )
+    let message =
+`
+📜 ADMIN LOGS
 
-  await ctx.reply(
-    message
-  )
+━━━━━━━━━━━━━━━━━━
+`
+
+    logs.forEach(
+
+      (log) => {
+
+        message +=
+`
+👤 ${log.username}
+
+⚡ ${log.action}
+
+📝 ${log.details}
+
+📅 ${log.createdAt
+.toLocaleDateString()}
+
+━━━━━━━━━━━━━━━━━━
+`
+
+      }
+
+    )
+
+    await ctx.reply(
+      message
+    )
+
+  } catch (error) {
+
+    console.log(error)
+
+  }
 
 }
 
 module.exports = {
 
-  showLogs
+  openLogs
 
 }

@@ -1,7 +1,7 @@
 const mongoose =
 require('mongoose')
 
-const questSchema =
+const premiumSchema =
 new mongoose.Schema({
 
   /*
@@ -14,75 +14,43 @@ new mongoose.Schema({
 
     type: Number,
 
+    unique: true,
+
     required: true
 
   },
 
   /*
   |--------------------------------------------------------------------------
-  | QUEST
+  | TYPE
   |--------------------------------------------------------------------------
   */
 
-  type: {
+  plan: {
 
     type: String,
 
-    required: true
-
-  },
-
-  description: {
-
-    type: String,
-
-    required: true
-
-  },
-
-  goal: {
-
-    type: Number,
-
-    default: 1
-
-  },
-
-  progress: {
-
-    type: Number,
-
-    default: 0
-
-  },
-
-  reward: {
-
-    type: Number,
-
-    default: 0
-
-  },
-
-  completed: {
-
-    type: Boolean,
-
-    default: false
-
-  },
-
-  claimed: {
-
-    type: Boolean,
-
-    default: false
+    default: 'gold'
 
   },
 
   /*
   |--------------------------------------------------------------------------
-  | DATES
+  | EXPIRATION
+  |--------------------------------------------------------------------------
+  */
+
+  expiresAt: {
+
+    type: Date,
+
+    required: true
+
+  },
+
+  /*
+  |--------------------------------------------------------------------------
+  | DATE
   |--------------------------------------------------------------------------
   */
 
@@ -99,8 +67,8 @@ new mongoose.Schema({
 module.exports =
 mongoose.model(
 
-  'Quest',
+  'Premium',
 
-  questSchema
+  premiumSchema
 
 )

@@ -1,64 +1,138 @@
-const os =
-require('os')
+const User =
+require(
+  '../models/User'
+)
 
-const {
+const Log =
+require(
+  '../models/Log'
+)
 
-  getTotalUsers
-
-} = require(
-  '../services/statsService'
+const MarketListing =
+require(
+  '../models/MarketListing'
 )
 
 /*
 |--------------------------------------------------------------------------
-| DASHBOARD
+| ADMIN DASHBOARD
 |--------------------------------------------------------------------------
 */
 
 const openDashboard =
 async (ctx) => {
 
-  const users =
-    await getTotalUsers()
+  try {
 
-  const uptime =
-    process.uptime()
+    /*
+    |--------------------------------------------------------------------------
+    | LOAD DATA
+    |--------------------------------------------------------------------------
+    */
 
-  const ram =
-    (
-      os.totalmem() /
-      1024 /
-      1024 /
-      1024
-    ).toFixed(2)
+    const totalUsers =
+      await User.countDocuments()
 
-  await ctx.reply(
+    const totalLogs =
+      await Log.countDocuments()
+
+    const totalListings =
+      await MarketListing.countDocuments()
+
+    /*
+    |--------------------------------------------------------------------------
+    | ECONOMY
+    |--------------------------------------------------------------------------
+    */
+
+    const users =
+      await User.find()
+
+    let totalMoney = 0
+
+    let totalXP = 0
+
+    users.forEach((user) => {
+
+      totalMoney +=
+        user.money || 0
+
+      totalXP +=
+        user.xp || 0
+
+    })
+
+    /*
+    |--------------------------------------------------------------------------
+    | TOP USER
+    |--------------------------------------------------------------------------
+    */
+
+    const topUser =
+      users.sort(
+
+        (a, b) =>
+
+          (b.xp || 0)
+
+          -
+
+          (a.xp || 0)
+
+      )[0]
+
+    /*
+    |--------------------------------------------------------------------------
+    | MESSAGE
+    |--------------------------------------------------------------------------
+    */
+
+    await ctx.reply(
 `
-📊 LIVE DASHBOARD
+📊 HACKWORLD DASHBOARD
 
 ━━━━━━━━━━━━━━━━━━
 
-👥 Users :
-${users}
+👥 Utilisateurs :
+${totalUsers}
 
-🟢 Status :
-ONLINE
+📦 Listings :
+${totalListings}
 
-⚡ Uptime :
-${Math.floor(uptime)} sec
-
-💾 RAM :
-${ram} GB
-
-🌐 Webhook :
-ACTIVE
-
-🗄 MongoDB :
-CONNECTED
+📜 Logs :
+${totalLogs}
 
 ━━━━━━━━━━━━━━━━━━
+
+💰 Argent total :
+${totalMoney}$
+
+⭐ XP total :
+${totalXP}
+
+━━━━━━━━━━━━━━━━━━
+
+🏆 Top utilisateur :
+
+${
+  topUser
+
+  ? `@${topUser.username}`
+
+  : 'Aucun'
+}
+
+━━━━━━━━━━━━━━━━━━
+
+🚀 Système opérationnel
 `
-  )
+    )
+
+  } catch (error) {
+
+    console.log(error)
+
+  }
 
 }
 

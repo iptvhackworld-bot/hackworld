@@ -1,244 +1,114 @@
-const User =
-require(
-  '../models/User'
-)
+const {
 
-const CryptoWallet =
-require(
-  '../models/CryptoWallet'
+  getTopMoney,
+
+  getTopMessages
+
+} = require(
+  '../services/leaderboardService'
 )
 
 /*
 |--------------------------------------------------------------------------
-| TOP MONEY
+| MONEY LEADERBOARD
 |--------------------------------------------------------------------------
 */
 
 const openMoneyLeaderboard =
 async (ctx) => {
 
-  const users =
-    await User.find()
+  try {
 
-    .sort({
+    const users =
+      await getTopMoney()
 
-      money: -1
-
-    })
-
-    .limit(10)
-
-  let text =
+    let message =
 `
-💰 TOP RICH USERS
+💰 TOP MONEY
 
 ━━━━━━━━━━━━━━━━━━
-
 `
 
-  users.forEach(
+    users.forEach(
 
-    (user, index) => {
+      (user, index) => {
 
-      text +=
+        message +=
 `
 #${index + 1}
 
-👤 @${user.username}
+@${user.username || 'unknown'}
 
-💰 ${user.money}$
+💵 ${user.money || 0}$
 
 ━━━━━━━━━━━━━━━━━━
 `
 
-    }
+      }
 
-  )
+    )
 
-  await ctx.reply(text)
+    await ctx.reply(
+      message
+    )
+
+  } catch (error) {
+
+    console.log(error)
+
+  }
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| TOP SELLERS
+| MESSAGE LEADERBOARD
 |--------------------------------------------------------------------------
 */
 
-const openSellerLeaderboard =
+const openMessageLeaderboard =
 async (ctx) => {
 
-  const users =
-    await User.find()
+  try {
 
-    .sort({
+    const users =
+      await getTopMessages()
 
-      sellerSales: -1
-
-    })
-
-    .limit(10)
-
-  let text =
+    let message =
 `
-📈 TOP SELLERS
+💬 TOP MESSAGES
 
 ━━━━━━━━━━━━━━━━━━
-
 `
 
-  users.forEach(
+    users.forEach(
 
-    (user, index) => {
+      (user, index) => {
 
-      text +=
+        message +=
 `
 #${index + 1}
 
-👤 @${user.username}
+@${user.username || 'unknown'}
 
-📦 ${user.sellerSales}
-
-━━━━━━━━━━━━━━━━━━
-`
-
-    }
-
-  )
-
-  await ctx.reply(text)
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| TOP XP
-|--------------------------------------------------------------------------
-*/
-
-const openXpLeaderboard =
-async (ctx) => {
-
-  const users =
-    await User.find()
-
-    .sort({
-
-      xp: -1
-
-    })
-
-    .limit(10)
-
-  let text =
-`
-⭐ TOP XP
-
-━━━━━━━━━━━━━━━━━━
-
-`
-
-  users.forEach(
-
-    (user, index) => {
-
-      text +=
-`
-#${index + 1}
-
-👤 @${user.username}
-
-⭐ ${user.xp}
+💬 ${user.messages || 0}
 
 ━━━━━━━━━━━━━━━━━━
 `
 
-    }
+      }
 
-  )
+    )
 
-  await ctx.reply(text)
+    await ctx.reply(
+      message
+    )
 
-}
+  } catch (error) {
 
-/*
-|--------------------------------------------------------------------------
-| TOP CRYPTO
-|--------------------------------------------------------------------------
-*/
+    console.log(error)
 
-const openCryptoLeaderboard =
-async (ctx) => {
-
-  const wallets =
-    await CryptoWallet.find()
-
-    .limit(10)
-
-  wallets.sort((a, b) => {
-
-    const totalA =
-
-      a.btc +
-
-      a.eth +
-
-      a.usdt +
-
-      a.ltc
-
-    const totalB =
-
-      b.btc +
-
-      b.eth +
-
-      b.usdt +
-
-      b.ltc
-
-    return totalB - totalA
-
-  })
-
-  let text =
-`
-💳 TOP CRYPTO
-
-━━━━━━━━━━━━━━━━━━
-
-`
-
-  wallets.forEach(
-
-    (wallet, index) => {
-
-      const total =
-
-        wallet.btc +
-
-        wallet.eth +
-
-        wallet.usdt +
-
-        wallet.ltc
-
-      text +=
-`
-#${index + 1}
-
-👤 ${wallet.userId}
-
-💰 ${total}
-
-━━━━━━━━━━━━━━━━━━
-`
-
-    }
-
-  )
-
-  await ctx.reply(text)
+  }
 
 }
 
@@ -246,10 +116,6 @@ module.exports = {
 
   openMoneyLeaderboard,
 
-  openSellerLeaderboard,
-
-  openXpLeaderboard,
-
-  openCryptoLeaderboard
+  openMessageLeaderboard
 
 }

@@ -3,6 +3,16 @@ require(
   '../models/Escrow'
 )
 
+const {
+
+  addMoney,
+
+  removeMoney
+
+} = require(
+  './walletService'
+)
+
 /*
 |--------------------------------------------------------------------------
 | CREATE ESCROW
@@ -10,25 +20,21 @@ require(
 */
 
 const createEscrow =
-async (
+async (data) => {
 
-  buyerId,
+  try {
 
-  sellerId,
+    return await Escrow.create(
+      data
+    )
 
-  amount
+  } catch (error) {
 
-) => {
+    console.log(error)
 
-  return await Escrow.create({
+    return null
 
-    buyerId,
-
-    sellerId,
-
-    amount
-
-  })
+  }
 
 }
 
@@ -41,7 +47,19 @@ async (
 const getEscrow =
 async (id) => {
 
-  return await Escrow.findById(id)
+  try {
+
+    return await Escrow.findById(
+      id
+    )
+
+  } catch (error) {
+
+    console.log(error)
+
+    return null
+
+  }
 
 }
 
@@ -54,17 +72,58 @@ async (id) => {
 const confirmBuyer =
 async (id) => {
 
-  return await Escrow.findByIdAndUpdate(
+  try {
 
-    id,
+    const escrow =
+      await Escrow.findById(id)
 
-    {
+    if (!escrow) {
 
-      buyerConfirmed: true
+      return false
 
     }
 
-  )
+    escrow.buyerConfirmed =
+      true
+
+    /*
+    |--------------------------------------------------------------------------
+    | RELEASE MONEY
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+
+      escrow.buyerConfirmed &&
+
+      escrow.sellerConfirmed
+
+    ) {
+
+      escrow.status =
+        'completed'
+
+      await addMoney(
+
+        escrow.sellerId,
+
+        escrow.amount
+
+      )
+
+    }
+
+    await escrow.save()
+
+    return escrow
+
+  } catch (error) {
+
+    console.log(error)
+
+    return false
+
+  }
 
 }
 
@@ -77,100 +136,96 @@ async (id) => {
 const confirmSeller =
 async (id) => {
 
-  return await Escrow.findByIdAndUpdate(
+  try {
 
-    id,
+    const escrow =
+      await Escrow.findById(id)
 
-    {
+    if (!escrow) {
 
-      sellerConfirmed: true
+      return false
 
     }
 
-  )
+    escrow.sellerConfirmed =
+      true
+
+    /*
+    |--------------------------------------------------------------------------
+    | RELEASE MONEY
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+
+      escrow.buyerConfirmed &&
+
+      escrow.sellerConfirmed
+
+    ) {
+
+      escrow.status =
+        'completed'
+
+      await addMoney(
+
+        escrow.sellerId,
+
+        escrow.amount
+
+      )
+
+    }
+
+    await escrow.save()
+
+    return escrow
+
+  } catch (error) {
+
+    console.log(error)
+
+    return false
+
+  }
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| COMPLETE
+| OPEN DISPUTE
 |--------------------------------------------------------------------------
 */
 
-const completeEscrow =
+const openDispute =
 async (id) => {
 
-  return await Escrow.findByIdAndUpdate(
+  try {
 
-    id,
+    const escrow =
+      await Escrow.findById(id)
 
-    {
+    if (!escrow) {
 
-      status: 'completed'
-
-    }
-
-  )
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| DISPUTE
-|--------------------------------------------------------------------------
-*/
-
-const disputeEscrow =
-async (id) => {
-
-  return await Escrow.findByIdAndUpdate(
-
-    id,
-
-    {
-
-      disputed: true,
-
-      status: 'dispute'
+      return false
 
     }
 
-  )
+    escrow.disputed = true
 
-}
+    escrow.status = 'dispute'
 
-/*
-|--------------------------------------------------------------------------
-| CREATE MARKET ESCROW
-|--------------------------------------------------------------------------
-*/
+    await escrow.save()
 
-const createMarketEscrow =
-async (
+    return escrow
 
-  buyerId,
+  } catch (error) {
 
-  sellerId,
+    console.log(error)
 
-  amount,
+    return false
 
-  marketItemId
-
-) => {
-
-  return await Escrow.create({
-
-    buyerId,
-
-    sellerId,
-
-    amount,
-
-    marketItemId,
-
-    status: 'pending'
-
-  })
+  }
 
 }
 
@@ -184,10 +239,6 @@ module.exports = {
 
   confirmSeller,
 
-  completeEscrow,
-
-  disputeEscrow,
-  
-  createMarketEscrow
+  openDispute
 
 }

@@ -11,201 +11,110 @@ const {
 
   confirmSeller,
 
-  completeEscrow,
-
-  disputeEscrow
+  openDispute
 
 } = require(
   '../services/escrowService'
 )
 
-if (!global.escrowSessions) {
+const {
 
-  global.escrowSessions = {}
+  removeMoney
 
-}
-
-/*
-|--------------------------------------------------------------------------
-| PANEL
-|--------------------------------------------------------------------------
-*/
-
-const openEscrowPanel =
-async (ctx) => {
-
-  await ctx.reply(
-
-`
-💰 ESCROW SYSTEM
-
-━━━━━━━━━━━━━━━━━━
-
-Sécurisation transactions
-
-━━━━━━━━━━━━━━━━━━
-`,
-
-    Markup.inlineKeyboard([
-
-      [
-
-        Markup.button.callback(
-          '➕ Créer Escrow',
-          'create_escrow'
-        )
-
-      ],
-
-      [
-
-        Markup.button.callback(
-          '📜 Mes Escrows',
-          'my_escrows'
-        )
-
-      ]
-
-    ])
-
-  )
-
-}
+} = require(
+  '../services/walletService'
+)
 
 /*
 |--------------------------------------------------------------------------
-| CREATE PANEL
+| CREATE ESCROW
 |--------------------------------------------------------------------------
 */
 
-const createEscrowPanel =
-async (ctx) => {
+const createEscrowDeal =
+async (
 
-  global.escrowSessions[
-    ctx.from.id
-  ] = {
+  ctx,
 
-    action:
-    'create_escrow'
+  sellerId,
 
-  }
+  amount,
 
-  await ctx.reply(
-`
-💰 Envoyez :
+  itemTitle
 
-@vendeur | montant
+) => {
 
-Exemple :
+  try {
 
-@hackworld | 150
-`
-  )
+    /*
+    |--------------------------------------------------------------------------
+    | REMOVE MONEY
+    |--------------------------------------------------------------------------
+    */
 
-}
-
-/*
-|--------------------------------------------------------------------------
-| HANDLE INPUT
-|--------------------------------------------------------------------------
-*/
-
-const handleEscrowInput =
-async (ctx) => {
-
-  const session =
-
-    global.escrowSessions[
-      ctx.from.id
-    ]
-
-  if (!session) {
-
-    return false
-
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | CREATE
-  |--------------------------------------------------------------------------
-  */
-
-  if (
-
-    session.action ===
-    'create_escrow'
-
-  ) {
-
-    const args =
-      ctx.message.text.split('|')
-
-    if (
-
-      args.length < 2
-
-    ) {
-
-      return ctx.reply(
-`
-❌ Format invalide.
-`
-      )
-
-    }
-
-    const seller =
-      args[0]
-      .trim()
-
-    const amount =
-      Number(
-        args[1]
-      )
-
-    if (
-
-      isNaN(amount)
-
-    ) {
-
-      return ctx.reply(
-`
-❌ Montant invalide.
-`
-      )
-
-    }
-
-    const escrow =
-      await createEscrow(
+    const paid =
+      await removeMoney(
 
         ctx.from.id,
-
-        seller,
 
         amount
 
       )
 
-    delete global.escrowSessions[
-      ctx.from.id
-    ]
+    if (!paid) {
 
-    return ctx.reply(
+      return ctx.reply(
+`
+❌ Solde insuffisant.
+`
+      )
+
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | CREATE
+    |--------------------------------------------------------------------------
+    */
+
+    const escrow =
+      await createEscrow({
+
+        buyerId:
+        ctx.from.id,
+
+        sellerId,
+
+        amount,
+
+        itemTitle
+
+      })
+
+    /*
+    |--------------------------------------------------------------------------
+    | MESSAGE
+    |--------------------------------------------------------------------------
+    */
+
+    await ctx.reply(
 
 `
-✅ Escrow créé.
+🔒 ESCROW CRÉÉ
+
+━━━━━━━━━━━━━━━━━━
+
+📦 ${itemTitle}
+
+💰 ${amount}$
 
 🆔 ${escrow._id}
 
-👤 vendeur :
-${seller}
+━━━━━━━━━━━━━━━━━━
 
-💰 montant :
-${amount}€
-`,
+Argent sécurisé.
+`
+,
 
       Markup.inlineKeyboard([
 
@@ -213,7 +122,7 @@ ${amount}€
 
           Markup.button.callback(
             '✅ Confirmer Achat',
-            `buyer_confirm_${escrow._id}`
+            `confirm_buyer_${escrow._id}`
           )
 
         ],
@@ -221,8 +130,8 @@ ${amount}€
         [
 
           Markup.button.callback(
-            '📦 Livraison',
-            `seller_confirm_${escrow._id}`
+            '📦 Confirmer Livraison',
+            `confirm_seller_${escrow._id}`
           )
 
         ],
@@ -230,8 +139,8 @@ ${amount}€
         [
 
           Markup.button.callback(
-            '⚠️ Dispute',
-            `escrow_dispute_${escrow._id}`
+            '⚠️ Ouvrir Dispute',
+            `open_dispute_${escrow._id}`
           )
 
         ]
@@ -240,78 +149,81 @@ ${amount}€
 
     )
 
-  }
+  } catch (error) {
 
-  return false
+    console.log(error)
+
+  }
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| BUYER CONFIRM
+| CONFIRM BUYER
 |--------------------------------------------------------------------------
 */
 
-const buyerConfirmHandler =
+const confirmBuyerEscrow =
 async (
 
   ctx,
 
-  id
+  escrowId
 
 ) => {
 
-  await confirmBuyer(id)
+  try {
 
-  await ctx.reply(
+    await confirmBuyer(
+      escrowId
+    )
+
+    await ctx.reply(
 `
 ✅ Acheteur confirmé.
 `
-  )
+    )
+
+  } catch (error) {
+
+    console.log(error)
+
+  }
 
 }
 
 /*
 |--------------------------------------------------------------------------
-| SELLER CONFIRM
+| CONFIRM SELLER
 |--------------------------------------------------------------------------
 */
 
-const sellerConfirmHandler =
+const confirmSellerEscrow =
 async (
 
   ctx,
 
-  id
+  escrowId
 
 ) => {
 
-  await confirmSeller(id)
+  try {
 
-  const escrow =
-    await getEscrow(id)
+    await confirmSeller(
+      escrowId
+    )
 
-  if (
-
-    escrow.buyerConfirmed
-
-  ) {
-
-    await completeEscrow(id)
-
-    return ctx.reply(
+    await ctx.reply(
 `
-💰 Transaction terminée.
+✅ Vendeur confirmé.
 `
     )
 
-  }
+  } catch (error) {
 
-  await ctx.reply(
-`
-📦 Livraison confirmée.
-`
-  )
+    console.log(error)
+
+  }
 
 }
 
@@ -321,37 +233,45 @@ async (
 |--------------------------------------------------------------------------
 */
 
-const disputeHandler =
+const disputeEscrow =
 async (
 
   ctx,
 
-  id
+  escrowId
 
 ) => {
 
-  await disputeEscrow(id)
+  try {
 
-  await ctx.reply(
+    await openDispute(
+      escrowId
+    )
+
+    await ctx.reply(
 `
 ⚠️ Dispute ouverte.
+
+Le staff va examiner le dossier.
 `
-  )
+    )
+
+  } catch (error) {
+
+    console.log(error)
+
+  }
 
 }
 
 module.exports = {
 
-  openEscrowPanel,
+  createEscrowDeal,
 
-  createEscrowPanel,
+  confirmBuyerEscrow,
 
-  handleEscrowInput,
+  confirmSellerEscrow,
 
-  buyerConfirmHandler,
-
-  sellerConfirmHandler,
-
-  disputeHandler
+  disputeEscrow
 
 }
