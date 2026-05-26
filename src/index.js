@@ -86,17 +86,17 @@ require(
   './middlewares/xpMiddleware'
 )
 
-//bot.use(
-//  antiSpamMiddleware
-//)
+bot.use(
+  antiSpamMiddleware
+)
 
-//bot.use(
-//  autoModerationMiddleware
-//)
+bot.use(
+  autoModerationMiddleware
+)
 
-//bot.use(
-//  xpMiddleware
-//)
+bot.use(
+  xpMiddleware
+)
 
 
 /*
