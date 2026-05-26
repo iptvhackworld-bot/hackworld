@@ -10,25 +10,25 @@ module.exports = (bot) => {
   |--------------------------------------------------------------------------
   */
 
-  //require('./profileRoutes')(bot)
+  require('./profileRoutes')(bot)
 
-  //require('./walletRoutes')(bot)
+  require('./walletRoutes')(bot)
 
-  //require('./marketRoutes')(bot)
+  require('./marketRoutes')(bot)
 
-  //require('./favoriteRoutes')(bot)
+  require('./favoriteRoutes')(bot)
 
-  //require('./purchaseRoutes')(bot)
+  require('./purchaseRoutes')(bot)
 
-  //require('./searchRoutes')(bot)
+  require('./searchRoutes')(bot)
 
-  //require('./filterRoutes')(bot)
+  require('./filterRoutes')(bot)
 
-  //require('./notificationRoutes')(bot)
+  require('./notificationRoutes')(bot)
 
-  //require('./premiumRoutes')(bot)
+  require('./premiumRoutes')(bot)
 
-  //require('./paymentRoutes')(bot)
+  require('./paymentRoutes')(bot)
 
   /*
   |--------------------------------------------------------------------------
@@ -36,17 +36,17 @@ module.exports = (bot) => {
   |--------------------------------------------------------------------------
   */
 
-  //require('./leaderboardRoutes')(bot)
+  require('./leaderboardRoutes')(bot)
 
-  //require('./casinoRoutes')(bot)
+  require('./casinoRoutes')(bot)
 
-  //require('./verificationRoutes')(bot)
+  require('./verificationRoutes')(bot)
 
-  //require('./escrowRoutes')(bot)
+  require('./escrowRoutes')(bot)
 
-  //require('./disputeRoutes')(bot)
+  require('./disputeRoutes')(bot)
 
-  //require('./logRoutes')(bot)
+  require('./logRoutes')(bot)
 
   /*
   |--------------------------------------------------------------------------
@@ -54,6 +54,6 @@ module.exports = (bot) => {
   |--------------------------------------------------------------------------
   */
 
-  //require('./adminRoutes')(bot)
+  require('./adminRoutes')(bot)
 
 }
