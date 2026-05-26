@@ -14,8 +14,6 @@ module.exports = (bot) => {
   |--------------------------------------------------------------------------
   */
 
-  require('./supportRoutes')(bot)
-
   require('./profileRoutes')(bot)
 
   require('./walletRoutes')(bot)
