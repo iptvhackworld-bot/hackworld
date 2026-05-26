@@ -50,11 +50,6 @@ require('./core/scheduler')
 const connectDatabase =
 require('./database/connect')
 
-const securityMiddleware =
-require(
-  './middlewares/securityMiddleware'
-)
-
 const antiSpamMiddleware =
 require(
   './middlewares/antiSpamMiddleware'
@@ -90,10 +85,6 @@ const xpMiddleware =
 require(
   './middlewares/xpMiddleware'
 )
-
-//bot.use(
-//  securityMiddleware
-//)
 
 //bot.use(
 //  antiSpamMiddleware
