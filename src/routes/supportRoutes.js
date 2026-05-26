@@ -4,29 +4,17 @@ module.exports = (bot) => {
 
     openTicketPanel,
 
-    closeTicket
+    closeTicket,
+
+    openAdminTickets,
+
+    closeTicketAdmin,
+
+    replyTicket
 
   } = require(
     '../handlers/ticketHandler'
   )
-  
-  const {
-
-  openAdminTickets,
-
-  closeTicketAdmin
-
-} = require(
-  '../handlers/ticketHandler'
-)
-
-const {
-
-  replyTicket
-
-} = require(
-  '../handlers/ticketHandler'
-)
 
   /*
   |--------------------------------------------------------------------------
@@ -55,136 +43,136 @@ const {
     }
 
   )
-  
+
   /*
-|--------------------------------------------------------------------------
-| REPLY COMMAND
-|--------------------------------------------------------------------------
-*/
+  |--------------------------------------------------------------------------
+  | REPLY COMMAND
+  |--------------------------------------------------------------------------
+  */
 
-bot.command(
+  bot.command(
 
-  'reply',
+    'reply',
 
-  async (ctx) => {
+    async (ctx) => {
 
-    try {
+      try {
 
-      const args =
-        ctx.message.text.split(' ')
+        const args =
+          ctx.message.text.split(' ')
 
-      const ticketId =
-        args[1]
+        const ticketId =
+          args[1]
 
-      const message =
-        args.slice(2).join(' ')
+        const message =
+          args.slice(2).join(' ')
 
-      if (
+        if (
 
-        !ticketId ||
+          !ticketId ||
 
-        !message
+          !message
 
-      ) {
+        ) {
 
-        return ctx.reply(
+          return ctx.reply(
 `
 ❌ Utilisation :
 
 /reply TICKET_ID message
 `
+          )
+
+        }
+
+        await replyTicket(
+
+          ctx,
+
+          ticketId,
+
+          message
+
         )
+
+      } catch (error) {
+
+        console.log(error)
 
       }
 
-      await replyTicket(
-
-        ctx,
-
-        ticketId,
-
-        message
-
-      )
-
-    } catch (error) {
-
-      console.log(error)
-
     }
 
-  }
-
-)
-  
-  /*
-|--------------------------------------------------------------------------
-| ADMIN TICKETS
-|--------------------------------------------------------------------------
-*/
-
-bot.action(
-
-  'admin_tickets',
-
-  async (ctx) => {
-
-    try {
-
-      await ctx.answerCbQuery()
-
-      await openAdminTickets(ctx)
-
-    } catch (error) {
-
-      console.log(error)
-
-    }
-
-  }
-
-)
-
-/*
-|--------------------------------------------------------------------------
-| CLOSE TICKET DB
-|--------------------------------------------------------------------------
-*/
-
-bot.action(
-
-  /^close_ticket_(.+)$/,
-
-  async (ctx) => {
-
-    try {
-
-      await ctx.answerCbQuery()
-
-      const id =
-        ctx.match[1]
-
-      await closeTicketAdmin(
-
-        ctx,
-
-        id
-
-      )
-
-    } catch (error) {
-
-      console.log(error)
-
-    }
-
-  }
-
-)
+  )
 
   /*
   |--------------------------------------------------------------------------
-  | CLOSE TICKET
+  | ADMIN TICKETS
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_tickets',
+
+    async (ctx) => {
+
+      try {
+
+        await ctx.answerCbQuery()
+
+        await openAdminTickets(ctx)
+
+      } catch (error) {
+
+        console.log(error)
+
+      }
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | CLOSE TICKET ADMIN
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    /^close_ticket_(.+)$/,
+
+    async (ctx) => {
+
+      try {
+
+        await ctx.answerCbQuery()
+
+        const id =
+          ctx.match[1]
+
+        await closeTicketAdmin(
+
+          ctx,
+
+          id
+
+        )
+
+      } catch (error) {
+
+        console.log(error)
+
+      }
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | CLOSE TICKET USER
   |--------------------------------------------------------------------------
   */
 
@@ -199,40 +187,6 @@ bot.action(
         await ctx.answerCbQuery()
 
         await closeTicket(ctx)
-
-      } catch (error) {
-
-        console.log(error)
-
-      }
-
-    }
-
-  )
-
-}
-
-module.exports = (bot) => {
-
-  const {
-
-    openSupportPanel
-
-  } = require(
-    '../handlers/supportHandler'
-  )
-
-  bot.action(
-
-    'support_panel',
-
-    async (ctx) => {
-
-      try {
-
-        await ctx.answerCbQuery()
-
-        await openSupportPanel(ctx)
 
       } catch (error) {
 
