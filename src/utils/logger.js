@@ -49,7 +49,6 @@ const writeLog =
 
   const time =
     new Date()
-
     .toISOString()
 
   const line =
@@ -58,11 +57,24 @@ const writeLog =
   console.log(line)
 
   fs.appendFileSync(
-
     logFile,
-
     line
+  )
 
+}
+
+/*
+|--------------------------------------------------------------------------
+| DEFAULT LOGGER
+|--------------------------------------------------------------------------
+*/
+
+const logger =
+(message) => {
+
+  writeLog(
+    'INFO',
+    message
   )
 
 }
@@ -77,11 +89,8 @@ const logInfo =
 (message) => {
 
   writeLog(
-
     'INFO',
-
     message
-
   )
 
 }
@@ -96,11 +105,8 @@ const logError =
 (message) => {
 
   writeLog(
-
     'ERROR',
-
     message
-
   )
 
 }
@@ -115,11 +121,8 @@ const logSecurity =
 (message) => {
 
   writeLog(
-
     'SECURITY',
-
     message
-
   )
 
 }
@@ -134,23 +137,29 @@ const logEconomy =
 (message) => {
 
   writeLog(
-
     'ECONOMY',
-
     message
-
   )
 
 }
 
-module.exports = {
+/*
+|--------------------------------------------------------------------------
+| EXPORTS
+|--------------------------------------------------------------------------
+*/
 
-  logInfo,
+module.exports =
+logger
 
-  logError,
+module.exports.logInfo =
+logInfo
 
-  logSecurity,
+module.exports.logError =
+logError
 
-  logEconomy
+module.exports.logSecurity =
+logSecurity
 
-}
+module.exports.logEconomy =
+logEconomy

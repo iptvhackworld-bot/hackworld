@@ -137,7 +137,7 @@ registerRoutes(bot)
 |--------------------------------------------------------------------------
 */
 
-registerEvents(bot)
+//registerEvents(bot)
 
 /*
 |--------------------------------------------------------------------------
@@ -147,7 +147,7 @@ registerEvents(bot)
 
 startScheduler()
 
-registerErrors()
+//registerErrors()
 
 registerShutdown(bot)
 
