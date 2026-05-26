@@ -50,7 +50,9 @@ async (ctx) => {
 const startHandler =
 async (ctx) => {
 
-  await ctx.reply(
+  try {
+
+    await ctx.reply(
 
 `
 📜 Bienvenue sur HackWorld
@@ -62,24 +64,28 @@ async (ctx) => {
 ⚠️ Vérifiez toujours les comptes officiels.
 
 ━━━━━━━━━━━━━━━━━━
-
-Cliquez sur ACCEPTER pour continuer.
 `,
 
-    Markup.inlineKeyboard([
+      Markup.inlineKeyboard([
 
-      [
+        [
 
-        Markup.button.callback(
-          '✅ ACCEPTER',
-          'accept_rules'
-        )
+          Markup.button.callback(
+            '✅ ACCEPTER',
+            'accept_rules'
+          )
 
-      ]
+        ]
 
-    ])
+      ])
 
-  )
+    )
+
+  } catch (error) {
+
+    console.log(error)
+
+  }
 
 }
 
