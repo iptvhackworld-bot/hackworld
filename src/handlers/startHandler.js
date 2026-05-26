@@ -15,8 +15,20 @@ async (ctx) => {
 
   try {
 
-    await ctx.reply(
+    await ctx.replyWithPhoto(
 
+      {
+
+        source:
+        fs.createReadStream(
+          'src/assets/hackworld.jpg'
+        )
+
+      },
+
+      {
+
+        caption:
 `
 🚀 HACKWORLD MARKETPLACE
 
@@ -25,45 +37,48 @@ async (ctx) => {
 ✅ Marketplace sécurisé
 ✅ Paiements crypto
 ✅ Premium system
+✅ Notifications temps réel
 
 ━━━━━━━━━━━━━━━━━━
 `,
 
-      Markup.inlineKeyboard([
+        ...Markup.inlineKeyboard([
 
-        [
+          [
 
-          Markup.button.callback(
-            '🛒 Marketplace',
-            'market_panel'
-          )
+            Markup.button.callback(
+              '🛒 Marketplace',
+              'market_panel'
+            )
 
-        ],
+          ],
 
-        [
+          [
 
-          Markup.button.callback(
-            '👤 Profil',
-            'profile_panel'
-          ),
+            Markup.button.callback(
+              '👤 Profil',
+              'profile_panel'
+            ),
 
-          Markup.button.callback(
-            '🏦 Wallet',
-            'wallet_panel'
-          )
+            Markup.button.callback(
+              '🏦 Wallet',
+              'wallet_panel'
+            )
 
-        ],
+          ],
 
-        [
+          [
 
-          Markup.button.callback(
-            '👑 Premium',
-            'premium_panel'
-          )
+            Markup.button.callback(
+              '👑 Premium',
+              'premium_panel'
+            )
 
-        ]
+          ]
 
-      ])
+        ])
+
+      }
 
     )
 
@@ -90,18 +105,18 @@ async (ctx) => {
 
     await ctx.replyWithPhoto(
 
-  {
+      {
 
-    source:
-    fs.createReadStream(
-      'src/assets/hackworld.jpg'
-    )
+        source:
+        fs.createReadStream(
+          'src/assets/hackworld.jpg'
+        )
 
-  },
+      },
 
-  {
+      {
 
-    caption:
+        caption:
 `
 📜 Bienvenue sur HackWorld
 
@@ -112,33 +127,45 @@ async (ctx) => {
 ⚠️ Vérifiez toujours les comptes officiels.
 
 ━━━━━━━━━━━━━━━━━━
+
+Cliquez sur ACCEPTER pour continuer.
 `,
 
-    ...Markup.inlineKeyboard([
+        ...Markup.inlineKeyboard([
 
-      [
+          [
 
-        Markup.button.callback(
-          '✅ ACCEPTER',
-          'accept_rules'
-        )
+            Markup.button.callback(
+              '✅ ACCEPTER',
+              'accept_rules'
+            )
 
-      ],
+          ],
 
-      [
+          [
 
-        Markup.button.callback(
-          '❌ REFUSER',
-          'decline_rules'
-        )
+            Markup.button.callback(
+              '❌ REFUSER',
+              'decline_rules'
+            )
 
-      ]
+          ]
 
-    ])
+        ])
+
+      }
+
+    )
 
   }
 
-)
+  catch (error) {
+
+    console.log(error)
+
+  }
+
+}
 
 module.exports = {
 
