@@ -40,17 +40,17 @@ module.exports = (bot) => {
   |--------------------------------------------------------------------------
   */
 
-  require('./leaderboardRoutes')(bot)
+  //require('./leaderboardRoutes')(bot)
 
-  require('./casinoRoutes')(bot)
+  //require('./casinoRoutes')(bot)
 
-  require('./verificationRoutes')(bot)
+  //require('./verificationRoutes')(bot)
 
   require('./escrowRoutes')(bot)
 
-  require('./disputeRoutes')(bot)
+  //require('./disputeRoutes')(bot)
 
-  require('./logRoutes')(bot)
+  //require('./logRoutes')(bot)
 
   /*
   |--------------------------------------------------------------------------

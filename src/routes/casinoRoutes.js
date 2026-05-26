@@ -2,11 +2,9 @@ module.exports = (bot) => {
 
   const {
 
-    openCasino,
+    openCasinoPanel,
 
-    playDiceGame,
-
-    playSlots
+    rouletteHandler
 
   } = require(
     '../handlers/casinoHandler'
@@ -28,14 +26,11 @@ module.exports = (bot) => {
 
         await ctx.answerCbQuery()
 
-        await openCasino(ctx)
+        await openCasinoPanel(ctx)
 
       } catch (error) {
 
-        console.log(
-          'CASINO PANEL ERROR:',
-          error
-        )
+        console.log(error)
 
       }
 
@@ -45,13 +40,13 @@ module.exports = (bot) => {
 
   /*
   |--------------------------------------------------------------------------
-  | DICE GAME
+  | ROULETTE
   |--------------------------------------------------------------------------
   */
 
   bot.action(
 
-    'dice_game',
+    'casino_roulette',
 
     async (ctx) => {
 
@@ -59,45 +54,11 @@ module.exports = (bot) => {
 
         await ctx.answerCbQuery()
 
-        await playDiceGame(ctx)
+        await rouletteHandler(ctx)
 
       } catch (error) {
 
-        console.log(
-          'DICE GAME ERROR:',
-          error
-        )
-
-      }
-
-    }
-
-  )
-
-  /*
-  |--------------------------------------------------------------------------
-  | SLOTS GAME
-  |--------------------------------------------------------------------------
-  */
-
-  bot.action(
-
-    'slots_game',
-
-    async (ctx) => {
-
-      try {
-
-        await ctx.answerCbQuery()
-
-        await playSlots(ctx)
-
-      } catch (error) {
-
-        console.log(
-          'SLOTS GAME ERROR:',
-          error
-        )
+        console.log(error)
 
       }
 
