@@ -10,7 +10,9 @@ require('telegraf')
 const showMainMenu =
 async (ctx) => {
 
-  await ctx.reply(
+  try {
+
+    await ctx.reply(
 
 `
 🚀 HACKWORLD MARKETPLACE
@@ -24,20 +26,51 @@ async (ctx) => {
 ━━━━━━━━━━━━━━━━━━
 `,
 
-    Markup.inlineKeyboard([
+      Markup.inlineKeyboard([
 
-      [
+        [
 
-        Markup.button.callback(
-          '🛒 Marketplace',
-          'market_panel'
-        )
+          Markup.button.callback(
+            '🛒 Marketplace',
+            'market_panel'
+          )
 
-      ]
+        ],
 
-    ])
+        [
 
-  )
+          Markup.button.callback(
+            '👤 Profil',
+            'profile_panel'
+          ),
+
+          Markup.button.callback(
+            '🏦 Wallet',
+            'wallet_panel'
+          )
+
+        ],
+
+        [
+
+          Markup.button.callback(
+            '👑 Premium',
+            'premium_panel'
+          )
+
+        ]
+
+      ])
+
+    )
+
+  }
+
+  catch (error) {
+
+    console.log(error)
+
+  }
 
 }
 
@@ -75,13 +108,24 @@ async (ctx) => {
             'accept_rules'
           )
 
+        ],
+
+        [
+
+          Markup.button.callback(
+            '❌ REFUSER',
+            'decline_rules'
+          )
+
         ]
 
       ])
 
     )
 
-  } catch (error) {
+  }
+
+  catch (error) {
 
     console.log(error)
 
