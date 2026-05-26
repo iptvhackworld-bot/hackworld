@@ -5,9 +5,9 @@ const registerRoutes =
     'LOAD commandRoutes'
   )
 
-  require(
-    '../routes/commandRoutes'
-  )(bot)
+  // require(
+  //   '../routes/commandRoutes'
+  // )(bot)
 
   console.log(
     'LOAD callbackRoutes'
@@ -21,9 +21,9 @@ const registerRoutes =
     'LOAD staffCommandRoutes'
   )
 
-  require(
-    '../routes/staffCommandRoutes'
-  )(bot)
+  // require(
+  //   '../routes/staffCommandRoutes'
+  // )(bot)
 
   console.log(
     '✅ Routes chargées'
