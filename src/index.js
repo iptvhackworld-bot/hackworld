@@ -91,9 +91,9 @@ require(
   './middlewares/xpMiddleware'
 )
 
-bot.use(
-  securityMiddleware
-)
+//bot.use(
+//  securityMiddleware
+//)
 
 //bot.use(
 //  antiSpamMiddleware
@@ -149,7 +149,7 @@ startScheduler()
 
 //registerErrors()
 
-registerShutdown(bot)
+//registerShutdown(bot)
 
 /*
 |--------------------------------------------------------------------------
