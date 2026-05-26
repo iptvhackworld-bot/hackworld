@@ -1,17 +1,9 @@
 const registerRoutes =
 (bot) => {
 
-  console.log(
-    'LOAD callbackRoutes'
-  )
-
   require(
-    '../routes/callbackRoutes'
+    '../routes/commandRoutes'
   )(bot)
-
-  console.log(
-    '✅ Routes chargées'
-  )
 
 }
 
