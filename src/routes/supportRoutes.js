@@ -211,3 +211,37 @@ bot.action(
   )
 
 }
+
+module.exports = (bot) => {
+
+  const {
+
+    openSupportPanel
+
+  } = require(
+    '../handlers/supportHandler'
+  )
+
+  bot.action(
+
+    'support_panel',
+
+    async (ctx) => {
+
+      try {
+
+        await ctx.answerCbQuery()
+
+        await openSupportPanel(ctx)
+
+      } catch (error) {
+
+        console.log(error)
+
+      }
+
+    }
+
+  )
+
+}
