@@ -1,9 +1,17 @@
 const registerRoutes =
 (bot) => {
 
-  require(
-    '../routes/commandRoutes'
-  )(bot)
+  bot.start(
+
+    async (ctx) => {
+
+      await ctx.reply(
+        '✅ BOT OK'
+      )
+
+    }
+
+  )
 
 }
 
