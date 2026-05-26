@@ -107,15 +107,6 @@ async (ctx) => {
         [
 
           Markup.button.callback(
-            '🎫 Support',
-            'support_panel'
-          )
-
-        ],
-
-        [
-
-          Markup.button.callback(
             '⚙️ Admin',
             'admin_panel'
           )
