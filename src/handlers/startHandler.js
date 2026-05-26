@@ -1,6 +1,9 @@
 const { Markup } =
 require('telegraf')
 
+const fs =
+require('fs')
+
 /*
 |--------------------------------------------------------------------------
 | MAIN MENU
@@ -85,8 +88,20 @@ async (ctx) => {
 
   try {
 
-    await ctx.reply(
+    await ctx.replyWithPhoto(
 
+  {
+
+    source:
+    fs.createReadStream(
+      'src/assets/hackworld.jpg'
+    )
+
+  },
+
+  {
+
+    caption:
 `
 📜 Bienvenue sur HackWorld
 
@@ -99,39 +114,31 @@ async (ctx) => {
 ━━━━━━━━━━━━━━━━━━
 `,
 
-      Markup.inlineKeyboard([
+    ...Markup.inlineKeyboard([
 
-        [
+      [
 
-          Markup.button.callback(
-            '✅ ACCEPTER',
-            'accept_rules'
-          )
+        Markup.button.callback(
+          '✅ ACCEPTER',
+          'accept_rules'
+        )
 
-        ],
+      ],
 
-        [
+      [
 
-          Markup.button.callback(
-            '❌ REFUSER',
-            'decline_rules'
-          )
+        Markup.button.callback(
+          '❌ REFUSER',
+          'decline_rules'
+        )
 
-        ]
+      ]
 
-      ])
-
-    )
+    ])
 
   }
 
-  catch (error) {
-
-    console.log(error)
-
-  }
-
-}
+)
 
 module.exports = {
 
