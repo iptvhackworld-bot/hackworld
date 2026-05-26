@@ -91,21 +91,21 @@ require(
   './middlewares/xpMiddleware'
 )
 
-bot.use(
-  securityMiddleware
-)
+//bot.use(
+//  securityMiddleware
+//)
 
-bot.use(
-  antiSpamMiddleware
-)
+//bot.use(
+//  antiSpamMiddleware
+//)
 
-bot.use(
-  autoModerationMiddleware
-)
+//bot.use(
+//  autoModerationMiddleware
+//)
 
-bot.use(
-  xpMiddleware
-)
+//bot.use(
+//  xpMiddleware
+//)
 
 
 /*
