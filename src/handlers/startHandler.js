@@ -1,9 +1,6 @@
 const { Markup } =
 require('telegraf')
 
-const fs =
-require('fs')
-
 /*
 |--------------------------------------------------------------------------
 | MAIN MENU
@@ -13,22 +10,8 @@ require('fs')
 const showMainMenu =
 async (ctx) => {
 
-  await ctx.replyWithPhoto(
+  await ctx.reply(
 
-    {
-
-      source:
-      fs.createReadStream(
-
-        'src/assets/hackworld.jpg'
-
-      )
-
-    },
-
-    {
-
-      caption:
 `
 🚀 HACKWORLD MARKETPLACE
 
@@ -37,85 +20,22 @@ async (ctx) => {
 ✅ Marketplace sécurisé
 ✅ Paiements crypto
 ✅ Premium system
-✅ Notifications temps réel
 
 ━━━━━━━━━━━━━━━━━━
 `,
 
-      ...Markup.inlineKeyboard([
+    Markup.inlineKeyboard([
 
-        [
+      [
 
-          Markup.button.callback(
-            '🛒 Marketplace',
-            'market_panel'
-          )
+        Markup.button.callback(
+          '🛒 Marketplace',
+          'market_panel'
+        )
 
-        ],
+      ]
 
-        [
-
-          Markup.button.callback(
-            '👤 Profil',
-            'profile_panel'
-          ),
-
-          Markup.button.callback(
-            '🏦 Wallet',
-            'wallet_panel'
-          )
-
-        ],
-
-        [
-
-          Markup.button.callback(
-            '🎁 Daily',
-            'daily_reward'
-          ),
-
-          Markup.button.callback(
-            '🏆 Leaderboards',
-            'leaderboards'
-          )
-
-        ],
-
-        [
-
-          Markup.button.callback(
-            '🎰 Casino',
-            'casino_panel'
-          )
-
-        ],
-
-        [
-
-          Markup.button.callback(
-            '👑 Premium',
-            'premium_panel'
-          ),
-
-          Markup.button.callback(
-            '💳 Crypto',
-            'crypto_panel'
-          )
-
-        ],
-
-        [
-
-          Markup.button.callback(
-            '⚙️ Admin',
-            'admin_panel'
-          )
-
-        ]
-
-      ])
-
-    }
+    ])
 
   )
 
@@ -153,15 +73,6 @@ Cliquez sur ACCEPTER pour continuer.
         Markup.button.callback(
           '✅ ACCEPTER',
           'accept_rules'
-        )
-
-      ],
-
-      [
-
-        Markup.button.callback(
-          '❌ REFUSER',
-          'decline_rules'
         )
 
       ]
