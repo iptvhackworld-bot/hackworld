@@ -91,9 +91,9 @@ require(
   './middlewares/xpMiddleware'
 )
 
-//bot.use(
-//  securityMiddleware
-//)
+bot.use(
+  securityMiddleware
+)
 
 //bot.use(
 //  antiSpamMiddleware
