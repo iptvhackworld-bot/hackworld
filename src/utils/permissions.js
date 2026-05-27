@@ -59,7 +59,13 @@ async (userId) => {
     role
   )
 
-  return role === 'owner'
+  return [
+
+    'owner',
+
+    'admin'
+
+  ].includes(role)
 
 }
 
