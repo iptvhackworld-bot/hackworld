@@ -14,26 +14,26 @@ module.exports = (bot) => {
   |--------------------------------------------------------------------------
   */
 
-  bot.action(
+ bot.action(
 
-    'profile_panel',
+  'profile_panel',
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        await openProfile(ctx)
+      console.log('PROFILE CLICK')
 
-      } catch (error) {
+      await openProfile(ctx)
 
-        console.log(error)
+    } catch (error) {
 
-      }
+      console.log(error)
 
     }
 
-  )
+  }
 
-}
+)
