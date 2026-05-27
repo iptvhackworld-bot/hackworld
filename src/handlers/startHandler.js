@@ -44,76 +44,83 @@ async (ctx) => {
 
         ...Markup.inlineKeyboard([
 
-          [
+  [
+    Markup.button.callback(
+      '🛒 Marketplace',
+      'market_panel'
+    )
+  ],
 
-            Markup.button.callback(
-              '🛒 Marketplace',
-              'market_panel'
-            )
+  [
+    Markup.button.callback(
+      '👤 Profil',
+      'profile_panel'
+    ),
 
-          ],
+    Markup.button.callback(
+      '🏦 Wallet',
+      'wallet_panel'
+    )
+  ],
 
-          [
+  [
+    Markup.button.callback(
+      '🎁 Daily',
+      'daily_reward'
+    ),
 
-            Markup.button.callback(
-              '👤 Profil',
-              'profile_panel'
-            ),
+    Markup.button.callback(
+      '🏆 Leaderboards',
+      'leaderboards'
+    )
+  ],
 
-            Markup.button.callback(
-              '🏦 Wallet',
-              'wallet_panel'
-            )
+  [
+    Markup.button.callback(
+      '🎰 Casino',
+      'casino_panel'
+    ),
 
-          ],
+    Markup.button.callback(
+      '⭐ Favoris',
+      'favorites_panel'
+    )
+  ],
 
-          [
+  [
+    Markup.button.callback(
+      '🔔 Notifications',
+      'notifications_panel'
+    ),
 
-            Markup.button.callback(
-              '👑 Premium',
-              'premium_panel'
-            ),
+    Markup.button.callback(
+      '👑 Premium',
+      'premium_panel'
+    )
+  ],
 
-            Markup.button.callback(
-              '🏆 Leaderboard',
-              'leaderboards'
-            )
+  [
+    Markup.button.callback(
+      '💳 Crypto',
+      'crypto_panel'
+    )
+  ],
 
-          ],
+  [
+    Markup.button.callback(
+      '🎫 Support',
+      'support_panel'
+    )
+  ],
 
-          [
+  [
+    Markup.button.callback(
+      '⚙️ Admin',
+      'admin_panel'
+    )
+  ]
 
-            Markup.button.callback(
-              '🎰 Casino',
-              'casino_panel'
-            ),
-
-            Markup.button.callback(
-              '⭐ Favoris',
-              'favorites_panel'
-            )
-
-          ],
-
-          [
-
-            Markup.button.callback(
-              '🔔 Notifications',
-              'notifications_panel'
-            )
-
-          ],
-
-          [
-
-            Markup.button.callback(
-              '⚙️ Admin',
-              'admin_panel'
-            )
-
-          ]
-
-        ])
+])
 
       }
 
