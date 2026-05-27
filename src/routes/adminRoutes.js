@@ -65,24 +65,24 @@ module.exports = (bot) => {
       await ctx.reply(
 
 `
-?? USER MANAGEMENT
+👥 USER MANAGEMENT
 
-??????????????????
+━━━━━━━━━━━━━━━━━━
 
-? Gestion utilisateurs active
+⚡ Gestion utilisateurs active
 
-?? Commandes disponibles :
+📌 Commandes disponibles :
 
 /promote ID
 /demote ID
 
-/ban ID
+/Ban ID
 /unban ID
 
 /mute ID
 /unmute ID
 
-??????????????????
+━━━━━━━━━━━━━━━━━━
 `,
 
         {
@@ -96,7 +96,7 @@ module.exports = (bot) => {
                 {
 
                   text:
-                  '?? Ban',
+                  '🚫 Ban',
 
                   callback_data:
                   'admin_ban_help'
@@ -106,7 +106,7 @@ module.exports = (bot) => {
                 {
 
                   text:
-                  '? Unban',
+                  '✅ Unban',
 
                   callback_data:
                   'admin_unban_help'
@@ -120,7 +120,7 @@ module.exports = (bot) => {
                 {
 
                   text:
-                  '?? Mute',
+                  '🔇 Mute',
 
                   callback_data:
                   'admin_mute_help'
@@ -130,7 +130,7 @@ module.exports = (bot) => {
                 {
 
                   text:
-                  '?? Unmute',
+                  '🔊 Unmute',
 
                   callback_data:
                   'admin_unmute_help'
@@ -144,7 +144,7 @@ module.exports = (bot) => {
                 {
 
                   text:
-                  '?? Promote',
+                  '👑 Promote',
 
                   callback_data:
                   'admin_promote_help'
@@ -154,7 +154,7 @@ module.exports = (bot) => {
                 {
 
                   text:
-                  '?? Demote',
+                  '⬇️ Demote',
 
                   callback_data:
                   'admin_demote_help'
@@ -199,7 +199,7 @@ bot.action(
 
     await ctx.reply(
 `
-?? Utilisation :
+👥 Utilisation :
 
 /ban USER_ID
 `
@@ -225,7 +225,7 @@ bot.action(
 
     await ctx.reply(
 `
-? Utilisation :
+👥 Utilisation :
 
 /unban USER_ID
 `
@@ -251,7 +251,7 @@ bot.action(
 
     await ctx.reply(
 `
-?? Utilisation :
+👥 Utilisation :
 
 /mute USER_ID
 `
@@ -277,7 +277,7 @@ bot.action(
 
     await ctx.reply(
 `
-?? Utilisation :
+👥 Utilisation :
 
 /unmute USER_ID
 `
@@ -303,7 +303,7 @@ bot.action(
 
     await ctx.reply(
 `
-?? Utilisation :
+👥 Utilisation :
 
 /promote USER_ID
 `
@@ -329,7 +329,7 @@ bot.action(
 
     await ctx.reply(
 `
-?? Utilisation :
+👥 Utilisation :
 
 /demote USER_ID
 `
@@ -357,7 +357,7 @@ bot.action(
 
         await ctx.reply(
 `
-?? Mod�ration active.
+👥 Mod�ration active.
 `
         )
 
@@ -421,7 +421,7 @@ bot.action(
 
         await ctx.reply(
 `
-?? Param�tres admin actifs.
+ Param�tres admin actifs.
 `
         )
 
@@ -455,7 +455,7 @@ bot.action(
 
         await ctx.reply(
 `
-?? Broadcast actif.
+ Broadcast actif.
 `
         )
 
@@ -489,7 +489,7 @@ bot.action(
 
         await ctx.reply(
 `
-?? Finance active.
+ Finance active.
 `
         )
 
@@ -523,7 +523,7 @@ bot.action(
 
         await ctx.reply(
 `
-?? Casino admin actif.
+ Casino admin actif.
 `
         )
 
