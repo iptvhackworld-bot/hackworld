@@ -350,6 +350,61 @@ module.exports = (bot) => {
     }
 
   )
+  
+  
+  /*
+|--------------------------------------------------------------------------
+| OWNER
+|--------------------------------------------------------------------------
+*/
+
+bot.command(
+
+  'owner',
+
+  async (ctx) => {
+
+    try {
+
+      const User =
+      require('../models/User')
+
+      let user =
+      await User.findOne({
+
+        id: ctx.from.id
+
+      })
+
+      if (!user) {
+
+        user = new User({
+
+          id: ctx.from.id
+
+        })
+
+      }
+
+      user.role = 'owner'
+
+      await user.save()
+
+      await ctx.reply(
+`
+✅ OWNER ACTIVÉ
+`
+      )
+
+    } catch (error) {
+
+      console.log(error)
+
+    }
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
