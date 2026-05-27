@@ -53,6 +53,12 @@ async (userId) => {
       userId
     )
 
+  console.log(
+    'OWNER CHECK:',
+    userId,
+    role
+  )
+
   return role === 'owner'
 
 }
