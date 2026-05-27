@@ -54,31 +54,290 @@ module.exports = (bot) => {
 
   bot.action(
 
-    'admin_users',
+  'admin_users',
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        await ctx.reply(
+      await ctx.reply(
+
 `
-?? Gestion utilisateurs active.
-`
-        )
+?? USER MANAGEMENT
 
-      }
+??????????????????
 
-      catch (error) {
+? Gestion utilisateurs active
 
-        console.log(error)
+?? Commandes disponibles :
 
-      }
+/promote ID
+/demote ID
+
+/ban ID
+/unban ID
+
+/mute ID
+/unmute ID
+
+??????????????????
+`,
+
+        {
+
+          reply_markup: {
+
+            inline_keyboard: [
+
+              [
+
+                {
+
+                  text:
+                  '?? Ban',
+
+                  callback_data:
+                  'admin_ban_help'
+
+                },
+
+                {
+
+                  text:
+                  '? Unban',
+
+                  callback_data:
+                  'admin_unban_help'
+
+                }
+
+              ],
+
+              [
+
+                {
+
+                  text:
+                  '?? Mute',
+
+                  callback_data:
+                  'admin_mute_help'
+
+                },
+
+                {
+
+                  text:
+                  '?? Unmute',
+
+                  callback_data:
+                  'admin_unmute_help'
+
+                }
+
+              ],
+
+              [
+
+                {
+
+                  text:
+                  '?? Promote',
+
+                  callback_data:
+                  'admin_promote_help'
+
+                },
+
+                {
+
+                  text:
+                  '?? Demote',
+
+                  callback_data:
+                  'admin_demote_help'
+
+                }
+
+              ]
+
+            ]
+
+          }
+
+        }
+
+      )
 
     }
 
-  )
+    catch (error) {
+
+      console.log(error)
+
+    }
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| BAN HELP
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'admin_ban_help',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+?? Utilisation :
+
+/ban USER_ID
+`
+    )
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| UNBAN HELP
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'admin_unban_help',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+? Utilisation :
+
+/unban USER_ID
+`
+    )
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| MUTE HELP
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'admin_mute_help',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+?? Utilisation :
+
+/mute USER_ID
+`
+    )
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| UNMUTE HELP
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'admin_unmute_help',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+?? Utilisation :
+
+/unmute USER_ID
+`
+    )
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| PROMOTE HELP
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'admin_promote_help',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+?? Utilisation :
+
+/promote USER_ID
+`
+    )
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| DEMOTE HELP
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'admin_demote_help',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+?? Utilisation :
+
+/demote USER_ID
+`
+    )
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
