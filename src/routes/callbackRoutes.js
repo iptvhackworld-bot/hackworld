@@ -39,6 +39,45 @@ module.exports = (bot) => {
   */
 
   require('./supportRoutes')(bot)
+  
+  
+  /*
+|--------------------------------------------------------------------------
+| BACK TO MENU
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'back_main_menu',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      const {
+
+        showMainMenu
+
+      } = require(
+        '../handlers/startHandler'
+      )
+
+      await showMainMenu(ctx)
+
+    }
+
+    catch (error) {
+
+      console.log(error)
+
+    }
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -49,3 +88,4 @@ module.exports = (bot) => {
   require('./adminRoutes')(bot)
 
 }
+

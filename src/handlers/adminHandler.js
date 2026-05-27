@@ -139,13 +139,24 @@ async (ctx) => {
             'admin_broadcast'
           )
 
+        ],
+
+        [
+
+          Markup.button.callback(
+            '🏠 Menu',
+            'back_main_menu'
+          )
+
         ]
 
       ])
 
     )
 
-  } catch (error) {
+  }
+
+  catch (error) {
 
     console.log(error)
 
