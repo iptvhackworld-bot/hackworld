@@ -357,7 +357,7 @@ bot.action(
 
         await ctx.reply(
 `
-?? Modération active.
+?? Modï¿½ration active.
 `
         )
 
@@ -421,7 +421,7 @@ bot.action(
 
         await ctx.reply(
 `
-?? Paramètres admin actifs.
+?? Paramï¿½tres admin actifs.
 `
         )
 
