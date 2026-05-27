@@ -53,16 +53,43 @@ en envoyant un message.
 
       Markup.inlineKeyboard([
 
-        [
+  [
 
-          Markup.button.callback(
-            '🔒 Fermer Ticket',
-            'close_ticket'
-          )
+    Markup.button.callback(
+      '📩 Ouvrir Ticket',
+      'create_ticket'
+    )
 
-        ]
+  ],
 
-      ])
+  [
+
+    Markup.button.callback(
+      '📬 Mes Tickets',
+      'my_tickets'
+    )
+
+  ],
+
+  [
+
+    Markup.button.callback(
+      '🛠 Tickets Admin',
+      'admin_tickets'
+    )
+
+  ],
+
+  [
+
+    Markup.button.callback(
+      '🏠 Menu',
+      'back_main_menu'
+    )
+
+  ]
+
+])
 
     )
 
@@ -346,6 +373,101 @@ async (
 
 /*
 |--------------------------------------------------------------------------
+| USER TICKETS
+|--------------------------------------------------------------------------
+*/
+
+const openUserTickets =
+async (ctx) => {
+
+  try {
+
+    const tickets =
+      await getTickets()
+
+    const userTickets =
+      tickets.filter(
+
+        ticket =>
+
+          ticket.userId ===
+          ctx.from.id
+
+      )
+
+    if (
+
+      !userTickets.length
+
+    ) {
+
+      return ctx.reply(
+`
+❌ Aucun ticket trouvé.
+`
+      )
+
+    }
+
+    for (const ticket of userTickets) {
+
+      await ctx.reply(
+
+`
+🎫 MON TICKET
+
+━━━━━━━━━━━━━━━━━━
+
+🆔 ${ticket._id}
+
+📌 ${ticket.subject}
+
+💬 ${ticket.message}
+
+📊 Status :
+${ticket.status}
+
+━━━━━━━━━━━━━━━━━━
+`,
+
+        Markup.inlineKeyboard([
+
+          [
+
+            Markup.button.callback(
+              '🔒 Fermer',
+              `close_ticket_${ticket._id}`
+            )
+
+          ],
+
+          [
+
+            Markup.button.callback(
+              '🏠 Menu',
+              'back_main_menu'
+            )
+
+          ]
+
+        ])
+
+      )
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.log(error)
+
+  }
+
+}
+
+/*
+|--------------------------------------------------------------------------
 | CLOSE
 |--------------------------------------------------------------------------
 */
@@ -378,9 +500,15 @@ module.exports = {
   handleAdminTicketInput,
 
   closeTicket,
-  
+
   openAdminTickets,
 
-  closeTicketAdmin
+  closeTicketAdmin,
+
+  replyTicket,
+
+  createTicket,
+
+  openUserTickets
 
 }
