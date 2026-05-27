@@ -56,27 +56,49 @@ module.exports = (bot) => {
 
   bot.action(
 
-    'create_ticket',
+  'create_ticket',
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        await createTicket(ctx)
+      await createTicket({
 
-      }
+        userId:
+        ctx.from.id,
 
-      catch (error) {
+        username:
+        ctx.from.username ||
 
-        console.log(error)
+        'unknown',
 
-      }
+        subject:
+        'Support',
+
+        message:
+        'Ticket ouvert depuis le panel'
+
+      })
+
+      await ctx.reply(
+`
+✅ Ticket créé avec succès.
+`
+      )
 
     }
 
-  )
+    catch (error) {
+
+      console.log(error)
+
+    }
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
