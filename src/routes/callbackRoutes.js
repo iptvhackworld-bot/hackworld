@@ -1,6 +1,5 @@
 module.exports = (bot) => {
 
-  console.log('LOAD startRoutes')
 
   require('./startRoutes')(bot)
 

@@ -72,6 +72,43 @@ async (ctx) => {
             Markup.button.callback(
               '👑 Premium',
               'premium_panel'
+            ),
+
+            Markup.button.callback(
+              '🏆 Leaderboard',
+              'leaderboards'
+            )
+
+          ],
+
+          [
+
+            Markup.button.callback(
+              '🎰 Casino',
+              'casino_panel'
+            ),
+
+            Markup.button.callback(
+              '⭐ Favoris',
+              'favorites_panel'
+            )
+
+          ],
+
+          [
+
+            Markup.button.callback(
+              '🔔 Notifications',
+              'notifications_panel'
+            )
+
+          ],
+
+          [
+
+            Markup.button.callback(
+              '⚙️ Admin',
+              'admin_panel'
             )
 
           ]
