@@ -406,6 +406,142 @@ bot.command(
 
 )
 
+/*
+|--------------------------------------------------------------------------
+| ADD MONEY
+|--------------------------------------------------------------------------
+*/
+
+bot.command(
+
+  'addmoney',
+
+  async (ctx) => {
+
+    try {
+
+      const User =
+      require('../models/User')
+
+      const args =
+      ctx.message.text.split(' ')
+
+      const userId =
+      Number(args[1])
+
+      const amount =
+      Number(args[2])
+
+      const user =
+      await User.findOne({
+
+        id: userId
+
+      })
+
+      if (!user) {
+
+        return ctx.reply(
+`
+❌ User introuvable.
+`
+        )
+
+      }
+
+      user.money += amount
+
+      await user.save()
+
+      await ctx.reply(
+`
+✅ ${amount}$ ajoutés.
+`
+      )
+
+    }
+
+    catch (error) {
+
+      console.log(error)
+
+    }
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| REMOVE MONEY
+|--------------------------------------------------------------------------
+*/
+
+bot.command(
+
+  'removemoney',
+
+  async (ctx) => {
+
+    try {
+
+      const User =
+      require('../models/User')
+
+      const args =
+      ctx.message.text.split(' ')
+
+      const userId =
+      Number(args[1])
+
+      const amount =
+      Number(args[2])
+
+      const user =
+      await User.findOne({
+
+        id: userId
+
+      })
+
+      if (!user) {
+
+        return ctx.reply(
+`
+❌ User introuvable.
+`
+        )
+
+      }
+
+      user.money -= amount
+
+      if (user.money < 0) {
+
+        user.money = 0
+
+      }
+
+      await user.save()
+
+      await ctx.reply(
+`
+✅ ${amount}$ retirés.
+`
+      )
+
+    }
+
+    catch (error) {
+
+      console.log(error)
+
+    }
+
+  }
+
+)
+
   /*
   |--------------------------------------------------------------------------
   | PROMOTE

@@ -479,31 +479,181 @@ bot.action(
 
   bot.action(
 
-    'admin_finance',
+  'admin_finance',
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        await ctx.reply(
-`
- Finance active.
-`
-        )
+      const User =
+      require('../models/User')
+
+      const users =
+      await User.find()
+
+      let totalMoney = 0
+
+      for (const user of users) {
+
+        totalMoney +=
+        user.money || 0
 
       }
 
-      catch (error) {
+      const richest =
+      users
 
-        console.log(error)
+      .sort(
 
-      }
+        (a, b) =>
+
+          (b.money || 0)
+
+          -
+
+          (a.money || 0)
+
+      )
+
+      .slice(0, 5)
+
+      let richestText = ''
+
+      richest.forEach(
+
+        (user, index) => {
+
+          richestText +=
+`
+${index + 1}. @${user.username || 'unknown'}
+
+💰 ${user.money || 0}$
+
+`
+
+        }
+
+      )
+
+      await ctx.reply(
+
+`
+💰 HACKWORLD FINANCE
+
+━━━━━━━━━━━━━━━━━━
+
+👥 Users :
+${users.length}
+
+💵 Argent total :
+${totalMoney}$
+
+━━━━━━━━━━━━━━━━━━
+
+🏆 TOP RICHEST
+
+${richestText}
+
+━━━━━━━━━━━━━━━━━━
+
+📌 Commandes :
+
+/addmoney ID amount
+
+/removemoney ID amount
+
+━━━━━━━━━━━━━━━━━━
+`,
+
+        {
+
+          reply_markup: {
+
+            inline_keyboard: [
+
+              [
+
+                {
+
+                  text:
+                  '💸 Transactions',
+
+                  callback_data:
+                  'finance_transactions'
+
+                }
+
+              ],
+
+              [
+
+                {
+
+                  text:
+                  '🏠 Menu',
+
+                  callback_data:
+                  'back_main_menu'
+
+                }
+
+              ]
+
+            ]
+
+          }
+
+        }
+
+      )
 
     }
 
-  )
+    catch (error) {
+
+      console.log(error)
+
+    }
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| FINANCE TRANSACTIONS
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'finance_transactions',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      await ctx.reply(
+`
+💸 Transactions system actif.
+`
+      )
+
+    }
+
+    catch (error) {
+
+      console.log(error)
+
+    }
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
