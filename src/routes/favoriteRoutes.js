@@ -37,7 +37,9 @@ module.exports = (bot) => {
 
         )
 
-      } catch (error) {
+      }
+
+      catch (error) {
 
         console.log(error)
 
@@ -49,7 +51,39 @@ module.exports = (bot) => {
 
   /*
   |--------------------------------------------------------------------------
-  | FAVORITES
+  | FAVORITES PANEL
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'favorites_panel',
+
+    async (ctx) => {
+
+      try {
+
+        await ctx.answerCbQuery()
+
+        await openFavorites(
+          ctx
+        )
+
+      }
+
+      catch (error) {
+
+        console.log(error)
+
+      }
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | FAVORITES COMMAND
   |--------------------------------------------------------------------------
   */
 
@@ -65,7 +99,9 @@ module.exports = (bot) => {
           ctx
         )
 
-      } catch (error) {
+      }
+
+      catch (error) {
 
         console.log(error)
 

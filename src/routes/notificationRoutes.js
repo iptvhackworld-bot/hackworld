@@ -12,23 +12,102 @@ module.exports = (bot) => {
 
   /*
   |--------------------------------------------------------------------------
-  | ENABLE
+  | NOTIFICATION PANEL
   |--------------------------------------------------------------------------
   */
 
-  bot.command(
+  bot.action(
 
-    'notifications_on',
+    'notifications_panel',
 
     async (ctx) => {
 
       try {
 
+        await ctx.answerCbQuery()
+
+        await ctx.reply(
+`
+🔔 NOTIFICATIONS
+
+━━━━━━━━━━━━━━━━━━
+
+Choisissez une option :
+`,
+
+          {
+
+            reply_markup: {
+
+              inline_keyboard: [
+
+                [
+
+                  {
+
+                    text:
+                    '✅ Activer',
+
+                    callback_data:
+                    'notifications_enable'
+
+                  },
+
+                  {
+
+                    text:
+                    '❌ Désactiver',
+
+                    callback_data:
+                    'notifications_disable'
+
+                  }
+
+                ]
+
+              ]
+
+            }
+
+          }
+
+        )
+
+      }
+
+      catch (error) {
+
+        console.log(error)
+
+      }
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | ENABLE
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'notifications_enable',
+
+    async (ctx) => {
+
+      try {
+
+        await ctx.answerCbQuery()
+
         await enableUserNotifications(
           ctx
         )
 
-      } catch (error) {
+      }
+
+      catch (error) {
 
         console.log(error)
 
@@ -44,19 +123,23 @@ module.exports = (bot) => {
   |--------------------------------------------------------------------------
   */
 
-  bot.command(
+  bot.action(
 
-    'notifications_off',
+    'notifications_disable',
 
     async (ctx) => {
 
       try {
 
+        await ctx.answerCbQuery()
+
         await disableUserNotifications(
           ctx
         )
 
-      } catch (error) {
+      }
+
+      catch (error) {
 
         console.log(error)
 

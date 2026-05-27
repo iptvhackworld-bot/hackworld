@@ -34,12 +34,11 @@ module.exports = (bot) => {
 
         await openAdminPanel(ctx)
 
-      } catch (error) {
+      }
 
-        console.log(
-          'ADMIN PANEL ERROR:',
-          error
-        )
+      catch (error) {
+
+        console.log(error)
 
       }
 
@@ -49,7 +48,7 @@ module.exports = (bot) => {
 
   /*
   |--------------------------------------------------------------------------
-  | ADMIN USERS
+  | USERS
   |--------------------------------------------------------------------------
   */
 
@@ -65,18 +64,15 @@ module.exports = (bot) => {
 
         await ctx.reply(
 `
-?? Gestion utilisateurs
-
-?? Fonction bient?t disponible.
+?? Gestion utilisateurs active.
 `
         )
 
-      } catch (error) {
+      }
 
-        console.log(
-          'ADMIN USERS ERROR:',
-          error
-        )
+      catch (error) {
+
+        console.log(error)
 
       }
 
@@ -86,7 +82,7 @@ module.exports = (bot) => {
 
   /*
   |--------------------------------------------------------------------------
-  | ADMIN MODERATION
+  | MODERATION
   |--------------------------------------------------------------------------
   */
 
@@ -102,18 +98,15 @@ module.exports = (bot) => {
 
         await ctx.reply(
 `
-?? Mod¨¦ration
-
-?? Fonction bient?t disponible.
+?? Modération active.
 `
         )
 
-      } catch (error) {
+      }
 
-        console.log(
-          'MODERATION ERROR:',
-          error
-        )
+      catch (error) {
+
+        console.log(error)
 
       }
 
@@ -123,7 +116,7 @@ module.exports = (bot) => {
 
   /*
   |--------------------------------------------------------------------------
-  | ADMIN LOGS
+  | LOGS
   |--------------------------------------------------------------------------
   */
 
@@ -137,20 +130,13 @@ module.exports = (bot) => {
 
         await ctx.answerCbQuery()
 
-        await ctx.reply(
-`
-?? Logs syst¨¨me
+        await openDashboard(ctx)
 
-?? Fonction bient?t disponible.
-`
-        )
+      }
 
-      } catch (error) {
+      catch (error) {
 
-        console.log(
-          'LOGS ERROR:',
-          error
-        )
+        console.log(error)
 
       }
 
@@ -160,7 +146,7 @@ module.exports = (bot) => {
 
   /*
   |--------------------------------------------------------------------------
-  | ADMIN SETTINGS
+  | SETTINGS
   |--------------------------------------------------------------------------
   */
 
@@ -176,18 +162,15 @@ module.exports = (bot) => {
 
         await ctx.reply(
 `
-?? Param¨¨tres
-
-?? Fonction bient?t disponible.
+?? Paramètres admin actifs.
 `
         )
 
-      } catch (error) {
+      }
 
-        console.log(
-          'SETTINGS ERROR:',
-          error
-        )
+      catch (error) {
+
+        console.log(error)
 
       }
 
@@ -197,38 +180,7 @@ module.exports = (bot) => {
 
   /*
   |--------------------------------------------------------------------------
-  | DASHBOARD
-  |--------------------------------------------------------------------------
-  */
-
-  bot.action(
-
-    'admin_dashboard',
-
-    async (ctx) => {
-
-      try {
-
-        await ctx.answerCbQuery()
-
-        await openDashboard(ctx)
-
-      } catch (error) {
-
-        console.log(
-          'DASHBOARD ERROR:',
-          error
-        )
-
-      }
-
-    }
-
-  )
-
-  /*
-  |--------------------------------------------------------------------------
-  | ADMIN BROADCAST
+  | BROADCAST
   |--------------------------------------------------------------------------
   */
 
@@ -244,18 +196,83 @@ module.exports = (bot) => {
 
         await ctx.reply(
 `
-?? Broadcast
-
-?? Fonction bient?t disponible.
+?? Broadcast actif.
 `
         )
 
-      } catch (error) {
+      }
 
-        console.log(
-          'BROADCAST ERROR:',
-          error
+      catch (error) {
+
+        console.log(error)
+
+      }
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | FINANCE
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_finance',
+
+    async (ctx) => {
+
+      try {
+
+        await ctx.answerCbQuery()
+
+        await ctx.reply(
+`
+?? Finance active.
+`
         )
+
+      }
+
+      catch (error) {
+
+        console.log(error)
+
+      }
+
+    }
+
+  )
+
+  /*
+  |--------------------------------------------------------------------------
+  | CASINO
+  |--------------------------------------------------------------------------
+  */
+
+  bot.action(
+
+    'admin_casino',
+
+    async (ctx) => {
+
+      try {
+
+        await ctx.answerCbQuery()
+
+        await ctx.reply(
+`
+?? Casino admin actif.
+`
+        )
+
+      }
+
+      catch (error) {
+
+        console.log(error)
 
       }
 
