@@ -1,6 +1,5 @@
 module.exports = (bot) => {
 
-
   require('./startRoutes')(bot)
 
   /*
@@ -16,12 +15,6 @@ module.exports = (bot) => {
   require('./marketRoutes')(bot)
 
   require('./favoriteRoutes')(bot)
-
-  require('./purchaseRoutes')(bot)
-
-  require('./searchRoutes')(bot)
-
-  require('./filterRoutes')(bot)
 
   require('./notificationRoutes')(bot)
 
@@ -39,13 +32,13 @@ module.exports = (bot) => {
 
   require('./casinoRoutes')(bot)
 
-  require('./verificationRoutes')(bot)
+  /*
+  |--------------------------------------------------------------------------
+  | SUPPORT
+  |--------------------------------------------------------------------------
+  */
 
-  require('./escrowRoutes')(bot)
-
-  require('./disputeRoutes')(bot)
-
-  require('./logRoutes')(bot)
+  require('./supportRoutes')(bot)
 
   /*
   |--------------------------------------------------------------------------
@@ -56,11 +49,3 @@ module.exports = (bot) => {
   require('./adminRoutes')(bot)
 
 }
-
-  /*
-  |--------------------------------------------------------------------------
-  | SUPPORT 
-  |--------------------------------------------------------------------------
-  */
-  
-  require('./supportRoutes')(bot)
