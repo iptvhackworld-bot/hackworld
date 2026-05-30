@@ -347,31 +347,177 @@ bot.action(
 
   bot.action(
 
-    'admin_moderation',
+  'admin_moderation',
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        await ctx.reply(
+      await ctx.reply(
+
 `
-👥 Mod�ration active.
-`
-        )
+🛡 MODÉRATION
 
-      }
+━━━━━━━━━━━━━━━━━━
 
-      catch (error) {
+⚡ Outils de modération
 
-        console.log(error)
+━━━━━━━━━━━━━━━━━━
 
-      }
+📌 Commandes disponibles :
+
+/warn ID raison
+
+/mute ID
+
+/unmute ID
+
+/ban ID
+
+/unban ID
+
+/kick ID
+
+━━━━━━━━━━━━━━━━━━
+`,
+
+        {
+
+          reply_markup: {
+
+            inline_keyboard: [
+
+              [
+
+                {
+
+                  text:
+                  '🚨 Warn',
+
+                  callback_data:
+                  'mod_warn'
+
+                },
+
+                {
+
+                  text:
+                  '🔇 Mute',
+
+                  callback_data:
+                  'mod_mute'
+
+                }
+
+              ],
+
+              [
+
+                {
+
+                  text:
+                  '🔊 Unmute',
+
+                  callback_data:
+                  'mod_unmute'
+
+                },
+
+                {
+
+                  text:
+                  '🚫 Ban',
+
+                  callback_data:
+                  'mod_ban'
+
+                }
+
+              ],
+
+              [
+
+                {
+
+                  text:
+                  '✅ Unban',
+
+                  callback_data:
+                  'mod_unban'
+
+                },
+
+                {
+
+                  text:
+                  '👢 Kick',
+
+                  callback_data:
+                  'mod_kick'
+
+                }
+
+              ],
+
+              [
+
+                {
+
+                  text:
+                  '📋 Logs',
+
+                  callback_data:
+                  'mod_logs'
+
+                }
+
+              ],
+
+              [
+
+                {
+
+                  text:
+                  '⬅️ Retour',
+
+                  callback_data:
+                  'admin_panel'
+
+                },
+
+                {
+
+                  text:
+                  '🏠 Menu',
+
+                  callback_data:
+                  'back_main_menu'
+
+                }
+
+              ]
+
+            ]
+
+          }
+
+        }
+
+      )
 
     }
 
-  )
+    catch (error) {
+
+      console.log(error)
+
+    }
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -650,6 +796,150 @@ bot.action(
       console.log(error)
 
     }
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| MODERATION COMMAND 
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'mod_warn',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+🚨 Utilisation :
+
+/warn USER_ID raison
+`
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'mod_mute',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+🔇 Utilisation :
+
+/mute USER_ID
+`
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'mod_unmute',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+🔊 Utilisation :
+
+/unmute USER_ID
+`
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'mod_ban',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+🚫 Utilisation :
+
+/ban USER_ID
+`
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'mod_unban',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+✅ Utilisation :
+
+/unban USER_ID
+`
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'mod_kick',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+👢 Utilisation :
+
+/kick USER_ID
+`
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'mod_logs',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await ctx.reply(
+`
+📋 Logs de modération actifs.
+`
+    )
 
   }
 

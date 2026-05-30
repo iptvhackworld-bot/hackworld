@@ -542,6 +542,147 @@ bot.command(
 
 )
 
+/*
+|--------------------------------------------------------------------------
+| WARN
+|--------------------------------------------------------------------------
+*/
+
+bot.command(
+
+  'warn',
+
+  async (ctx) => {
+
+    try {
+
+      const allowed =
+        await isAdmin(
+          ctx.from.id
+        )
+
+      if (!allowed) {
+
+        return ctx.reply(
+`
+❌ Permission refusée.
+`
+        )
+
+      }
+
+      const args =
+        ctx.message.text.split(' ')
+
+      const userId =
+        Number(args[1])
+
+      const reason =
+        args.slice(2).join(' ')
+
+      if (!userId) {
+
+        return ctx.reply(
+`
+❌ Utilisation :
+
+/warn ID raison
+`
+        )
+
+      }
+
+      await ctx.reply(
+`
+🚨 Avertissement enregistré
+
+👤 User :
+${userId}
+
+📌 Raison :
+${reason || 'Non précisée'}
+`
+      )
+
+    }
+
+    catch (error) {
+
+      console.log(error)
+
+    }
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| KICK
+|--------------------------------------------------------------------------
+*/
+
+bot.command(
+
+  'kick',
+
+  async (ctx) => {
+
+    try {
+
+      const allowed =
+        await isAdmin(
+          ctx.from.id
+        )
+
+      if (!allowed) {
+
+        return ctx.reply(
+`
+❌ Permission refusée.
+`
+        )
+
+      }
+
+      const args =
+        ctx.message.text.split(' ')
+
+      const userId =
+        Number(args[1])
+
+      if (!userId) {
+
+        return ctx.reply(
+`
+❌ Utilisation :
+
+/kick ID
+`
+        )
+
+      }
+
+      await ctx.reply(
+`
+👢 User expulsé :
+
+${userId}
+`
+      )
+
+    }
+
+    catch (error) {
+
+      console.log(error)
+
+    }
+
+  }
+
+)
+
   /*
   |--------------------------------------------------------------------------
   | PROMOTE
