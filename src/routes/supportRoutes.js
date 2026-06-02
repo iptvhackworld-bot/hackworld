@@ -2,21 +2,25 @@ module.exports = (bot) => {
 
   const {
 
-    openTicketPanel,
+  openTicketPanel,
 
-    createTicket,
+  createTicket,
 
-    openUserTickets,
+  openUserTickets,
 
-    closeTicket,
+  closeTicket,
 
-    openAdminTickets,
+  openAdminTickets,
 
-    replyTicket
+  replyTicket,
 
-  } = require(
-    '../handlers/ticketHandler'
-  )
+  cleanupClosedTickets,
+
+  organizeTickets
+
+} = require(
+  '../handlers/ticketHandler'
+)
   
   const {
 
@@ -244,6 +248,76 @@ module.exports = (bot) => {
 
 )
 
+ /*
+  |--------------------------------------------------------------------------
+  | TICKET SORT
+  |--------------------------------------------------------------------------
+  */
+  
+  bot.action(
+
+  'tickets_sort',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      await organizeTickets(
+        ctx
+      )
+
+    }
+
+    catch (error) {
+
+      logError(
+        'TICKETS_SORT',
+        error
+      )
+
+    }
+
+  }
+
+)
+
+/*
+  |--------------------------------------------------------------------------
+  | TICKET CLEANNUP
+  |--------------------------------------------------------------------------
+  */
+  
+  bot.action(
+
+  'tickets_cleanup',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      await cleanupClosedTickets(
+        ctx
+      )
+
+    }
+
+    catch (error) {
+
+      logError(
+        'TICKETS_CLEANUP',
+        error
+      )
+
+    }
+
+  }
+
+)
+
   /*
   |--------------------------------------------------------------------------
   | REPLY
@@ -299,9 +373,12 @@ module.exports = (bot) => {
 
       catch (error) {
 
-        console.log(error)
+  logError(
+    'REPLY_COMMAND',
+    error
+  )
 
-      }
+}
 
     }
 

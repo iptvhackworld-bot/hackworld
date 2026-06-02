@@ -37,6 +37,11 @@ const {
   '../utils/logger'
 )
 
+const Ticket =
+require(
+  '../models/Ticket'
+)
+
 /*
 |--------------------------------------------------------------------------
 | OPEN PANEL
@@ -245,16 +250,39 @@ ${ticket.status}
 
         Markup.inlineKeyboard([
 
-          [
+  [
 
-            Markup.button.callback(
-              '🔒 Fermer',
-              `close_ticket_${ticket._id}`
-            )
+    Markup.button.callback(
+      '🔒 Fermer',
+      `close_ticket_${ticket._id}`
+    )
 
-          ]
+  ],
 
-        ])
+  [
+
+    Markup.button.callback(
+      '📂 Organiser',
+      'tickets_sort'
+    ),
+
+    Markup.button.callback(
+      '🗑️ Nettoyer',
+      'tickets_cleanup'
+    )
+
+  ],
+
+  [
+
+    Markup.button.callback(
+      '🏠 Menu',
+      'back_main_menu'
+    )
+
+  ]
+
+])
 
       )
 
@@ -291,6 +319,10 @@ async (
   try {
 
     await closeTicketById(id)
+	
+	logInfo(
+      `CLOSE_TICKET_ADMIN ${ctx.from.id} ${id}`
+    )
 
     await ctx.reply(
 `
@@ -300,9 +332,12 @@ async (
 
   } catch (error) {
 
-    console.log(error)
+  logError(
+    'CLOSE_TICKET_ADMIN',
+    error
+  )
 
-  }
+}
 
 }
 
@@ -319,9 +354,16 @@ async (ctx) => {
 
     return false
 
-  } catch (error) {
+  }
 
-    console.log(error)
+  catch (error) {
+
+    logError(
+      'HANDLE_ADMIN_TICKET_INPUT',
+      error
+    )
+
+    return false
 
   }
 
@@ -411,37 +453,6 @@ async (
 
 }
 
-    /*
-    |--------------------------------------------------------------------------
-    | NOTIFY USER
-    |--------------------------------------------------------------------------
-    */
-
-    await ctx.telegram.sendMessage(
-
-      ticket.userId,
-
-`
-📩 Nouvelle réponse support
-
-💬 ${message}
-`
-    )
-
-    await ctx.reply(
-`
-✅ Réponse envoyée.
-`
-    )
-
-  } catch (error) {
-
-  logError(
-    'REPLY_TICKET',
-    error
-  )
-
-}
 
 /*
 |--------------------------------------------------------------------------
@@ -587,6 +598,103 @@ async (
 
 }
 
+const cleanupClosedTickets =
+async (ctx) => {
+
+  try {
+
+    const result =
+      await Ticket.deleteMany({
+
+        status: 'closed'
+
+      })
+
+    logInfo(
+      `TICKETS_CLEANUP ${ctx.from.id}`
+    )
+
+    await ctx.reply(
+
+`
+🗑️ Nettoyage terminé
+
+━━━━━━━━━━━━━━━━━━
+
+📦 Tickets supprimés :
+
+${result.deletedCount}
+
+━━━━━━━━━━━━━━━━━━
+`
+
+    )
+
+  }
+
+  catch (error) {
+
+    logError(
+      'TICKETS_CLEANUP',
+      error
+    )
+
+  }
+
+}
+
+const organizeTickets =
+async (ctx) => {
+
+  try {
+
+    const open =
+      await Ticket.countDocuments({
+
+        status: 'open'
+
+      })
+
+    const closed =
+      await Ticket.countDocuments({
+
+        status: 'closed'
+
+      })
+
+    logInfo(
+      `TICKETS_ORGANIZE ${ctx.from.id}`
+    )
+
+    await ctx.reply(
+
+`
+📂 ORGANISATION TICKETS
+
+━━━━━━━━━━━━━━━━━━
+
+🔴 Ouverts : ${open}
+
+🟢 Fermés : ${closed}
+
+━━━━━━━━━━━━━━━━━━
+`
+
+    )
+
+  }
+
+  catch (error) {
+
+    logError(
+      'TICKETS_ORGANIZE',
+      error
+    )
+
+  }
+
+}
+
 module.exports = {
 
   openTicketPanel,
@@ -605,6 +713,10 @@ module.exports = {
 
   createTicket,
 
-  openUserTickets
+  openUserTickets,
+
+  cleanupClosedTickets,
+
+  organizeTickets
 
 }
