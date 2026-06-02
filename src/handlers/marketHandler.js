@@ -85,6 +85,18 @@ const {
   '../services/premiumService'
 )
 
+const {
+
+  logInfo,
+
+  logError,
+
+  logEconomy
+
+} = require(
+  '../utils/logger'
+)
+
 /*
 |--------------------------------------------------------------------------
 | SESSIONS
@@ -107,6 +119,10 @@ const openMarket =
 async (ctx) => {
 
   try {
+
+    logInfo(
+      `OPEN_MARKET ${ctx.from.id}`
+    )
 
     await ctx.reply(
 
@@ -164,9 +180,12 @@ async (ctx) => {
 
   } catch (error) {
 
-    console.log(error)
+  logError(
+    'OPEN_MARKET',
+    error
+  )
 
-  }
+}
 
 }
 
@@ -191,6 +210,10 @@ async (ctx) => {
       step: 1
 
     }
+	
+	logInfo(
+  `CREATE_LISTING_PANEL ${ctx.from.id}`
+)
 
     await ctx.reply(
 `
@@ -206,9 +229,12 @@ Netflix Premium | 50 | Accounts
 
   } catch (error) {
 
-    console.log(error)
+  logError(
+    'CREATE_LISTING_PANEL',
+    error
+  )
 
-  }
+}
 
 }
 
@@ -439,6 +465,10 @@ titre | prix | catégorie
 
       })
 
+      logInfo(
+        `LISTING_CREATED ${ctx.from.id} ${session.title}`
+      )
+
       /*
       |--------------------------------------------------------------------------
       | NOTIFICATIONS
@@ -450,25 +480,25 @@ titre | prix | catégorie
 
       for (const userId of users) {
 
-        try {
+  try {
 
-          if (
+    if (
 
-            Number(userId)
+      Number(userId)
 
-            ===
+      ===
 
-            ctx.from.id
+      ctx.from.id
 
-          ) {
+    ) {
 
-            continue
+      continue
 
-          }
+    }
 
-          await ctx.telegram.sendMessage(
+    await ctx.telegram.sendMessage(
 
-            userId,
+      userId,
 
 `
 🆕 Nouvelle annonce
@@ -477,15 +507,20 @@ titre | prix | catégorie
 
 💰 ${session.price}$
 `
-          )
+    )
 
-        } catch (error) {
+  }
 
-          console.log(error)
+  catch (error) {
 
-        }
+    logError(
+      'MARKET_NOTIFICATION',
+      error
+    )
 
-      }
+  }
+
+}
 
       /*
       |--------------------------------------------------------------------------
@@ -529,9 +564,12 @@ titre | prix | catégorie
 
   } catch (error) {
 
-    console.log(error)
+  logError(
+    'HANDLE_MARKET_INPUT',
+    error
+  )
 
-  }
+}
 
 }
 
@@ -715,7 +753,10 @@ ${item.featured
 
   } catch (error) {
 
-    console.log(error)
+    logError(
+    'VIEW_MARKET',
+    error
+  )
 
   }
 
@@ -779,6 +820,10 @@ async (
     }
 
     await markSold(id)
+	
+	logEconomy(
+  `MARKET_PURCHASE ${ctx.from.id} ${item.price}$`
+)
 
     await createPurchase({
 
@@ -837,7 +882,10 @@ async (
 
   } catch (error) {
 
-    console.log(error)
+    logError(
+    'BUY_MARKET_ITEM',
+    error
+  )
 
   }
 
@@ -913,6 +961,10 @@ async (
         ''
 
       )
+	  
+	  logInfo(
+  `REVIEW_PRODUCT ${ctx.from.id} ${rating}/5`
+)
 
     if (!created) {
 
@@ -948,7 +1000,10 @@ ${rating}/5
 
   } catch (error) {
 
-    console.log(error)
+    logError(
+  'REVIEW_PRODUCT',
+  error
+)
 
   }
 
@@ -993,6 +1048,10 @@ async (
       rating
 
     )
+	
+	logInfo(
+  `RATE_SELLER ${ctx.from.id} ${rating}/5`
+)
 
     await ctx.reply(
 `
@@ -1004,7 +1063,10 @@ ${rating}/5
 
   } catch (error) {
 
-    console.log(error)
+    logError(
+  'RATE_SELLER',
+  error
+)
 
   }
 
@@ -1065,7 +1127,10 @@ ${item.featured
 
   } catch (error) {
 
-    console.log(error)
+    logError(
+  'SEARCH_MARKET',
+  error
+)
 
   }
 
@@ -1087,6 +1152,10 @@ async (
 ) => {
 
   try {
+
+    logInfo(
+      `OPEN_CATEGORY ${ctx.from.id} ${category}`
+    )
 
     const listings =
       await getCategoryListings(
@@ -1126,7 +1195,10 @@ ${item.featured
 
   } catch (error) {
 
-    console.log(error)
+    logError(
+  'OPEN_CATEGORY',
+  error
+)
 
   }
 
