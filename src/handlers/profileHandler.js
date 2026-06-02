@@ -3,6 +3,24 @@ require(
   '../models/User'
 )
 
+const {
+
+  Markup
+
+} = require(
+  'telegraf'
+)
+
+const {
+
+  logInfo,
+
+  logError
+
+} = require(
+  '../utils/logger'
+)
+
 /*
 |--------------------------------------------------------------------------
 | PROFILE
@@ -31,7 +49,12 @@ async (ctx) => {
 
     }
 
+    logInfo(
+      `PROFILE_OPEN ${ctx.from.id}`
+    )
+
     await ctx.reply(
+
 `
 👤 PROFIL
 
@@ -58,13 +81,35 @@ ${user.prestige || 0}
 💬 Messages :
 ${user.messages || 0}
 
+👑 Rôle :
+${user.role || 'user'}
+
 ━━━━━━━━━━━━━━━━━━
-`
+`,
+
+      Markup.inlineKeyboard([
+
+        [
+
+          Markup.button.callback(
+            '🏠 Menu',
+            'back_main_menu'
+          )
+
+        ]
+
+      ])
+
     )
 
-  } catch (error) {
+  }
 
-    console.log(error)
+  catch (error) {
+
+    logError(
+      'PROFILE_HANDLER',
+      error
+    )
 
   }
 

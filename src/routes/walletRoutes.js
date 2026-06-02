@@ -8,6 +8,16 @@ module.exports = (bot) => {
     '../handlers/walletHandler'
   )
 
+  const {
+
+    logInfo,
+
+    logError
+
+  } = require(
+    '../utils/logger'
+  )
+
   /*
   |--------------------------------------------------------------------------
   | WALLET PANEL
@@ -24,11 +34,20 @@ module.exports = (bot) => {
 
         await ctx.answerCbQuery()
 
+        logInfo(
+          `WALLET_PANEL ${ctx.from.id}`
+        )
+
         await openWalletPanel(ctx)
 
-      } catch (error) {
+      }
 
-        console.log(error)
+      catch (error) {
+
+        logError(
+          'WALLET_PANEL',
+          error
+        )
 
       }
 
@@ -52,15 +71,24 @@ module.exports = (bot) => {
 
         await ctx.answerCbQuery()
 
+        logInfo(
+          `WALLET_DEPOSIT ${ctx.from.id}`
+        )
+
         await ctx.reply(
 `
 💳 Dépôt bientôt disponible.
 `
         )
 
-      } catch (error) {
+      }
 
-        console.log(error)
+      catch (error) {
+
+        logError(
+          'WALLET_DEPOSIT',
+          error
+        )
 
       }
 
@@ -84,15 +112,24 @@ module.exports = (bot) => {
 
         await ctx.answerCbQuery()
 
+        logInfo(
+          `WALLET_WITHDRAW ${ctx.from.id}`
+        )
+
         await ctx.reply(
 `
 🏦 Retrait bientôt disponible.
 `
         )
 
-      } catch (error) {
+      }
 
-        console.log(error)
+      catch (error) {
+
+        logError(
+          'WALLET_WITHDRAW',
+          error
+        )
 
       }
 
@@ -116,15 +153,24 @@ module.exports = (bot) => {
 
         await ctx.answerCbQuery()
 
+        logInfo(
+          `WALLET_LOGS ${ctx.from.id}`
+        )
+
         await ctx.reply(
 `
 📜 Historique bientôt disponible.
 `
         )
 
-      } catch (error) {
+      }
 
-        console.log(error)
+      catch (error) {
+
+        logError(
+          'WALLET_LOGS',
+          error
+        )
 
       }
 

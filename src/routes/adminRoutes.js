@@ -15,6 +15,16 @@ module.exports = (bot) => {
   } = require(
     '../handlers/dashboardHandler'
   )
+  
+  const {
+
+  logInfo,
+
+  logError
+
+} = require(
+  '../utils/logger'
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -31,6 +41,10 @@ module.exports = (bot) => {
       try {
 
         await ctx.answerCbQuery()
+		
+		logInfo(
+          `ADMIN_PANEL ${ctx.from.id}`
+)
 
         await openAdminPanel(ctx)
 
@@ -61,6 +75,10 @@ module.exports = (bot) => {
     try {
 
       await ctx.answerCbQuery()
+	  
+	  logInfo(
+        `ADMIN_USERS ${ctx.from.id}`
+)
 
       await ctx.reply(
 
@@ -140,7 +158,6 @@ module.exports = (bot) => {
               ],
 
               [
-
                 {
 
                   text:
@@ -158,6 +175,28 @@ module.exports = (bot) => {
 
                   callback_data:
                   'admin_demote_help'
+
+                }
+			   ],
+				
+			   [
+				{
+
+                   text:
+                    '⬅️ Retour',
+
+                  callback_data:
+                   'admin_panel'
+
+                },
+
+                {
+
+                   text:
+                    '🏠 Menu',
+
+                   callback_data:
+                    'back_main_menu'
 
                 }
 
@@ -345,7 +384,7 @@ bot.action(
   |--------------------------------------------------------------------------
   */
 
-  bot.action(
+bot.action(
 
   'admin_moderation',
 
@@ -354,6 +393,10 @@ bot.action(
     try {
 
       await ctx.answerCbQuery()
+
+      logInfo(
+        `ADMIN_MODERATION ${ctx.from.id}`
+      )
 
       await ctx.reply(
 
@@ -511,7 +554,10 @@ bot.action(
 
     catch (error) {
 
-      console.log(error)
+      logError(
+        'ADMIN_MODERATION',
+        error
+      )
 
     }
 
@@ -527,27 +573,142 @@ bot.action(
 
   bot.action(
 
-    'admin_logs',
+  'admin_logs',
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
+	  
+	  logInfo(
+        `ADMIN_LOGS ${ctx.from.id}`
+)
 
-        await openDashboard(ctx)
+      const fs =
+      require('fs')
+
+      const path =
+      require('path')
+
+      const logFile =
+      path.join(
+
+        __dirname,
+
+        '../logs/bot.log'
+
+      )
+
+      if (
+
+        !fs.existsSync(logFile)
+
+      ) {
+
+        return ctx.reply(
+`
+❌ Aucun log trouvé.
+`
+        )
 
       }
 
-      catch (error) {
+      const content =
+      fs.readFileSync(
 
-        console.log(error)
+        logFile,
 
-      }
+        'utf8'
+
+      )
+
+      const lines =
+      content
+
+      .split('\n')
+
+      .filter(Boolean)
+
+      .slice(-20)
+
+      .join('\n')
+
+      await ctx.reply(
+
+`
+📊 LOGS HACKWORLD
+
+━━━━━━━━━━━━━━━━━━
+
+${lines || 'Aucun log'}
+
+━━━━━━━━━━━━━━━━━━
+`,
+
+        {
+
+          reply_markup: {
+
+            inline_keyboard: [
+
+              [
+
+                {
+
+                  text:
+                  '🗑 Vider',
+
+                  callback_data:
+                  'clear_logs'
+
+                }
+
+              ],
+
+              [
+
+                {
+
+                  text:
+                  '⬅️ Retour',
+
+                  callback_data:
+                  'admin_panel'
+
+                },
+
+                {
+
+                  text:
+                  '🏠 Menu',
+
+                  callback_data:
+                  'back_main_menu'
+
+                }
+
+              ]
+
+            ]
+
+          }
+
+        }
+
+      )
 
     }
 
-  )
+    catch (error) {
+
+      console.log(error)
+
+    }
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -567,7 +728,7 @@ bot.action(
 
         await ctx.reply(
 `
- Param�tres admin actifs.
+ ⚙️ Paramètres admin actifs.
 `
         )
 
@@ -601,7 +762,7 @@ bot.action(
 
         await ctx.reply(
 `
- Broadcast actif.
+ 📢 Broadcast actif.
 `
         )
 
@@ -632,6 +793,10 @@ bot.action(
     try {
 
       await ctx.answerCbQuery()
+	  
+	  logInfo(
+        `ADMIN_FINANCE ${ctx.from.id}`
+)
 
       const User =
       require('../models/User')
@@ -945,6 +1110,63 @@ bot.action(
 
 )
 
+/*
+  |--------------------------------------------------------------------------
+  | LOG HISTO
+  |--------------------------------------------------------------------------
+  */
+
+bot.action(
+
+  'clear_logs',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      const fs =
+      require('fs')
+
+      const path =
+      require('path')
+
+      const logFile =
+      path.join(
+
+        __dirname,
+
+        '../logs/bot.log'
+
+      )
+
+      fs.writeFileSync(
+
+        logFile,
+
+        ''
+
+      )
+
+      await ctx.reply(
+`
+✅ Logs supprimés.
+`
+      )
+
+    }
+
+    catch (error) {
+
+      console.log(error)
+
+    }
+
+  }
+
+)
+
   /*
   |--------------------------------------------------------------------------
   | CASINO
@@ -963,7 +1185,7 @@ bot.action(
 
         await ctx.reply(
 `
- Casino admin actif.
+ 🎰 Casino admin actif.
 `
         )
 

@@ -13,6 +13,16 @@ const {
   '../services/walletService'
 )
 
+const {
+
+  logInfo,
+
+  logError
+
+} = require(
+  '../utils/logger'
+)
+
 /*
 |--------------------------------------------------------------------------
 | WALLET PANEL
@@ -29,6 +39,10 @@ async (ctx) => {
         ctx.from.id
       )
 
+    logInfo(
+      `WALLET_OPEN ${ctx.from.id}`
+    )
+
     await ctx.reply(
 
 `
@@ -42,8 +56,15 @@ ${balance}$
 ━━━━━━━━━━━━━━━━━━
 
 🔒 Transactions sécurisées
-`
-,
+
+💳 Dépôts
+
+🏦 Retraits
+
+📜 Historique
+
+━━━━━━━━━━━━━━━━━━
+`,
 
       Markup.inlineKeyboard([
 
@@ -68,15 +89,29 @@ ${balance}$
             'wallet_logs'
           )
 
+        ],
+
+        [
+
+          Markup.button.callback(
+            '🏠 Menu',
+            'back_main_menu'
+          )
+
         ]
 
       ])
 
     )
 
-  } catch (error) {
+  }
 
-    console.log(error)
+  catch (error) {
+
+    logError(
+      'WALLET_HANDLER',
+      error
+    )
 
   }
 
@@ -95,9 +130,16 @@ async (ctx) => {
 
     return false
 
-  } catch (error) {
+  }
 
-    console.log(error)
+  catch (error) {
+
+    logError(
+      'WALLET_INPUT',
+      error
+    )
+
+    return false
 
   }
 

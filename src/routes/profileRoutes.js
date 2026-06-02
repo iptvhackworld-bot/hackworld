@@ -8,6 +8,16 @@ module.exports = (bot) => {
     '../handlers/profileHandler'
   )
 
+  const {
+
+    logInfo,
+
+    logError
+
+  } = require(
+    '../utils/logger'
+  )
+
   /*
   |--------------------------------------------------------------------------
   | PROFILE PANEL
@@ -24,8 +34,8 @@ module.exports = (bot) => {
 
         await ctx.answerCbQuery()
 
-        console.log(
-          'PROFILE CLICK'
+        logInfo(
+          `PROFILE_PANEL ${ctx.from.id}`
         )
 
         await openProfile(ctx)
@@ -34,7 +44,10 @@ module.exports = (bot) => {
 
       catch (error) {
 
-        console.log(error)
+        logError(
+          'PROFILE_PANEL',
+          error
+        )
 
       }
 

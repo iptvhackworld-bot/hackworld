@@ -30,6 +30,16 @@ const {
   '../services/logService'
 )
 
+const {
+
+  logSecurity,
+
+  logError
+
+} = require(
+  '../utils/logger'
+)
+
 /*
 |--------------------------------------------------------------------------
 | PROMOTE ADMIN
@@ -44,16 +54,16 @@ async (
   userId
 
 ) => {
-	
-	logStaffAction(
 
-  'PROMOTE',
+  logStaffAction(
 
-  ctx.from.id,
+    'PROMOTE',
 
-  userId
+    ctx.from.id,
 
-)
+    userId
+
+  )
 
   try {
 
@@ -65,6 +75,10 @@ async (
 
     )
 
+    logSecurity(
+      `PROMOTE ${userId} BY ${ctx.from.id}`
+    )
+
     await ctx.reply(
 `
 ✅ Utilisateur promu admin.
@@ -73,7 +87,10 @@ async (
 
   } catch (error) {
 
-    console.log(error)
+    logError(
+      'PROMOTE_ADMIN',
+      error
+    )
 
   }
 
@@ -93,32 +110,36 @@ async (
   userId
 
 ) => {
-	
-	await createLog(
 
-  'staff',
+  await createLog(
 
-  ctx.from.id,
+    'staff',
 
-  'BAN',
+    ctx.from.id,
 
-  `Target: ${userId}`
+    'BAN',
 
-)
-	
-	logStaffAction(
+    `Target: ${userId}`
 
-  'BAN',
+  )
 
-  ctx.from.id,
+  logStaffAction(
 
-  userId
+    'BAN',
 
-)
+    ctx.from.id,
+
+    userId
+
+  )
 
   try {
 
     await banUser(userId)
+
+    logSecurity(
+      `BAN ${userId} BY ${ctx.from.id}`
+    )
 
     await ctx.reply(
 `
@@ -128,7 +149,10 @@ async (
 
   } catch (error) {
 
-    console.log(error)
+    logError(
+      'BAN_MEMBER',
+      error
+    )
 
   }
 
@@ -148,20 +172,24 @@ async (
   userId
 
 ) => {
-	
-	logStaffAction(
 
-  'MUTE',
+  logStaffAction(
 
-  ctx.from.id,
+    'MUTE',
 
-  userId
+    ctx.from.id,
 
-)
+    userId
+
+  )
 
   try {
 
     await muteUser(userId)
+
+    logSecurity(
+      `MUTE ${userId} BY ${ctx.from.id}`
+    )
 
     await ctx.reply(
 `
@@ -171,7 +199,10 @@ async (
 
   } catch (error) {
 
-    console.log(error)
+    logError(
+      'MUTE_MEMBER',
+      error
+    )
 
   }
 
@@ -198,6 +229,10 @@ async (
       userId
     )
 
+    logSecurity(
+      `UNBAN ${userId} BY ${ctx.from.id}`
+    )
+
     await ctx.reply(
 `
 ✅ Utilisateur débanni.
@@ -206,7 +241,10 @@ async (
 
   } catch (error) {
 
-    console.log(error)
+    logError(
+      'UNBAN_MEMBER',
+      error
+    )
 
   }
 
@@ -233,6 +271,10 @@ async (
       userId
     )
 
+    logSecurity(
+      `UNMUTE ${userId} BY ${ctx.from.id}`
+    )
+
     await ctx.reply(
 `
 ✅ Utilisateur unmute.
@@ -241,7 +283,10 @@ async (
 
   } catch (error) {
 
-    console.log(error)
+    logError(
+      'UNMUTE_MEMBER',
+      error
+    )
 
   }
 
@@ -272,6 +317,10 @@ async (
 
     )
 
+    logSecurity(
+      `DEMOTE ${userId} BY ${ctx.from.id}`
+    )
+
     await ctx.reply(
 `
 ✅ Admin rétrogradé.
@@ -280,7 +329,10 @@ async (
 
   } catch (error) {
 
-    console.log(error)
+    logError(
+      'DEMOTE_ADMIN',
+      error
+    )
 
   }
 

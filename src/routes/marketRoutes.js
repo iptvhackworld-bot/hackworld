@@ -38,6 +38,16 @@ module.exports = (bot) => {
   } = require(
     '../handlers/marketAnalyticsHandler'
   )
+  
+  const {
+
+  logInfo,
+
+  logError
+
+} = require(
+  '../utils/logger'
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -47,28 +57,34 @@ module.exports = (bot) => {
 
   bot.action(
 
-    'market_panel',
+  'market_panel',
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        await openMarket(ctx)
+      logInfo(
+        `MARKET_PANEL ${ctx.from.id}`
+      )
 
-      } catch (error) {
-
-        console.log(
-          'MARKET PANEL ERROR:',
-          error
-        )
-
-      }
+      await openMarket(ctx)
 
     }
 
-  )
+    catch (error) {
+
+      logError(
+        'MARKET_PANEL',
+        error
+      )
+
+    }
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -85,13 +101,17 @@ module.exports = (bot) => {
       try {
 
         await ctx.answerCbQuery()
+		
+		logInfo(
+          `CREATE_LISTING ${ctx.from.id}`
+        )
 
         await createListingPanel(ctx)
 
       } catch (error) {
 
         console.log(
-          'CREATE LISTING ERROR:',
+          'CREATE_LISTING:',
           error
         )
 
@@ -116,13 +136,17 @@ module.exports = (bot) => {
       try {
 
         await ctx.answerCbQuery()
+		
+		logInfo(
+          `VIEW_MARKET ${ctx.from.id}`
+        )
 
         await viewMarket(ctx)
 
       } catch (error) {
 
         console.log(
-          'VIEW MARKET ERROR:',
+          'VIEW_MARKET:',
           error
         )
 
@@ -140,37 +164,43 @@ module.exports = (bot) => {
 
   bot.action(
 
-    /^buy_market_(.+)$/,
+  /^buy_market_(.+)$/,
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        const id =
-          ctx.match[1]
+      logInfo(
+        `BUY_ITEM ${ctx.from.id}`
+      )
 
-        await buyMarketItem(
+      const id =
+        ctx.match[1]
 
-          ctx,
+      await buyMarketItem(
 
-          id
+        ctx,
 
-        )
+        id
 
-      } catch (error) {
-
-        console.log(
-          'BUY ITEM ERROR:',
-          error
-        )
-
-      }
+      )
 
     }
 
-  )
+    catch (error) {
+
+      logError(
+        'BUY_ITEM',
+        error
+      )
+
+    }
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -180,44 +210,50 @@ module.exports = (bot) => {
 
   bot.action(
 
-    /^rate_(.+)_(.+)$/,
+  /^rate_(.+)_(.+)$/,
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        const id =
-          ctx.match[1]
+      logInfo(
+        `RATE_SELLER ${ctx.from.id}`
+      )
 
-        const rating =
-          Number(
-            ctx.match[2]
-          )
+      const id =
+        ctx.match[1]
 
-        await rateSeller(
-
-          ctx,
-
-          id,
-
-          rating
-
+      const rating =
+        Number(
+          ctx.match[2]
         )
 
-      } catch (error) {
+      await rateSeller(
 
-        console.log(
-          'RATE SELLER ERROR:',
-          error
-        )
+        ctx,
 
-      }
+        id,
+
+        rating
+
+      )
 
     }
 
-  )
+    catch (error) {
+
+      logError(
+        'RATE_SELLER',
+        error
+      )
+
+    }
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -227,44 +263,50 @@ module.exports = (bot) => {
 
   bot.action(
 
-    /^review_(.+)_(.+)$/,
+  /^review_(.+)_(.+)$/,
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        const listingId =
-          ctx.match[1]
+      logInfo(
+        `REVIEW_PRODUCT ${ctx.from.id}`
+      )
 
-        const rating =
-          Number(
-            ctx.match[2]
-          )
+      const listingId =
+        ctx.match[1]
 
-        await reviewProduct(
-
-          ctx,
-
-          listingId,
-
-          rating
-
+      const rating =
+        Number(
+          ctx.match[2]
         )
 
-      } catch (error) {
+      await reviewProduct(
 
-        console.log(
-          'REVIEW PRODUCT ERROR:',
-          error
-        )
+        ctx,
 
-      }
+        listingId,
+
+        rating
+
+      )
 
     }
 
-  )
+    catch (error) {
+
+      logError(
+        'REVIEW_PRODUCT',
+        error
+      )
+
+    }
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -274,37 +316,43 @@ module.exports = (bot) => {
 
   bot.action(
 
-    /^seller_(.+)$/,
+  /^seller_(.+)$/,
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        const sellerId =
-          ctx.match[1]
+      logInfo(
+        `SELLER_PROFILE ${ctx.from.id}`
+      )
 
-        await openSellerProfile(
+      const sellerId =
+        ctx.match[1]
 
-          ctx,
+      await openSellerProfile(
 
-          sellerId
+        ctx,
 
-        )
+        sellerId
 
-      } catch (error) {
-
-        console.log(
-          'SELLER PROFILE ERROR:',
-          error
-        )
-
-      }
+      )
 
     }
 
-  )
+    catch (error) {
+
+      logError(
+        'SELLER_PROFILE',
+        error
+      )
+
+    }
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -314,74 +362,89 @@ module.exports = (bot) => {
 
   bot.action(
 
-    'market_categories',
+  'market_categories',
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        await ctx.reply(
+      logInfo(
+        `MARKET_CATEGORIES ${ctx.from.id}`
+      )
+
+      await ctx.reply(
 
 `
 📂 Catégories
 `,
 
-          Markup.inlineKeyboard([
+        Markup.inlineKeyboard([
 
-            [
+          [
 
-              Markup.button.callback(
-                '🎮 Gaming',
-                'category_Gaming'
-              )
+            Markup.button.callback(
+              '🎮 Gaming',
+              'category_Gaming'
+            )
 
-            ],
+          ],
 
-            [
+          [
 
-              Markup.button.callback(
-                '📺 Streaming',
-                'category_Streaming'
-              )
+            Markup.button.callback(
+              '📺 Streaming',
+              'category_Streaming'
+            )
 
-            ],
+          ],
 
-            [
+          [
 
-              Markup.button.callback(
-                '💻 Software',
-                'category_Software'
-              )
+            Markup.button.callback(
+              '💻 Software',
+              'category_Software'
+            )
 
-            ],
+          ],
 
-            [
+          [
 
-              Markup.button.callback(
-                '📱 Accounts',
-                'category_Accounts'
-              )
+            Markup.button.callback(
+              '📱 Accounts',
+              'category_Accounts'
+            )
 
-            ]
+          ],
 
-          ])
+          [
 
-        )
+            Markup.button.callback(
+              '🏠 Menu',
+              'back_main_menu'
+            )
 
-      } catch (error) {
+          ]
 
-        console.log(
-          'CATEGORIES ERROR:',
-          error
-        )
+        ])
 
-      }
+      )
 
     }
 
-  )
+    catch (error) {
+
+      logError(
+        'MARKET_CATEGORIES',
+        error
+      )
+
+    }
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -391,37 +454,43 @@ module.exports = (bot) => {
 
   bot.action(
 
-    /^category_(.+)$/,
+  /^category_(.+)$/,
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        const category =
-          ctx.match[1]
+      logInfo(
+        `OPEN_CATEGORY ${ctx.from.id}`
+      )
 
-        await openCategory(
+      const category =
+        ctx.match[1]
 
-          ctx,
+      await openCategory(
 
-          category
+        ctx,
 
-        )
+        category
 
-      } catch (error) {
-
-        console.log(
-          'OPEN CATEGORY ERROR:',
-          error
-        )
-
-      }
+      )
 
     }
 
-  )
+    catch (error) {
+
+      logError(
+        'OPEN_CATEGORY',
+        error
+      )
+
+    }
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -431,27 +500,35 @@ module.exports = (bot) => {
 
   bot.action(
 
-    'market_analytics',
+  'market_analytics',
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        await openMarketAnalytics(ctx)
+      logInfo(
+        `MARKET_ANALYTICS ${ctx.from.id}`
+      )
 
-      } catch (error) {
-
-        console.log(
-          'MARKET ANALYTICS ERROR:',
-          error
-        )
-
-      }
+      await openMarketAnalytics(
+        ctx
+      )
 
     }
 
-  )
+    catch (error) {
+
+      logError(
+        'MARKET_ANALYTICS',
+        error
+      )
+
+    }
+
+  }
+
+)
 
 }
