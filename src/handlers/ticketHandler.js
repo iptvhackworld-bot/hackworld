@@ -27,6 +27,16 @@ const {
   '../services/ticketService'
 )
 
+const {
+
+  logInfo,
+
+  logError
+
+} = require(
+  '../utils/logger'
+)
+
 /*
 |--------------------------------------------------------------------------
 | OPEN PANEL
@@ -37,6 +47,10 @@ const openTicketPanel =
 async (ctx) => {
 
   try {
+
+    logInfo(
+      `SUPPORT_PANEL ${ctx.from.id}`
+    )
 
     await ctx.reply(
 
@@ -53,49 +67,54 @@ en envoyant un message.
 
       Markup.inlineKeyboard([
 
-  [
+        [
 
-    Markup.button.callback(
-      '📩 Ouvrir Ticket',
-      'create_ticket'
+          Markup.button.callback(
+            '📩 Ouvrir Ticket',
+            'create_ticket'
+          )
+
+        ],
+
+        [
+
+          Markup.button.callback(
+            '📬 Mes Tickets',
+            'my_tickets'
+          )
+
+        ],
+
+        [
+
+          Markup.button.callback(
+            '🛠 Tickets Admin',
+            'admin_tickets'
+          )
+
+        ],
+
+        [
+
+          Markup.button.callback(
+            '🏠 Menu',
+            'back_main_menu'
+          )
+
+        ]
+
+      ])
+
     )
 
-  ],
+  }
 
-  [
+  catch (error) {
 
-    Markup.button.callback(
-      '📬 Mes Tickets',
-      'my_tickets'
+    logError(
+      'SUPPORT_PANEL',
+      error
     )
-
-  ],
-
-  [
-
-    Markup.button.callback(
-      '🛠 Tickets Admin',
-      'admin_tickets'
-    )
-
-  ],
-
-  [
-
-    Markup.button.callback(
-      '🏠 Menu',
-      'back_main_menu'
-    )
-
-  ]
-
-])
-
-    )
-
-  } catch (error) {
-
-    console.log(error)
 
   }
 
@@ -142,6 +161,10 @@ async (ctx) => {
 
     })
 
+    logInfo(
+      `TICKET_CREATED ${ctx.from.id}`
+    )
+
     await ctx.reply(
 `
 ✅ Ticket envoyé au support.
@@ -150,9 +173,14 @@ async (ctx) => {
 
     return true
 
-  } catch (error) {
+  }
 
-    console.log(error)
+  catch (error) {
+
+    logError(
+      'HANDLE_TICKET_INPUT',
+      error
+    )
 
     return false
 
@@ -170,6 +198,10 @@ const openAdminTickets =
 async (ctx) => {
 
   try {
+
+    logInfo(
+      `ADMIN_TICKETS ${ctx.from.id}`
+    )
 
     const tickets =
       await getTickets()
@@ -228,9 +260,14 @@ ${ticket.status}
 
     }
 
-  } catch (error) {
+  }
 
-    console.log(error)
+  catch (error) {
+
+    logError(
+      'ADMIN_TICKETS',
+      error
+    )
 
   }
 
@@ -309,6 +346,10 @@ async (
 
   try {
 
+    logInfo(
+      `TICKET_REPLY ${ctx.from.id} ${ticketId}`
+    )
+
     const ticket =
       await addReply(
 
@@ -340,6 +381,36 @@ async (
 
     }
 
+    await ctx.telegram.sendMessage(
+
+      ticket.userId,
+
+`
+📩 Nouvelle réponse support
+
+💬 ${message}
+`
+    )
+
+    await ctx.reply(
+`
+✅ Réponse envoyée.
+`
+    )
+
+  }
+
+  catch (error) {
+
+    logError(
+      'REPLY_TICKET',
+      error
+    )
+
+  }
+
+}
+
     /*
     |--------------------------------------------------------------------------
     | NOTIFY USER
@@ -365,9 +436,10 @@ async (
 
   } catch (error) {
 
-    console.log(error)
-
-  }
+  logError(
+    'REPLY_TICKET',
+    error
+  )
 
 }
 
@@ -381,6 +453,10 @@ const openUserTickets =
 async (ctx) => {
 
   try {
+
+    logInfo(
+      `USER_TICKETS ${ctx.from.id}`
+    )
 
     const tickets =
       await getTickets()
@@ -460,7 +536,10 @@ ${ticket.status}
 
   catch (error) {
 
-    console.log(error)
+    logError(
+      'USER_TICKETS',
+      error
+    )
 
   }
 
@@ -473,9 +552,21 @@ ${ticket.status}
 */
 
 const closeTicket =
-async (ctx) => {
+async (
+
+  ctx,
+
+  id
+
+) => {
 
   try {
+
+    await closeTicketById(id)
+
+    logInfo(
+      `CLOSE_TICKET ${ctx.from.id} ${id}`
+    )
 
     await ctx.reply(
 `
@@ -483,9 +574,14 @@ async (ctx) => {
 `
     )
 
-  } catch (error) {
+  }
 
-    console.log(error)
+  catch (error) {
+
+    logError(
+      'CLOSE_TICKET',
+      error
+    )
 
   }
 

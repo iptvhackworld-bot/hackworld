@@ -17,6 +17,16 @@ module.exports = (bot) => {
   } = require(
     '../handlers/ticketHandler'
   )
+  
+  const {
+
+  logInfo,
+
+  logError
+
+} = require(
+  '../utils/logger'
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -26,27 +36,34 @@ module.exports = (bot) => {
 
   bot.action(
 
-    'support_panel',
+  'support_panel',
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        await openTicketPanel(ctx)
+      logInfo(
+        `SUPPORT_PANEL ${ctx.from.id}`
+      )
 
-      }
-
-      catch (error) {
-
-        console.log(error)
-
-      }
+      await openTicketPanel(ctx)
 
     }
 
-  )
+    catch (error) {
+
+      logError(
+        'SUPPORT_PANEL',
+        error
+      )
+
+    }
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -63,6 +80,10 @@ module.exports = (bot) => {
     try {
 
       await ctx.answerCbQuery()
+
+      logInfo(
+        `CREATE_TICKET ${ctx.from.id}`
+      )
 
       await createTicket({
 
@@ -92,7 +113,10 @@ module.exports = (bot) => {
 
     catch (error) {
 
-      console.log(error)
+      logError(
+        'CREATE_TICKET',
+        error
+      )
 
     }
 
@@ -108,27 +132,34 @@ module.exports = (bot) => {
 
   bot.action(
 
-    'my_tickets',
+  'my_tickets',
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        await openUserTickets(ctx)
+      logInfo(
+        `MY_TICKETS ${ctx.from.id}`
+      )
 
-      }
-
-      catch (error) {
-
-        console.log(error)
-
-      }
+      await openUserTickets(ctx)
 
     }
 
-  )
+    catch (error) {
+
+      logError(
+        'MY_TICKETS',
+        error
+      )
+
+    }
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -138,36 +169,43 @@ module.exports = (bot) => {
 
   bot.action(
 
-    /^close_ticket_(.+)$/,
+  /^close_ticket_(.+)$/,
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        const id =
-          ctx.match[1]
+      const id =
+        ctx.match[1]
 
-        await closeTicket(
+      logInfo(
+        `CLOSE_TICKET ${ctx.from.id} ${id}`
+      )
 
-          ctx,
+      await closeTicket(
 
-          id
+        ctx,
 
-        )
+        id
 
-      }
-
-      catch (error) {
-
-        console.log(error)
-
-      }
+      )
 
     }
 
-  )
+    catch (error) {
+
+      logError(
+        'CLOSE_TICKET',
+        error
+      )
+
+    }
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -177,27 +215,34 @@ module.exports = (bot) => {
 
   bot.action(
 
-    'admin_tickets',
+  'admin_tickets',
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        await openAdminTickets(ctx)
+      logInfo(
+        `ADMIN_TICKETS ${ctx.from.id}`
+      )
 
-      }
-
-      catch (error) {
-
-        console.log(error)
-
-      }
+      await openAdminTickets(ctx)
 
     }
 
-  )
+    catch (error) {
+
+      logError(
+        'ADMIN_TICKETS',
+        error
+      )
+
+    }
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
