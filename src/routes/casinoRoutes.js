@@ -147,7 +147,7 @@ bot.action(
 
     }
 
-    catch (error) {
+        catch (error) {
 
       logError(
         'CASINO_BLACKJACK',
@@ -159,3 +159,5 @@ bot.action(
   }
 
 )
+
+}
