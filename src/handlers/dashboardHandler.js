@@ -13,6 +13,20 @@ require(
   '../models/MarketListing'
 )
 
+const {
+
+  logInfo,
+
+  logError
+
+} = require(
+  '../utils/logger'
+)
+
+const { Markup } =
+require('telegraf')
+
+
 /*
 |--------------------------------------------------------------------------
 | ADMIN DASHBOARD
@@ -38,6 +52,27 @@ async (ctx) => {
 
     const totalListings =
       await MarketListing.countDocuments()
+	  
+	const totalAdmins =
+      await User.countDocuments({
+
+       role: 'admin'
+
+      })
+
+    const totalBanned =
+       await User.countDocuments({
+
+        banned: true
+
+       })
+
+    const trustedSellers =
+       await User.countDocuments({
+
+        trustedSeller: true
+
+       })
 
     /*
     |--------------------------------------------------------------------------
@@ -50,15 +85,13 @@ async (ctx) => {
 
     let totalMoney = 0
 
-    let totalXP = 0
+    
 
     users.forEach((user) => {
 
       totalMoney +=
         user.money || 0
 
-      totalXP +=
-        user.xp || 0
 
     })
 
@@ -69,25 +102,30 @@ async (ctx) => {
     */
 
     const topUser =
-      users.sort(
+  [...users].sort(
 
-        (a, b) =>
+    (a, b) =>
 
-          (b.xp || 0)
+      (b.money || 0)
 
-          -
+      -
 
-          (a.xp || 0)
+      (a.money || 0)
 
-      )[0]
+  )[0]
 
     /*
     |--------------------------------------------------------------------------
     | MESSAGE
     |--------------------------------------------------------------------------
     */
+	
+	logInfo(
+  `ADMIN_DASHBOARD ${ctx.from.id}`
+)
 
     await ctx.reply(
+
 `
 📊 HACKWORLD DASHBOARD
 
@@ -95,6 +133,17 @@ async (ctx) => {
 
 👥 Utilisateurs :
 ${totalUsers}
+
+👑 Admins :
+${totalAdmins}
+
+🚫 Bannis :
+${totalBanned}
+
+⭐ Trusted Sellers :
+${trustedSellers}
+
+━━━━━━━━━━━━━━━━━━
 
 📦 Listings :
 ${totalListings}
@@ -107,8 +156,18 @@ ${totalLogs}
 💰 Argent total :
 ${totalMoney}$
 
-⭐ XP total :
-${totalXP}
+🎰 Parties Casino :
+${users.reduce(
+
+  (total, user) =>
+
+    total +
+
+    (user.casinoPlayed || 0),
+
+  0
+
+)}
 
 ━━━━━━━━━━━━━━━━━━
 
@@ -116,23 +175,52 @@ ${totalXP}
 
 ${
   topUser
-
   ? `@${topUser.username}`
-
   : 'Aucun'
 }
 
 ━━━━━━━━━━━━━━━━━━
 
 🚀 Système opérationnel
-`
+`,
+
+Markup.inlineKeyboard([
+
+  [
+
+    Markup.button.callback(
+      '🔄 Actualiser',
+      'admin_dashboard'
     )
+
+  ],
+
+  [
+
+    Markup.button.callback(
+      '⬅️ Admin',
+      'admin_panel'
+    ),
+
+    Markup.button.callback(
+      '🏠 Menu',
+      'back_main_menu'
+    )
+
+  ]
+
+])
+
+)
 
   } catch (error) {
 
-    console.log(error)
+  logError(
+    'ADMIN_DASHBOARD',
+    error
+  )
 
-  }
+}
 
 }
 

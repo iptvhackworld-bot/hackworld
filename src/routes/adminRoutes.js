@@ -26,6 +26,178 @@ module.exports = (bot) => {
   '../utils/logger'
 )
 
+const {
+
+  openSettings,
+
+  toggleSetting
+
+} = require(
+  '../handlers/settingsHandler'
+)
+
+/*
+  |--------------------------------------------------------------------------
+  | Marketplace ON/OFF
+  |--------------------------------------------------------------------------
+  */
+  
+  bot.action(
+
+  'toggle_marketplace',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      await toggleSetting(
+
+        ctx,
+
+        'marketplace'
+
+      )
+
+    }
+
+    catch (error) {
+
+      logError(
+        'TOGGLE_MARKETPLACE',
+        error
+      )
+
+    }
+
+  }
+
+)
+
+/*
+  |--------------------------------------------------------------------------
+  | Support ON/OFF
+  |--------------------------------------------------------------------------
+  */
+  
+  bot.action(
+
+  'toggle_support',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      await toggleSetting(
+
+        ctx,
+
+        'support'
+
+      )
+
+    }
+
+    catch (error) {
+
+      logError(
+        'TOGGLE_SUPPORT',
+        error
+      )
+
+    }
+
+  }
+
+)
+
+/*
+  |--------------------------------------------------------------------------
+  | Maintenance ON/OFF
+  |--------------------------------------------------------------------------
+  */
+  
+  bot.action(
+
+  'toggle_maintenance',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      await toggleSetting(
+
+        ctx,
+
+        'maintenance'
+
+      )
+
+    }
+
+    catch (error) {
+
+      logError(
+        'TOGGLE_MAINTENANCE',
+        error
+      )
+
+    }
+
+  }
+
+)
+
+
+  
+/*
+  |--------------------------------------------------------------------------
+  | Casino ON/OFF
+  |--------------------------------------------------------------------------
+  */
+  
+  bot.action(
+
+  'toggle_casino',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      await toggleSetting(
+
+        ctx,
+
+        'casino'
+
+      )
+
+    }
+
+    catch (error) {
+
+      logError(
+        'TOGGLE_CASINO',
+        error
+      )
+
+    }
+
+  }
+
+)
+
+
+
+
+
   /*
   |--------------------------------------------------------------------------
   | ADMIN PANEL
@@ -52,13 +224,16 @@ module.exports = (bot) => {
 
       catch (error) {
 
-        console.log(error)
-
-      }
+      logError(
+        'ADMIN_PANEL',
+        error
+      )
 
     }
 
-  )
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -212,9 +387,14 @@ module.exports = (bot) => {
 
     }
 
+        }
+
     catch (error) {
 
-      console.log(error)
+      logError(
+        'USERS',
+        error
+      )
 
     }
 
@@ -700,9 +880,14 @@ ${lines || 'Aucun log'}
 
     }
 
+        }
+
     catch (error) {
 
-      console.log(error)
+      logError(
+        'LOGS',
+        error
+      )
 
     }
 
@@ -710,39 +895,40 @@ ${lines || 'Aucun log'}
 
 )
 
-  /*
+/*
   |--------------------------------------------------------------------------
-  | SETTINGS
+  | ADMIN SETTING
   |--------------------------------------------------------------------------
   */
-
+  
   bot.action(
 
-    'admin_settings',
+  'admin_settings',
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        await ctx.reply(
-`
- ⚙️ Paramètres admin actifs.
-`
-        )
-
-      }
-
-      catch (error) {
-
-        console.log(error)
-
-      }
+      await openSettings(
+        ctx
+      )
 
     }
 
-  )
+    catch (error) {
+
+      logError(
+        'ADMIN_SETTINGS',
+        error
+      )
+
+    }
+
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -768,15 +954,20 @@ ${lines || 'Aucun log'}
 
       }
 
-      catch (error) {
+          }
 
-        console.log(error)
+    catch (error) {
 
-      }
+      logError(
+        'BROADCAST',
+        error
+      )
 
     }
 
-  )
+  }
+
+)
 
   /*
   |--------------------------------------------------------------------------
@@ -922,9 +1113,14 @@ ${richestText}
 
     }
 
+        }
+
     catch (error) {
 
-      console.log(error)
+      logError(
+        'FINANCE',
+        error
+      )
 
     }
 
@@ -956,9 +1152,14 @@ bot.action(
 
     }
 
+        }
+
     catch (error) {
 
-      console.log(error)
+      logError(
+        'FINANCE_TRANSACTIONS',
+        error
+      )
 
     }
 
@@ -1157,9 +1358,14 @@ bot.action(
 
     }
 
+        }
+
     catch (error) {
 
-      console.log(error)
+      logError(
+        'LOGS_HISTORY',
+        error
+      )
 
     }
 
@@ -1191,14 +1397,17 @@ bot.action(
 
       }
 
-      catch (error) {
+          }
 
-        console.log(error)
+    catch (error) {
 
-      }
+      logError(
+        'CASINO',
+        error
+      )
 
     }
 
-  )
+  }
 
-}
+)

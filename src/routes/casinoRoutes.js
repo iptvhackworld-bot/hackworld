@@ -2,56 +2,160 @@ module.exports = (bot) => {
 
   const {
 
-    openCasinoPanel,
+  openCasinoPanel,
 
-    rouletteHandler
+  rouletteHandler,
 
-  } = require(
-    '../handlers/casinoHandler'
-  )
+  slotsHandler,
 
-  bot.action(
+  blackjackHandler
 
-    'casino_panel',
+} = require(
+  '../handlers/casinoHandler'
+)
+  
+  const {
 
-    async (ctx) => {
+  logInfo,
 
-      try {
+  logError
 
-        await ctx.answerCbQuery()
-
-        await openCasinoPanel(ctx)
-
-      } catch (error) {
-
-        console.log(error)
-
-      }
-
-    }
-
-  )
+} = require(
+  '../utils/logger'
+)
 
   bot.action(
 
-    'casino_roulette',
+  'casino_panel',
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        await rouletteHandler(ctx)
+      logInfo(
+        `CASINO_PANEL ${ctx.from.id}`
+      )
 
-      } catch (error) {
-
-        console.log(error)
-
-      }
+      await openCasinoPanel(ctx)
 
     }
 
-  )
+    catch (error) {
 
-}
+      logError(
+        'CASINO_PANEL',
+        error
+      )
+
+    }
+
+  }
+
+)
+
+  bot.action(
+
+  'casino_roulette',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      logInfo(
+        `CASINO_ROULETTE ${ctx.from.id}`
+      )
+
+      await rouletteHandler(ctx)
+
+    }
+
+    catch (error) {
+
+      logError(
+        'CASINO_ROULETTE',
+        error
+      )
+
+    }
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| SLOTS
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'casino_slots',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      logInfo(
+        `CASINO_SLOTS ${ctx.from.id}`
+      )
+
+      await slotsHandler(ctx)
+
+    }
+
+    catch (error) {
+
+      logError(
+        'CASINO_SLOTS',
+        error
+      )
+
+    }
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| BLACKJACK
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'casino_blackjack',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      logInfo(
+        `CASINO_BLACKJACK ${ctx.from.id}`
+      )
+
+      await blackjackHandler(ctx)
+
+    }
+
+    catch (error) {
+
+      logError(
+        'CASINO_BLACKJACK',
+        error
+      )
+
+    }
+
+  }
+
+)
