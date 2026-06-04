@@ -911,9 +911,11 @@ ${lines || 'Aucun log'}
 
       await ctx.answerCbQuery()
 
-      await openSettings(
-        ctx
+      console.log(
+        'ADMIN_SETTINGS_CLICK'
       )
+
+      await openSettings(ctx)
 
     }
 
