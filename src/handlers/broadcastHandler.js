@@ -58,15 +58,17 @@ async (
   try {
 
     const users =
-  await User.find({
+      await User.find({
 
-    banned: false
+        banned: false
 
-  })
+      })
 
     let success = 0
 
     let failed = 0
+
+    let removed = 0
 
     for (const user of users) {
 
@@ -84,9 +86,29 @@ async (
 
       }
 
-      catch {
+      catch (error) {
 
         failed++
+
+        /*
+        |--------------------------------------------------------------------------
+        | REMOVE DEAD USER
+        |--------------------------------------------------------------------------
+        */
+
+        try {
+
+          await User.deleteOne({
+
+            id: user.id
+
+          })
+
+          removed++
+
+        }
+
+        catch {}
 
       }
 
@@ -100,11 +122,18 @@ async (
 `
 ✅ Broadcast terminé
 
+━━━━━━━━━━━━━━━━━━
+
 📨 Envoyés :
 ${success}
 
 ❌ Erreurs :
 ${failed}
+
+🗑 Supprimés :
+${removed}
+
+━━━━━━━━━━━━━━━━━━
 `
     )
 
