@@ -387,7 +387,6 @@ const {
 
     }
 
-        }
 
     catch (error) {
 
@@ -880,8 +879,6 @@ ${lines || 'Aucun log'}
 
     }
 
-        }
-
     catch (error) {
 
       logError(
@@ -940,23 +937,21 @@ ${lines || 'Aucun log'}
 
   bot.action(
 
-    'admin_broadcast',
+  'admin_broadcast',
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        await ctx.reply(
+      await ctx.reply(
 `
- 📢 Broadcast actif.
+📢 Broadcast actif.
 `
-        )
+      )
 
-      }
-
-          }
+    }
 
     catch (error) {
 
@@ -1115,8 +1110,6 @@ ${richestText}
 
     }
 
-        }
-
     catch (error) {
 
       logError(
@@ -1153,8 +1146,6 @@ bot.action(
       )
 
     }
-
-        }
 
     catch (error) {
 
@@ -1360,8 +1351,6 @@ bot.action(
 
     }
 
-        }
-
     catch (error) {
 
       logError(
@@ -1383,23 +1372,21 @@ bot.action(
 
   bot.action(
 
-    'admin_casino',
+  'admin_casino',
 
-    async (ctx) => {
+  async (ctx) => {
 
-      try {
+    try {
 
-        await ctx.answerCbQuery()
+      await ctx.answerCbQuery()
 
-        await ctx.reply(
+      await ctx.reply(
 `
- 🎰 Casino admin actif.
+🎰 Casino admin actif.
 `
-        )
+      )
 
-      }
-
-          }
+    }
 
     catch (error) {
 
@@ -1413,3 +1400,5 @@ bot.action(
   }
 
 )
+
+}
