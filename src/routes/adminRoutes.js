@@ -36,6 +36,14 @@ const {
   '../handlers/settingsHandler'
 )
 
+const {
+
+  startBroadcast
+
+} = require(
+  '../handlers/broadcastHandler'
+)
+
 /*
   |--------------------------------------------------------------------------
   | Marketplace ON/OFF
@@ -945,10 +953,8 @@ ${lines || 'Aucun log'}
 
       await ctx.answerCbQuery()
 
-      await ctx.reply(
-`
-📢 Broadcast actif.
-`
+      await startBroadcast(
+        ctx
       )
 
     }

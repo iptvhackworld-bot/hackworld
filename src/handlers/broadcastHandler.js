@@ -1,274 +1,82 @@
-const env =
+const User =
 require(
-  '../config/env'
+  '../models/User'
 )
 
 const {
 
-  getUsers
+  logInfo,
+
+  logError
 
 } = require(
-  '../services/userService'
+  '../utils/logger'
 )
-
-/*
-|--------------------------------------------------------------------------
-| START BROADCAST
-|--------------------------------------------------------------------------
-*/
 
 const startBroadcast =
 async (ctx) => {
 
-  /*
-  |--------------------------------------------------------------------------
-  | OWNER ONLY
-  |--------------------------------------------------------------------------
-  */
+  try {
 
-  if (
+    global.broadcastMode = true
 
-    ctx.from.id.toString()
+    global.broadcastAdmin =
+      ctx.from.id
 
-    !==
+    await ctx.reply(
+`
+📢 MODE BROADCAST
 
-    env.ownerId.toString()
+Envoie maintenant le message à diffuser.
 
-  ) {
-
-    return ctx.reply(
-      '❌ Accès refusé'
+❌ /cancel pour annuler.
+`
     )
 
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | SESSION
-  |--------------------------------------------------------------------------
-  */
+  catch (error) {
 
-  if (!ctx.session) {
-
-    ctx.session = {}
+    logError(
+      'START_BROADCAST',
+      error
+    )
 
   }
-
-  ctx.session.step =
-    'broadcast_waiting'
-
-  /*
-  |--------------------------------------------------------------------------
-  | ASK
-  |--------------------------------------------------------------------------
-  */
-
-  await ctx.reply(
-`
-📢 BROADCAST PANEL
-
-━━━━━━━━━━━━━━━━━━
-
-📝 Envoyez :
-
-• Texte
-• Photo
-• Vidéo
-
-Le bot diffusera
-à tous les utilisateurs.
-`
-  )
 
 }
 
-/*
-|--------------------------------------------------------------------------
-| TEXT BROADCAST
-|--------------------------------------------------------------------------
-*/
+const sendBroadcast =
+async (
 
-const handleBroadcastText =
-async (ctx) => {
+  ctx,
 
-  if (
+  message
 
-    ctx.session.step
+) => {
 
-    !==
+  try {
 
-    'broadcast_waiting'
+    const users =
+  await User.find({
 
-  ) {
+    banned: false
 
-    return
+  })
 
-  }
+    let success = 0
 
-  /*
-  |--------------------------------------------------------------------------
-  | USERS
-  |--------------------------------------------------------------------------
-  */
-
-  const users =
-    await getUsers()
-
-  /*
-  |--------------------------------------------------------------------------
-  | MESSAGE
-  |--------------------------------------------------------------------------
-  */
-
-  const message =
-    ctx.message.text
-
-  let success = 0
-
-  let failed = 0
-
-  /*
-  |--------------------------------------------------------------------------
-  | SEND
-  |--------------------------------------------------------------------------
-  */
-
-  for (const user of users) {
-
-    try {
-
-      await ctx.telegram.sendMessage(
-
-        user.id,
-
-`
-📢 HACKWORLD NEWS
-
-━━━━━━━━━━━━━━━━━━
-
-${message}
-`
-
-      )
-
-      success++
-
-    }
-
-    catch {
-
-      failed++
-
-    }
-
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | RESET
-  |--------------------------------------------------------------------------
-  */
-
-  ctx.session.step =
-    null
-
-  /*
-  |--------------------------------------------------------------------------
-  | RESULT
-  |--------------------------------------------------------------------------
-  */
-
-  await ctx.reply(
-`
-✅ BROADCAST TERMINÉ
-
-━━━━━━━━━━━━━━━━━━
-
-📨 Envoyés :
-${success}
-
-❌ Échecs :
-${failed}
-`
-  )
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| MEDIA BROADCAST
-|--------------------------------------------------------------------------
-*/
-
-const handleBroadcastMedia =
-async (ctx) => {
-
-  if (
-
-    ctx.session.step
-
-    !==
-
-    'broadcast_waiting'
-
-  ) {
-
-    return
-
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | USERS
-  |--------------------------------------------------------------------------
-  */
-
-  const users =
-    await getUsers()
-
-  const caption =
-    ctx.message.caption || ''
-
-  let success = 0
-
-  let failed = 0
-
-  /*
-  |--------------------------------------------------------------------------
-  | PHOTO
-  |--------------------------------------------------------------------------
-  */
-
-  if (ctx.message.photo) {
-
-    const photo =
-
-      ctx.message.photo[
-        ctx.message.photo.length - 1
-      ].file_id
+    let failed = 0
 
     for (const user of users) {
 
       try {
 
-        await ctx.telegram.sendPhoto(
+        await ctx.telegram.sendMessage(
 
           user.id,
 
-          photo,
-
-          {
-
-            caption:
-`
-📢 HACKWORLD NEWS
-
-━━━━━━━━━━━━━━━━━━
-
-${caption}
-`
-
-          }
+          message
 
         )
 
@@ -284,86 +92,32 @@ ${caption}
 
     }
 
-  }
+    logInfo(
+      `BROADCAST ${success}/${users.length}`
+    )
 
-  /*
-  |--------------------------------------------------------------------------
-  | VIDEO
-  |--------------------------------------------------------------------------
-  */
-
-  else if (ctx.message.video) {
-
-    const video =
-      ctx.message.video.file_id
-
-    for (const user of users) {
-
-      try {
-
-        await ctx.telegram.sendVideo(
-
-          user.id,
-
-          video,
-
-          {
-
-            caption:
+    await ctx.reply(
 `
-📢 HACKWORLD NEWS
-
-━━━━━━━━━━━━━━━━━━
-
-${caption}
-`
-
-          }
-
-        )
-
-        success++
-
-      }
-
-      catch {
-
-        failed++
-
-      }
-
-    }
-
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | RESET
-  |--------------------------------------------------------------------------
-  */
-
-  ctx.session.step =
-    null
-
-  /*
-  |--------------------------------------------------------------------------
-  | RESULT
-  |--------------------------------------------------------------------------
-  */
-
-  await ctx.reply(
-`
-✅ BROADCAST MÉDIA TERMINÉ
-
-━━━━━━━━━━━━━━━━━━
+✅ Broadcast terminé
 
 📨 Envoyés :
 ${success}
 
-❌ Échecs :
+❌ Erreurs :
 ${failed}
 `
-  )
+    )
+
+  }
+
+  catch (error) {
+
+    logError(
+      'SEND_BROADCAST',
+      error
+    )
+
+  }
 
 }
 
@@ -371,8 +125,6 @@ module.exports = {
 
   startBroadcast,
 
-  handleBroadcastText,
-
-  handleBroadcastMedia
+  sendBroadcast
 
 }

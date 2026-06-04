@@ -68,6 +68,14 @@ require(
   './middlewares/autoModerationMiddleware'
 )
 
+const {
+
+  sendBroadcast
+
+} = require(
+  './handlers/broadcastHandler'
+)
+
 /*
 |--------------------------------------------------------------------------
 | BOT
@@ -113,6 +121,49 @@ bot.use(
 */
 
 //registerMiddlewares(bot)
+
+/*
+|--------------------------------------------------------------------------
+| BROADCAST LISTENER
+|--------------------------------------------------------------------------
+*/
+
+bot.on(
+
+  'text',
+
+  async (ctx, next) => {
+
+    if (
+
+      global.broadcastMode &&
+
+      global.broadcastAdmin ===
+      ctx.from.id
+
+    ) {
+
+      global.broadcastMode =
+      false
+
+      global.broadcastAdmin =
+      null
+
+      return sendBroadcast(
+
+        ctx,
+
+        ctx.message.text
+
+      )
+
+    }
+
+    return next()
+
+  }
+
+)
 
 /*
 |--------------------------------------------------------------------------
