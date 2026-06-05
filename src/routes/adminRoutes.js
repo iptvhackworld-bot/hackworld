@@ -44,6 +44,49 @@ const {
   '../handlers/broadcastHandler'
 )
 
+const {
+
+  openAnalytics
+
+} = require(
+  '../handlers/analyticsHandler'
+)
+
+/*
+  |--------------------------------------------------------------------------
+  | ADMIN_ANALYTICS 
+  |--------------------------------------------------------------------------
+  */
+  
+  bot.action(
+
+  'admin_analytics',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      await openAnalytics(
+        ctx
+      )
+
+    }
+
+    catch (error) {
+
+      logError(
+        'ADMIN_ANALYTICS',
+        error
+      )
+
+    }
+
+  }
+
+)
+
 /*
   |--------------------------------------------------------------------------
   | Marketplace ON/OFF
