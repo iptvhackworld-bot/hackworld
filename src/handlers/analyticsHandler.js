@@ -1,175 +1,114 @@
-const os = require('os')
+const User =
+require(
+  '../models/User'
+)
 
 const {
 
-  userService
+  logError
 
-} = require('../data/userData')
-
-const {
-
-  contentService
-
-} = require('../data/contentData')
-
-const {
-
-  loadLogs
-
-} = require('../data/logData')
+} = require(
+  '../utils/logger'
+)
 
 /*
 |--------------------------------------------------------------------------
-| START TIME
+| STATS
 |--------------------------------------------------------------------------
 */
 
-const startTime = Date.now()
-
-/*
-|--------------------------------------------------------------------------
-| FORMAT UPTIME
-|--------------------------------------------------------------------------
-*/
-
-const formatUptime = (
-  seconds
-) => {
-
-  const hours =
-    Math.floor(
-      seconds / 3600
-    )
-
-  const minutes =
-    Math.floor(
-      (seconds % 3600) / 60
-    )
-
-  const secs =
-    Math.floor(
-      seconds % 60
-    )
-
-  return `${hours}h ${minutes}m ${secs}s`
-}
-
-/*
-|--------------------------------------------------------------------------
-| SHOW ANALYTICS
-|--------------------------------------------------------------------------
-*/
-
-const showAnalytics =
+const showStats =
 async (ctx) => {
 
-  /*
-  |--------------------------------------------------------------------------
-  | OWNER ONLY
-  |--------------------------------------------------------------------------
-  */
+  try {
 
-  if (
-    ctx.from.id.toString() !==
-    env.ownerId
-  ) {
+    const users =
+      await User.find()
 
-    return ctx.reply(
-      '❌ Accès refusé'
+    const totalUsers =
+      users.length
+
+    let totalMoney = 0
+
+    let totalMessages = 0
+
+    let totalCasino = 0
+
+    users.forEach((user) => {
+
+      totalMoney +=
+        user.money || 0
+
+      totalMessages +=
+        user.messages || 0
+
+      totalCasino +=
+        user.casinoPlayed || 0
+
+    })
+
+    const topUser =
+      users.sort(
+
+        (a, b) =>
+
+          (b.money || 0)
+
+          -
+
+          (a.money || 0)
+
+      )[0]
+
+    await ctx.reply(
+`
+📊 HACKWORLD STATS
+
+━━━━━━━━━━━━━━━━━━
+
+👥 Utilisateurs :
+${totalUsers}
+
+💰 Argent total :
+${totalMoney}$
+
+💬 Messages :
+${totalMessages}
+
+🎰 Parties Casino :
+${totalCasino}
+
+━━━━━━━━━━━━━━━━━━
+
+🏆 Plus riche :
+
+${
+  topUser
+  ?
+  `@${topUser.username || 'unknown'}`
+  :
+  'Aucun'
+}
+
+━━━━━━━━━━━━━━━━━━
+`
     )
 
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | LOAD DATA
-  |--------------------------------------------------------------------------
-  */
+  catch (error) {
 
-  const users =
-    userService()
+    logError(
+      'SHOW_STATS',
+      error
+    )
 
-  const contents =
-    contentService()
+  }
 
-  const logs =
-    loadLogs()
-
-  /*
-  |--------------------------------------------------------------------------
-  | STATS
-  |--------------------------------------------------------------------------
-  */
-
-  const uptime =
-    process.uptime()
-
-  const ramUsage =
-    (
-      process.memoryUsage()
-        .heapUsed /
-      1024 /
-      1024
-    ).toFixed(2)
-
-  const cpuLoad =
-    os.loadavg()[0]
-      .toFixed(2)
-
-  const totalUsers =
-    users.length
-
-  const totalContents =
-    contents.length
-
-  const totalLogs =
-    logs.length
-
-  /*
-  |--------------------------------------------------------------------------
-  | SEND
-  |--------------------------------------------------------------------------
-  */
-
-  await ctx.reply(
-`
-📡 HACKWORLD MONITOR
-
-━━━━━━━━━━━━━━━━━━
-
-🟢 STATUS :
-ONLINE
-
-⏱ UPTIME :
-${formatUptime(uptime)}
-
-💾 RAM :
-${ramUsage} MB
-
-⚡ CPU LOAD :
-${cpuLoad}
-
-👥 USERS :
-${totalUsers}
-
-📂 CONTENTS :
-${totalContents}
-
-📜 LOGS :
-${totalLogs}
-
-🖥 PLATFORM :
-${os.platform()}
-
-━━━━━━━━━━━━━━━━━━
-
-🚀 Système stable
-`
-  )
 }
 
 module.exports = {
 
-  showAnalytics
+  showStats
 
 }
