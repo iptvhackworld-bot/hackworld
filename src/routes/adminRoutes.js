@@ -52,14 +52,6 @@ const {
   '../handlers/analyticsHandler'
 )
 
-const {
-
-  openAnalytics
-
-} = require(
-  '../handlers/analyticsHandler'
-)
-
 
 
 /*
