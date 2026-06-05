@@ -133,10 +133,16 @@ async (ctx) => {
         ],
 		
 		[
-           Markup.button.callback(
-             '📢 Broadcast',
-             'admin_broadcast'
+          Markup.button.callback(
+            '📢 Broadcast',
+            'admin_broadcast'
+          ),
+
+          Markup.button.callback(
+            '📊 Analytics',
+            'admin_analytics'
           )
+
         ],
 
         [
