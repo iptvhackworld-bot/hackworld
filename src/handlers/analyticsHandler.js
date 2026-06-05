@@ -17,7 +17,7 @@ const {
 |--------------------------------------------------------------------------
 */
 
-const showStats =
+const openAnalytics =
 async (ctx) => {
 
   try {
@@ -109,6 +109,6 @@ ${
 
 module.exports = {
 
-  showStats
+  openAnalytics
 
 }
