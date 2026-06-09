@@ -22,40 +22,6 @@ const {
   '../handlers/backupHandler'
 )
 
-/*
-|--------------------------------------------------------------------------
-| ADMIN BACKUP 
-|--------------------------------------------------------------------------
-*/
-
-bot.action(
-
-  'admin_backup',
-
-  async (ctx) => {
-
-    try {
-
-      await ctx.answerCbQuery()
-
-      await createBackup(
-        ctx
-      )
-
-    }
-
-    catch (error) {
-
-      logError(
-        'ADMIN_BACKUP',
-        error
-      )
-
-    }
-
-  }
-
-)
 
 /*
 |--------------------------------------------------------------------------
