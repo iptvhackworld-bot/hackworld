@@ -123,42 +123,9 @@ bot.use(
   xpMiddleware
 )
 
-bot.on(
 
-  'document',
 
-  async (ctx, next) => {
-
-    if (
-
-      global.restoreMode &&
-
-      global.restoreAdmin ===
-      ctx.from.id
-
-    ) {
-
-      global.restoreMode = false
-
-      global.restoreAdmin = null
-
-      await ctx.reply(
-`
-⚠️ Restore avancé :
-
-Télécharge d'abord le fichier puis appelle restoreBackup().
-`
-      )
-
-    }
-
-    return next()
-
-  }
-
-)
-
-//*
+/*
 |--------------------------------------------------------------------------
 | RESTORE LISTENER
 |--------------------------------------------------------------------------
