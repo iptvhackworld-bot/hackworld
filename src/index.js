@@ -76,6 +76,23 @@ const {
   './handlers/broadcastHandler'
 )
 
+const {
+
+  restoreBackup
+
+} = require(
+  './handlers/restoreHandler'
+)
+
+const fs =
+require('fs')
+
+const path =
+require('path')
+
+const https =
+require('https')
+
 /*
 |--------------------------------------------------------------------------
 | BOT
@@ -106,13 +123,175 @@ bot.use(
   xpMiddleware
 )
 
+bot.on(
 
-/*
+  'document',
+
+  async (ctx, next) => {
+
+    if (
+
+      global.restoreMode &&
+
+      global.restoreAdmin ===
+      ctx.from.id
+
+    ) {
+
+      global.restoreMode = false
+
+      global.restoreAdmin = null
+
+      await ctx.reply(
+`
+⚠️ Restore avancé :
+
+Télécharge d'abord le fichier puis appelle restoreBackup().
+`
+      )
+
+    }
+
+    return next()
+
+  }
+
+)
+
+//*
 |--------------------------------------------------------------------------
-| SESSION
+| RESTORE LISTENER
 |--------------------------------------------------------------------------
 */
 
+bot.on(
+
+  'document',
+
+  async (ctx, next) => {
+
+    if (
+
+      global.restoreMode &&
+
+      global.restoreAdmin ===
+      ctx.from.id
+
+    ) {
+
+      try {
+
+        global.restoreMode =
+          false
+
+        global.restoreAdmin =
+          null
+
+        await ctx.reply(
+`
+📥 Fichier reçu
+
+⚠️ Téléchargement du backup...
+`
+        )
+
+        const file =
+          await ctx.telegram.getFile(
+
+            ctx.message.document.file_id
+
+          )
+
+        const url =
+
+          `https://api.telegram.org/file/bot${env.botToken}/${file.file_path}`
+
+        const restoreDir =
+          path.join(
+
+            __dirname,
+
+            '../restore'
+
+          )
+
+        if (
+
+          !fs.existsSync(
+            restoreDir
+          )
+
+        ) {
+
+          fs.mkdirSync(
+            restoreDir
+          )
+
+        }
+
+        const filePath =
+          path.join(
+
+            restoreDir,
+
+            'restore.json'
+
+          )
+
+        const stream =
+          fs.createWriteStream(
+            filePath
+          )
+
+        https.get(
+
+          url,
+
+          (response) => {
+
+            response.pipe(
+              stream
+            )
+
+            stream.on(
+
+              'finish',
+
+              async () => {
+
+                stream.close()
+
+                await restoreBackup(
+
+                  ctx,
+
+                  filePath
+
+                )
+
+              }
+
+            )
+
+          }
+
+        )
+
+      }
+
+      catch (error) {
+
+        console.log(error)
+
+      }
+
+    }
+
+    return next()
+
+  }
+
+)
 
 /*
 |--------------------------------------------------------------------------

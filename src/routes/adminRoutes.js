@@ -60,7 +60,194 @@ const {
   '../handlers/backupHandler'
 )
 
+const {
 
+  startRestore,
+
+  confirmRestore,
+
+  cancelRestore
+
+} = require(
+  '../handlers/restoreHandler'
+)
+
+const {
+
+  openLeaderboards
+
+} = require(
+  '../handlers/leaderboardHandler'
+)
+
+/*
+|--------------------------------------------------------------------------
+| LEADERBOARDS
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'admin_leaderboards',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      await openLeaderboards(
+        ctx
+      )
+
+    }
+
+    catch (error) {
+
+      logError(
+        'ADMIN_LEADERBOARDS',
+        error
+      )
+
+    }
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| RESTORE
+|--------------------------------------------------------------------------
+*/
+
+/*
+|--------------------------------------------------------------------------
+| RESTORE
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'admin_restore',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      await startRestore(
+        ctx
+      )
+
+    }
+
+    catch (error) {
+
+      logError(
+        'ADMIN_RESTORE',
+        error
+      )
+
+    }
+
+  }
+
+)
+
+bot.action(
+
+  'restore_confirm',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      await confirmRestore(
+        ctx
+      )
+
+    }
+
+    catch (error) {
+
+      logError(
+        'RESTORE_CONFIRM',
+        error
+      )
+
+    }
+
+  }
+
+)
+
+bot.action(
+
+  'restore_cancel',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      await cancelRestore(
+        ctx
+      )
+
+    }
+
+    catch (error) {
+
+      logError(
+        'RESTORE_CANCEL',
+        error
+      )
+
+    }
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| RESTORE
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'admin_restore',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      await startRestore(
+        ctx
+      )
+
+    }
+
+    catch (error) {
+
+      logError(
+        'ADMIN_RESTORE',
+        error
+      )
+
+    }
+
+  }
+
+)
 
 /*
 |--------------------------------------------------------------------------

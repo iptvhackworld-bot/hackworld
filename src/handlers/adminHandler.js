@@ -126,6 +126,20 @@ async (ctx) => {
           )
 
         ],
+		
+		[
+           Markup.button.callback(
+             '📥 Restore',
+             'admin_restore'
+          )
+        ],
+		
+		[
+           Markup.button.callback(
+             '📥 Restore',
+             'admin_restore'
+          )
+        ],
 
         [
 
@@ -157,6 +171,20 @@ async (ctx) => {
           Markup.button.callback(
             '💾 Backup',
             'admin_backup'
+          )
+        ],
+		
+		[
+           Markup.button.callback(
+             '📥 Restore',
+             'admin_restore'
+          )
+        ],
+		
+		[
+           Markup.button.callback(
+             '🏆 Leaderboards',
+             'admin_leaderboards'
           )
         ],
 

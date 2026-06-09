@@ -1,112 +1,199 @@
+const User =
+require(
+  '../models/User'
+)
+
 const {
 
-  getTopMoney,
+  logInfo,
 
-  getTopMessages
+  logError
 
 } = require(
-  '../services/leaderboardService'
+  '../utils/logger'
 )
 
 /*
 |--------------------------------------------------------------------------
-| MONEY LEADERBOARD
+| LEADERBOARDS
 |--------------------------------------------------------------------------
 */
 
-const openMoneyLeaderboard =
+const openLeaderboards =
 async (ctx) => {
 
   try {
 
     const users =
-      await getTopMoney()
+      await User.find()
 
-    let message =
-`
-💰 TOP MONEY
+    /*
+    |--------------------------------------------------------------------------
+    | MONEY
+    |--------------------------------------------------------------------------
+    */
 
-━━━━━━━━━━━━━━━━━━
-`
+    const richest =
+      [...users]
 
-    users.forEach(
+      .sort(
+
+        (a, b) =>
+
+          (b.money || 0)
+
+          -
+
+          (a.money || 0)
+
+      )
+
+      .slice(0, 5)
+
+    /*
+    |--------------------------------------------------------------------------
+    | MESSAGES
+    |--------------------------------------------------------------------------
+    */
+
+    const messages =
+      [...users]
+
+      .sort(
+
+        (a, b) =>
+
+          (b.messages || 0)
+
+          -
+
+          (a.messages || 0)
+
+      )
+
+      .slice(0, 5)
+
+    /*
+    |--------------------------------------------------------------------------
+    | CASINO
+    |--------------------------------------------------------------------------
+    */
+
+    const casino =
+      [...users]
+
+      .sort(
+
+        (a, b) =>
+
+          (b.casinoWon || 0)
+
+          -
+
+          (a.casinoWon || 0)
+
+      )
+
+      .slice(0, 5)
+
+    /*
+    |--------------------------------------------------------------------------
+    | TEXT
+    |--------------------------------------------------------------------------
+    */
+
+    let richText = ''
+
+    richest.forEach(
 
       (user, index) => {
 
-        message +=
+        richText +=
 `
-#${index + 1}
+${index + 1}. @${user.username || 'unknown'}
 
-@${user.username || 'unknown'}
+💰 ${user.money || 0}$
 
-💵 ${user.money || 0}$
-
-━━━━━━━━━━━━━━━━━━
 `
 
       }
 
     )
 
-    await ctx.reply(
-      message
-    )
+    let msgText = ''
 
-  } catch (error) {
-
-    console.log(error)
-
-  }
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| MESSAGE LEADERBOARD
-|--------------------------------------------------------------------------
-*/
-
-const openMessageLeaderboard =
-async (ctx) => {
-
-  try {
-
-    const users =
-      await getTopMessages()
-
-    let message =
-`
-💬 TOP MESSAGES
-
-━━━━━━━━━━━━━━━━━━
-`
-
-    users.forEach(
+    messages.forEach(
 
       (user, index) => {
 
-        message +=
+        msgText +=
 `
-#${index + 1}
-
-@${user.username || 'unknown'}
+${index + 1}. @${user.username || 'unknown'}
 
 💬 ${user.messages || 0}
 
-━━━━━━━━━━━━━━━━━━
 `
 
       }
 
     )
 
-    await ctx.reply(
-      message
+    let casinoText = ''
+
+    casino.forEach(
+
+      (user, index) => {
+
+        casinoText +=
+`
+${index + 1}. @${user.username || 'unknown'}
+
+🎰 ${user.casinoWon || 0}$
+
+`
+
+      }
+
     )
 
-  } catch (error) {
+    logInfo(
+      `LEADERBOARDS ${ctx.from.id}`
+    )
 
-    console.log(error)
+    await ctx.reply(
+`
+🏆 HACKWORLD LEADERBOARDS
+
+━━━━━━━━━━━━━━━━━━
+
+💰 TOP RICHES
+
+${richText}
+
+━━━━━━━━━━━━━━━━━━
+
+💬 TOP MESSAGES
+
+${msgText}
+
+━━━━━━━━━━━━━━━━━━
+
+🎰 TOP CASINO
+
+${casinoText}
+
+━━━━━━━━━━━━━━━━━━
+`
+    )
+
+  }
+
+  catch (error) {
+
+    logError(
+      'LEADERBOARDS',
+      error
+    )
 
   }
 
@@ -114,8 +201,6 @@ async (ctx) => {
 
 module.exports = {
 
-  openMoneyLeaderboard,
-
-  openMessageLeaderboard
+  openLeaderboards
 
 }
