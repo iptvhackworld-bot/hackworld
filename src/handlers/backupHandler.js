@@ -1,261 +1,163 @@
-const fs = require('fs')
+const fs =
+require('fs')
 
-const path = require('path')
+const path =
+require('path')
 
-/*
-|--------------------------------------------------------------------------
-| FILES
-|--------------------------------------------------------------------------
-*/
-
-const filesToBackup = [
-
-  'users.json',
-
-  'content.json',
-
-  'categories.json',
-
-  'staff.json',
-
-  'logs.json'
-
-]
-
-/*
-|--------------------------------------------------------------------------
-| PATHS
-|--------------------------------------------------------------------------
-*/
-
-const dataPath = path.join(
-  __dirname,
-  '../data'
+const User =
+require(
+  '../models/User'
 )
 
-const backupPath = path.join(
-  __dirname,
-  '../backups'
+const Ticket =
+require(
+  '../models/Ticket'
 )
 
-/*
-|--------------------------------------------------------------------------
-| CREATE FOLDER
-|--------------------------------------------------------------------------
-*/
+const MarketListing =
+require(
+  '../models/MarketListing'
+)
 
-if (
-  !fs.existsSync(backupPath)
-) {
+const {
 
-  fs.mkdirSync(backupPath)
+  logInfo,
 
-}
+  logError
 
-/*
-|--------------------------------------------------------------------------
-| CREATE BACKUP
-|--------------------------------------------------------------------------
-*/
+} = require(
+  '../utils/logger'
+)
 
-const createBackup = () => {
-
-  const date =
-    new Date()
-      .toISOString()
-      .replace(/:/g, '-')
-
-  filesToBackup.forEach((file) => {
-
-    const source =
-      path.join(
-        dataPath,
-        file
-      )
-
-    if (
-      fs.existsSync(source)
-    ) {
-
-      const destination =
-        path.join(
-
-          backupPath,
-
-          `${date}-${file}`
-
-        )
-
-      fs.copyFileSync(
-        source,
-        destination
-      )
-
-    }
-
-  })
-
-  console.log(
-    '✅ Backup créé'
-  )
-}
-
-/*
-|--------------------------------------------------------------------------
-| EXPORT DATA
-|--------------------------------------------------------------------------
-*/
-
-const exportData = async (ctx) => {
-
-  /*
-  |--------------------------------------------------------------------------
-  | OWNER ONLY
-  |--------------------------------------------------------------------------
-  */
-
-  if (
-    ctx.from.id.toString() !==
-    env.ownerId
-  ) {
-
-    return ctx.reply(
-      '❌ Accès refusé'
-    )
-
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | SEND FILES
-  |--------------------------------------------------------------------------
-  */
-
-  for (const file of filesToBackup) {
-
-    const filePath =
-      path.join(
-        dataPath,
-        file
-      )
-
-    if (
-      fs.existsSync(filePath)
-    ) {
-
-      await ctx.replyWithDocument({
-
-        source: filePath
-
-      })
-
-    }
-
-  }
-}
-
-/*
-|--------------------------------------------------------------------------
-| RESTORE LAST BACKUP
-|--------------------------------------------------------------------------
-*/
-
-const restoreBackup =
+const createBackup =
 async (ctx) => {
 
-  /*
-  |--------------------------------------------------------------------------
-  | OWNER ONLY
-  |--------------------------------------------------------------------------
-  */
+  try {
 
-  if (
-    ctx.from.id.toString() !==
-    env.ownerId
-  ) {
+    const users =
+      await User.find()
 
-    return ctx.reply(
-      '❌ Accès refusé'
-    )
+    const tickets =
+      await Ticket.find()
 
-  }
+    const listings =
+      await MarketListing.find()
 
-  /*
-  |--------------------------------------------------------------------------
-  | FILES
-  |--------------------------------------------------------------------------
-  */
+    const backup = {
 
-  const backupFiles =
-    fs.readdirSync(
-      backupPath
-    )
+      createdAt:
+        new Date(),
 
-  /*
-  |--------------------------------------------------------------------------
-  | EMPTY
-  |--------------------------------------------------------------------------
-  */
+      users,
 
-  if (
-    backupFiles.length === 0
-  ) {
+      tickets,
 
-    return ctx.reply(
-      '❌ Aucun backup.'
-    )
+      listings
 
-  }
+    }
 
-  /*
-  |--------------------------------------------------------------------------
-  | RESTORE
-  |--------------------------------------------------------------------------
-  */
+    const backupDir =
+      path.join(
 
-  filesToBackup.forEach((file) => {
+        __dirname,
 
-    const matching =
-      backupFiles
-        .filter(f =>
-          f.endsWith(file)
-        )
-        .sort()
-        .reverse()[0]
+        '../backups'
 
-    if (matching) {
+      )
 
-      fs.copyFileSync(
+    if (
 
-        path.join(
-          backupPath,
-          matching
-        ),
+      !fs.existsSync(
+        backupDir
+      )
 
-        path.join(
-          dataPath,
-          file
-        )
+    ) {
 
+      fs.mkdirSync(
+        backupDir
       )
 
     }
 
-  })
+    const fileName =
 
-  await ctx.reply(
+      `backup_${Date.now()}.json`
+
+    const filePath =
+
+      path.join(
+
+        backupDir,
+
+        fileName
+
+      )
+
+    fs.writeFileSync(
+
+      filePath,
+
+      JSON.stringify(
+
+        backup,
+
+        null,
+
+        2
+
+      )
+
+    )
+
+    logInfo(
+      `BACKUP_CREATED ${fileName}`
+    )
+
+    await ctx.reply(
 `
-✅ Dernier backup restauré.
+💾 Backup créé avec succès
+
+━━━━━━━━━━━━━━━━━━
+
+👥 Utilisateurs :
+${users.length}
+
+🎫 Tickets :
+${tickets.length}
+
+📦 Listings :
+${listings.length}
+
+📄 Fichier :
+
+${fileName}
+
+━━━━━━━━━━━━━━━━━━
 `
-  )
+)
+
+await ctx.replyWithDocument({
+
+  source:
+    filePath
+
+})
+
+  }
+
+  catch (error) {
+
+    logError(
+      'BACKUP',
+      error
+    )
+
+  }
+
 }
 
 module.exports = {
 
-  createBackup,
-
-  exportData,
-
-  restoreBackup
+  createBackup
 
 }
