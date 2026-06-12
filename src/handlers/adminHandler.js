@@ -187,6 +187,13 @@ async (ctx) => {
              'admin_leaderboards'
           )
         ],
+		
+		[
+           Markup.button.callback(
+             '🔔 Notifications',
+             'admin_notifications'
+          )
+        ],
 
         [
 

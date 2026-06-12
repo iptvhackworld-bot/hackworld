@@ -1,10 +1,17 @@
-```js
 const {
 
   addXp
 
 } = require(
   '../services/levelService'
+)
+
+const {
+
+  addXP
+
+} = require(
+  '../utils/xpSystem'
 )
 
 /*
@@ -30,47 +37,42 @@ async (
 
   ) {
 
-    if (
+    if (!global.xpCooldowns) {
 
-      !global.xpCooldowns
+  global.xpCooldowns = {}
 
-    ) {
+}
 
-      global.xpCooldowns = {}
+const last =
 
-    }
+  global.xpCooldowns[
+    ctx.from.id
+  ]
 
-    const last =
+if (
 
-      global.xpCooldowns[
-        ctx.from.id
-      ]
+  !last ||
 
-    if (
+  Date.now() - last > 30000
 
-      !last ||
+) {
 
-      Date.now() - last > 30000
+  await addXp(
 
-    ) {
+    ctx.from.id,
 
-      await addXp(
+    5
 
-        ctx.from.id,
+  )
 
-        5
+  global.xpCooldowns[
+    ctx.from.id
+  ] = Date.now()
 
-      )
-
-      global.xpCooldowns[
-        ctx.from.id
-      ] = Date.now()
-
-    }
+}
 
   }
 
   return next()
 
 }
-```

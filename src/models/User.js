@@ -1,3 +1,4 @@
+```js
 const mongoose =
 require('mongoose')
 
@@ -38,11 +39,81 @@ new mongoose.Schema({
 
   /*
   |--------------------------------------------------------------------------
+  | PROFILE
+  |--------------------------------------------------------------------------
+  */
+
+  title: {
+
+    type: String,
+
+    default: 'Member'
+
+  },
+
+  level: {
+
+    type: Number,
+
+    default: 1
+
+  },
+
+  xp: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  reputation: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  joinDate: {
+
+    type: Date,
+
+    default: Date.now
+
+  },
+
+  lastSeen: {
+
+    type: Date,
+
+    default: Date.now
+
+  },
+
+  /*
+  |--------------------------------------------------------------------------
   | ECONOMY
   |--------------------------------------------------------------------------
   */
 
   money: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  totalEarned: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  totalSpent: {
 
     type: Number,
 
@@ -65,6 +136,30 @@ new mongoose.Schema({
   },
 
   casinoWon: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  casinoLost: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  biggestWin: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  biggestLoss: {
 
     type: Number,
 
@@ -102,7 +197,15 @@ new mongoose.Schema({
 
   },
 
-  warns: {
+  blacklisted: {
+
+    type: Boolean,
+
+    default: false
+
+  },
+
+  warningCount: {
 
     type: Number,
 
@@ -110,11 +213,19 @@ new mongoose.Schema({
 
   },
 
-  blacklisted: {
+  muteCount: {
 
-    type: Boolean,
+    type: Number,
 
-    default: false
+    default: 0
+
+  },
+
+  banCount: {
+
+    type: Number,
+
+    default: 0
 
   },
 
@@ -137,6 +248,62 @@ new mongoose.Schema({
   | MARKETPLACE
   |--------------------------------------------------------------------------
   */
+
+  purchaseCount: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  pendingPurchases: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  completedPurchases: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  soldCount: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  salesCount: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  totalSalesMoney: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  favoriteCount: {
+
+    type: Number,
+
+    default: 0
+
+  },
 
   sellerRating: {
 
@@ -224,6 +391,58 @@ new mongoose.Schema({
 
   /*
   |--------------------------------------------------------------------------
+  | INVENTORY
+  |--------------------------------------------------------------------------
+  */
+
+  inventory: {
+
+    type: Array,
+
+    default: []
+
+  },
+
+  badges: {
+
+    type: Array,
+
+    default: []
+
+  },
+
+  achievements: {
+
+    type: Array,
+
+    default: []
+
+  },
+
+  /*
+  |--------------------------------------------------------------------------
+  | PREMIUM
+  |--------------------------------------------------------------------------
+  */
+
+  vip: {
+
+    type: Boolean,
+
+    default: false
+
+  },
+
+  verified: {
+
+    type: Boolean,
+
+    default: false
+
+  },
+
+  /*
+  |--------------------------------------------------------------------------
   | DATES
   |--------------------------------------------------------------------------
   */
@@ -246,3 +465,4 @@ mongoose.model(
   userSchema
 
 )
+```

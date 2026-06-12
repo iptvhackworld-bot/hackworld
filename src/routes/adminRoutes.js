@@ -80,6 +80,166 @@ const {
   '../handlers/leaderboardHandler'
 )
 
+const {
+
+  openNotifications,
+
+  sendMaintenance,
+
+  sendUpdate,
+
+  sendPromo,
+
+  sendSecurity,
+
+  startCustomNotification
+
+} = require(
+  '../handlers/notificationHandler'
+)
+
+/*
+|--------------------------------------------------------------------------
+| CUSTOM NOTIFICATION
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'notify_custom',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      await startCustomNotification(
+        ctx
+      )
+
+    }
+
+    catch (error) {
+
+      logError(
+        'NOTIFY_CUSTOM',
+        error
+      )
+
+    }
+
+  }
+
+)
+
+/*
+|--------------------------------------------------------------------------
+| NOTIFICATION MAINTENANCE
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'notify_maintenance',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await sendMaintenance(
+      ctx
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'notify_update',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await sendUpdate(
+      ctx
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'notify_promo',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await sendPromo(
+      ctx
+    )
+
+  }
+
+)
+
+bot.action(
+
+  'notify_security',
+
+  async (ctx) => {
+
+    await ctx.answerCbQuery()
+
+    await sendSecurity(
+      ctx
+    )
+
+  }
+
+)
+
+
+
+/*
+|--------------------------------------------------------------------------
+| ADMIN NOTIFICATION
+|--------------------------------------------------------------------------
+*/
+
+bot.action(
+
+  'admin_notifications',
+
+  async (ctx) => {
+
+    try {
+
+      await ctx.answerCbQuery()
+
+      await openNotifications(
+        ctx
+      )
+
+    }
+
+    catch (error) {
+
+      logError(
+        'ADMIN_NOTIFICATIONS',
+        error
+      )
+
+    }
+
+  }
+
+)
+
 /*
 |--------------------------------------------------------------------------
 | LEADERBOARDS
