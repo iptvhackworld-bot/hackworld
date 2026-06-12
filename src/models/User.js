@@ -1,4 +1,3 @@
-```js
 const mongoose =
 require('mongoose')
 
@@ -465,4 +464,3 @@ mongoose.model(
   userSchema
 
 )
-```
