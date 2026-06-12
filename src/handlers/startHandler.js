@@ -28,8 +28,8 @@ async (ctx) => {
 
       {
 
-        caption:
-
+caption:
+`
 🚀 HACKWORLD MARKETPLACE
 
 ━━━━━━━━━━━━━━━━━━
@@ -38,14 +38,14 @@ async (ctx) => {
 
 ✅ Paiements crypto
 
-✅ Paiements avec Escrow disponibles 
+✅ Paiements avec Escrow disponibles
 
 ✅ Premium system
 
 ✅ Notifications temps réel
 
 ━━━━━━━━━━━━━━━━━━
-
+`,
 
         ...Markup.inlineKeyboard([
 
