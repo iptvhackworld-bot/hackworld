@@ -1,4 +1,3 @@
-```js
 const { Markup } =
 require('telegraf')
 
@@ -30,18 +29,23 @@ async (ctx) => {
       {
 
         caption:
-`
+
 🚀 HACKWORLD MARKETPLACE
 
 ━━━━━━━━━━━━━━━━━━
 
 ✅ Marketplace sécurisé
+
 ✅ Paiements crypto
+
+✅ Paiements avec Escrow disponibles 
+
 ✅ Premium system
+
 ✅ Notifications temps réel
 
 ━━━━━━━━━━━━━━━━━━
-`,
+
 
         ...Markup.inlineKeyboard([
 
@@ -192,13 +196,15 @@ async (ctx) => {
 
         caption:
 `
-📜 Bienvenue sur HackWorld
+📜 Bienvenue sur HackWorld Shop 
 
 ━━━━━━━━━━━━━━━━━━
 
 ⚠️ Aucun staff ne vous contactera en privé.
 
 ⚠️ Vérifiez toujours les comptes officiels.
+
+⚠️ Notre @admin ( @Imortallhack )
 
 ━━━━━━━━━━━━━━━━━━
 
@@ -248,4 +254,3 @@ module.exports = {
   showMainMenu
 
 }
-```
