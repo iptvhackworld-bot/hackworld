@@ -1,4 +1,3 @@
-```js
 const {
 
   addXp
@@ -73,4 +72,3 @@ async (
   return next()
 
 }
-```
